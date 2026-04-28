@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <defs>
+    <linearGradient id="acc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Browser chrome -->
+  <rect width="800" height="600" rx="16" fill="#141414"/>
+  <rect x="0" y="0" width="800" height="40" rx="16" fill="#1a1a1a"/>
+  <rect x="0" y="24" width="800" height="16" fill="#1a1a1a"/>
+  <circle cx="20" cy="20" r="5" fill="#ff5f57"/>
+  <circle cx="36" cy="20" r="5" fill="#febc2e"/>
+  <circle cx="52" cy="20" r="5" fill="#28c840"/>
+  <rect x="200" y="10" width="300" height="20" rx="6" fill="rgba(255,255,255,0.06)"/>
+  <text x="215" y="25" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(237,237,237,0.35)">app.stellar.org</text>
+
+  <!-- Extension icon in toolbar -->
+  <rect x="740" y="10" width="20" height="20" rx="5" fill="url(#acc)"/>
+  <text x="750" y="24" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="800" fill="white">F</text>
+
+  <!-- Website content (blurred background) -->
+  <rect x="20" y="60" width="180" height="14" rx="4" fill="rgba(255,255,255,0.05)"/>
+  <rect x="20" y="82" width="320" height="10" rx="3" fill="rgba(255,255,255,0.03)"/>
+  <rect x="20" y="100" width="280" height="10" rx="3" fill="rgba(255,255,255,0.03)"/>
+  <rect x="20" y="130" width="450" height="200" rx="12" fill="rgba(255,255,255,0.02)"/>
+  <rect x="20" y="346" width="160" height="12" rx="4" fill="rgba(255,255,255,0.04)"/>
+  <rect x="20" y="368" width="350" height="10" rx="3" fill="rgba(255,255,255,0.02)"/>
+
+  <!-- Extension popup -->
+  <rect x="420" y="50" width="360" height="500" rx="16" fill="#141414" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <!-- Popup header -->
+  <rect x="421" y="51" width="358" height="48" rx="16" fill="#1a1a1a"/>
+  <rect x="421" y="83" width="358" height="16" fill="#1a1a1a"/>
+  <rect x="440" y="62" width="24" height="24" rx="6" fill="url(#acc)"/>
+  <text x="452" y="79" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="800" fill="white">F</text>
+  <text x="474" y="79" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#ededed">Freighter</text>
+
+  <!-- Account chip -->
+  <rect x="630" y="62" width="130" height="24" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)"/>
+  <text x="642" y="78" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(237,237,237,0.4)">GDKL...X4R2</text>
+
+  <!-- Network badge -->
+  <rect x="440" y="110" width="70" height="20" rx="10" fill="rgba(52,211,153,0.1)"/>
+  <circle cx="453" cy="120" r="3" fill="#34d399"/>
+  <text x="462" y="124" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="600" fill="#34d399">Mainnet</text>
+
+  <!-- Balance -->
+  <text x="600" y="168" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" fill="rgba(237,237,237,0.4)">Total Balance</text>
+  <text x="600" y="202" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="34" font-weight="700" fill="#ededed">$1,557.60</text>
+  <text x="600" y="225" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="rgba(99,102,241,0.7)">12,450.83 XLM</text>
+
+  <!-- Action buttons -->
+  <rect x="440" y="245" width="105" height="40" rx="10" fill="url(#acc)"/>
+  <text x="493" y="270" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="white">Send</text>
+  <rect x="553" y="245" width="105" height="40" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.08)"/>
+  <text x="606" y="270" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">Receive</text>
+  <rect x="666" y="245" width="94" height="40" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.08)"/>
+  <text x="713" y="270" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">Swap</text>
+
+  <!-- Divider -->
+  <line x1="440" y1="302" x2="760" y2="302" stroke="rgba(255,255,255,0.06)"/>
+
+  <text x="440" y="330" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">Assets</text>
+
+  <!-- Asset 1 -->
+  <rect x="440" y="344" width="320" height="52" rx="10" fill="rgba(255,255,255,0.03)"/>
+  <circle cx="468" cy="370" r="14" fill="url(#acc)"/>
+  <text x="468" y="374" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="8" font-weight="700" fill="white">XLM</text>
+  <text x="492" y="365" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">Stellar Lumens</text>
+  <text x="492" y="381" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(237,237,237,0.3)">10,000 XLM</text>
+  <text x="746" y="365" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">$1,250.00</text>
+  <text x="746" y="381" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="10" fill="#34d399">+2.4%</text>
+
+  <!-- Asset 2 -->
+  <rect x="440" y="404" width="320" height="52" rx="10" fill="rgba(255,255,255,0.03)"/>
+  <circle cx="468" cy="430" r="14" fill="#2775ca"/>
+  <text x="468" y="434" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="8" font-weight="700" fill="white">USDC</text>
+  <text x="492" y="425" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">USD Coin</text>
+  <text x="492" y="441" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(237,237,237,0.3)">307.60 USDC</text>
+  <text x="746" y="425" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">$307.60</text>
+
+  <!-- Asset 3 -->
+  <rect x="440" y="464" width="320" height="52" rx="10" fill="rgba(255,255,255,0.03)"/>
+  <circle cx="468" cy="490" r="14" fill="#f59e0b"/>
+  <text x="468" y="494" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="7" font-weight="700" fill="white">yXLM</text>
+  <text x="492" y="485" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">Ultra Stellar</text>
+  <text x="492" y="501" font-family="Inter, system-ui, sans-serif" font-size="10" fill="rgba(237,237,237,0.3)">2,450.83 yXLM</text>
+  <text x="746" y="485" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#ededed">$306.35</text>
+</svg>

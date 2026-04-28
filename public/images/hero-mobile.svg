@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 780" fill="none">
+  <defs>
+    <linearGradient id="acc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <clipPath id="screen">
+      <rect x="8" y="8" width="364" height="764" rx="36"/>
+    </clipPath>
+  </defs>
+
+  <!-- Phone shell -->
+  <rect width="380" height="780" rx="44" fill="#1a1a1a" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+  <g clip-path="url(#screen)">
+    <rect x="8" y="8" width="364" height="764" fill="#0c0c0c"/>
+
+    <!-- Status bar -->
+    <text x="30" y="36" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="rgba(237,237,237,0.6)">9:41</text>
+    <rect x="296" y="26" width="50" height="13" rx="3" fill="rgba(237,237,237,0.3)"/>
+    <rect x="298" y="28" width="32" height="9" rx="2" fill="rgba(99,102,241,0.7)"/>
+
+    <!-- Dynamic island -->
+    <rect x="140" y="14" width="100" height="26" rx="13" fill="#000"/>
+
+    <!-- Header -->
+    <circle cx="38" cy="72" r="18" fill="url(#acc)"/>
+    <text x="38" y="77" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="800" fill="white">F</text>
+    <text x="66" y="68" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="700" fill="#ededed">Freighter</text>
+    <text x="66" y="84" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(237,237,237,0.4)">Main Account</text>
+
+    <!-- Balance -->
+    <text x="190" y="140" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="13" fill="rgba(237,237,237,0.4)">Total Balance</text>
+    <text x="190" y="182" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="40" font-weight="700" fill="#ededed">$1,557.60</text>
+    <text x="190" y="210" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="15" fill="rgba(99,102,241,0.8)">12,450.83 XLM</text>
+
+    <!-- Action buttons -->
+    <rect x="24" y="236" width="100" height="60" rx="16" fill="rgba(99,102,241,0.12)"/>
+    <text x="74" y="278" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#8b9cf7">Send</text>
+    <line x1="74" y1="252" x2="74" y2="264" stroke="#8b9cf7" stroke-width="1.5" stroke-linecap="round"/>
+    <polyline points="70,256 74,252 78,256" fill="none" stroke="#8b9cf7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="138" y="236" width="100" height="60" rx="16" fill="rgba(99,102,241,0.12)"/>
+    <text x="188" y="278" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#8b9cf7">Receive</text>
+    <line x1="188" y1="252" x2="188" y2="264" stroke="#8b9cf7" stroke-width="1.5" stroke-linecap="round"/>
+    <polyline points="184,260 188,264 192,260" fill="none" stroke="#8b9cf7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <rect x="252" y="236" width="100" height="60" rx="16" fill="rgba(99,102,241,0.12)"/>
+    <text x="302" y="278" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="600" fill="#8b9cf7">Swap</text>
+    <polyline points="296,254 302,258 308,254" fill="none" stroke="#8b9cf7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="296,264 302,260 308,264" fill="none" stroke="#8b9cf7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Assets -->
+    <text x="24" y="336" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="600" fill="#ededed">Assets</text>
+
+    <!-- Asset 1 - XLM -->
+    <rect x="16" y="352" width="348" height="66" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.04)"/>
+    <circle cx="50" cy="385" r="18" fill="url(#acc)"/>
+    <text x="50" y="390" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="700" fill="white">XLM</text>
+    <text x="78" y="379" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#ededed">Stellar Lumens</text>
+    <text x="78" y="396" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(237,237,237,0.35)">10,000 XLM</text>
+    <text x="350" y="379" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#ededed">$1,250.00</text>
+    <text x="350" y="396" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#34d399">+2.4%</text>
+
+    <!-- Asset 2 - USDC -->
+    <rect x="16" y="426" width="348" height="66" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.04)"/>
+    <circle cx="50" cy="459" r="18" fill="#2775ca"/>
+    <text x="50" y="463" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="9" font-weight="700" fill="white">USDC</text>
+    <text x="78" y="453" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#ededed">USD Coin</text>
+    <text x="78" y="470" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(237,237,237,0.35)">307.60 USDC</text>
+    <text x="350" y="453" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#ededed">$307.60</text>
+    <text x="350" y="470" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(237,237,237,0.35)">0.0%</text>
+
+    <!-- Asset 3 - yXLM -->
+    <rect x="16" y="500" width="348" height="66" rx="16" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.04)"/>
+    <circle cx="50" cy="533" r="18" fill="#f59e0b"/>
+    <text x="50" y="537" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="8" font-weight="700" fill="white">yXLM</text>
+    <text x="78" y="527" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#ededed">Ultra Stellar</text>
+    <text x="78" y="544" font-family="Inter, system-ui, sans-serif" font-size="11" fill="rgba(237,237,237,0.35)">2,450.83 yXLM</text>
+    <text x="350" y="527" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#ededed">$306.35</text>
+    <text x="350" y="544" text-anchor="end" font-family="Inter, system-ui, sans-serif" font-size="11" fill="#34d399">+1.1%</text>
+
+    <!-- Bottom nav bar -->
+    <rect x="8" y="712" width="364" height="60" fill="#111111"/>
+    <line x1="8" y1="712" x2="372" y2="712" stroke="rgba(255,255,255,0.06)"/>
+    <text x="80" y="740" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#8b9cf7">Wallet</text>
+    <text x="190" y="740" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500" fill="rgba(237,237,237,0.3)">Activity</text>
+    <text x="300" y="740" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="500" fill="rgba(237,237,237,0.3)">Settings</text>
+
+    <!-- Home indicator -->
+    <rect x="140" y="756" width="100" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
+  </g>
+</svg>
