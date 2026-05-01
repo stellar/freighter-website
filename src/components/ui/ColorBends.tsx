@@ -199,9 +199,13 @@ export default function ColorBends({
     };
     handleResize();
 
-    const ro = new ResizeObserver(handleResize);
-    ro.observe(container);
-    resizeObserverRef.current = ro;
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(handleResize);
+      ro.observe(container);
+      resizeObserverRef.current = ro;
+    } else {
+      window.addEventListener("resize", handleResize);
+    }
 
     const loop = () => {
       const dt = clock.getDelta();
@@ -224,7 +228,8 @@ export default function ColorBends({
 
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      resizeObserverRef.current?.disconnect();
+      if (resizeObserverRef.current) resizeObserverRef.current.disconnect();
+      else window.removeEventListener("resize", handleResize);
       geometry.dispose();
       material.dispose();
       renderer.dispose();

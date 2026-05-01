@@ -8,58 +8,89 @@ export const metadata: Metadata = {
   description: "Keep up with the latest Freighter updates and releases.",
 };
 
-const changelogEntries = [
-  {
-    version: "5.28.0",
-    date: "March 2025",
-    platform: "extension" as const,
-    title: "Performance improvements and bug fixes",
-    changes: [
-      "Improved transaction signing speed",
-      "Fixed asset display issue for certain tokens",
-      "Updated Stellar SDK to latest version",
-      "Minor UI improvements throughout the extension",
-    ],
-  },
-  {
-    version: "2.12.0",
-    date: "February 2025",
-    platform: "mobile" as const,
-    title: "Biometric authentication enhancements",
-    changes: [
-      "Added Face ID support for iOS",
-      "Improved fingerprint authentication on Android",
-      "Fixed crash on account switch",
-      "Updated onboarding flow for new users",
-    ],
-  },
-  {
-    version: "5.27.0",
-    date: "January 2025",
-    platform: "extension" as const,
-    title: "DEX swap improvements",
-    changes: [
-      "Added configurable slippage tolerance for swaps",
-      "Improved price quotes for DEX trades",
-      "Added swap history view",
-      "Fixed issue with certain trustline additions",
-    ],
-  },
-  {
-    version: "2.11.0",
-    date: "January 2025",
-    platform: "mobile" as const,
-    title: "Portfolio view and fiat ramp",
-    changes: [
-      "New portfolio overview with asset breakdown",
-      "Integrated Coinbase on-ramp for buying XLM",
-      "Added push notification support",
-      "Various stability improvements",
-    ],
-  },
-];
+interface GitHubRelease {
+  tag_name: string;
+  name: string;
+  published_at: string;
+  body: string;
+  prerelease: boolean;
+  draft: boolean;
+}
 
-export default function ChangelogPage() {
+interface ChangelogEntry {
+  version: string;
+  date: string;
+  platform: "extension" | "mobile";
+  title: string;
+  body: string;
+  url: string;
+}
+
+function parseRelease(
+  release: GitHubRelease,
+  platform: "extension" | "mobile",
+  repo: string
+): ChangelogEntry {
+  const version = release.tag_name.replace(/^v/, "");
+  const date = new Date(release.published_at).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  // Use release name as title, fall back to tag
+  const title = release.name || version;
+
+  // Clean up the body: remove "Full Changelog" links and contributor lines
+  let body = release.body || "";
+  body = body.replace(/\*\*Full Changelog\*\*:.*$/gm, "");
+  body = body.replace(/## New Contributors[\s\S]*$/m, "");
+  body = body.trim();
+
+  return {
+    version,
+    date,
+    platform,
+    title,
+    body,
+    url: `https://github.com/stellar/${repo}/releases/tag/${release.tag_name}`,
+  };
+}
+
+async function fetchReleases(
+  repo: string,
+  platform: "extension" | "mobile"
+): Promise<ChangelogEntry[]> {
+  const res = await fetch(
+    `https://api.github.com/repos/stellar/${repo}/releases?per_page=30`,
+    {
+      headers: {
+        Accept: "application/vnd.github+json",
+      },
+      next: { revalidate: 3600 },
+    }
+  );
+
+  if (!res.ok) return [];
+
+  const releases: GitHubRelease[] = await res.json();
+
+  return releases
+    .filter((r) => !r.prerelease && !r.draft)
+    .map((r) => parseRelease(r, platform, repo));
+}
+
+export default async function ChangelogPage() {
+  const [extensionReleases, mobileReleases] = await Promise.all([
+    fetchReleases("freighter", "extension"),
+    fetchReleases("freighter-mobile", "mobile"),
+  ]);
+
+  // Merge and sort by date descending
+  const entries = [...extensionReleases, ...mobileReleases].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
   return (
     <>
       <Navbar />
@@ -71,7 +102,7 @@ export default function ChangelogPage() {
           <p className="text-lg text-text-secondary mt-4">
             Keep up with the latest Freighter updates.
           </p>
-          <ChangelogContent entries={changelogEntries} />
+          <ChangelogContent entries={entries} />
         </div>
       </main>
       <Footer />

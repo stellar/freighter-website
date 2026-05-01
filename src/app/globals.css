@@ -231,6 +231,669 @@ button[class*="rounded-full"]:active {
   ry: 1;
 }
 
+/* ─────────────────────────────────────────────
+   Feature carousel cards — scoped design tokens
+   ───────────────────────────────────────────── */
+.feature-cards {
+  --fc-bg: #0a0b14;
+  --fc-surface: #18181b;       /* zinc-900 — matches the rest of the site's elevated surfaces */
+  --fc-surface-2: #1f1f23;
+  --fc-line: #27272a;          /* zinc-800 */
+  --fc-line-2: #3f3f46;        /* zinc-700 */
+  --fc-ink: #f4f5fb;
+  --fc-ink-2: #c5c8df;
+  --fc-ink-3: #8088aa;
+  --fc-ink-4: #535a78;
+  --fc-pur-1: #6f4cff;
+  --fc-pur-2: #8a5cff;
+  --fc-blu-1: #2dd4ff;
+  --fc-blu-2: #4f8cff;
+  --fc-grn: #5fffaf;
+  --fc-gold: #ffd24f;
+  --fc-pink: #ff4f8c;
+  --fc-orange: #ff6b35;
+  --fc-grad: linear-gradient(135deg, #6f4cff 0%, #4f8cff 60%, #2dd4ff 100%);
+  --fc-grad-pbb: linear-gradient(135deg, #8a5cff 0%, #4f8cff 50%, #2dd4ff 100%);
+  --fc-grad-cool: linear-gradient(135deg, #2dd4ff 0%, #5fffaf 100%);
+  --fc-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.fc-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--fc-surface);
+  border: 1px solid var(--fc-line);
+  border-radius: 28px;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
+}
+.fc-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--fc-line-2);
+  box-shadow: 0 18px 50px -20px rgba(111, 76, 255, 0.35);
+}
+
+/* ── Glow ring variant — animated purple→cyan border ring fades in on hover */
+.feature-cards--glow .fc-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(135deg, #6f4cff 0%, #4f8cff 50%, #2dd4ff 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.feature-cards--glow .fc-card:hover::after { opacity: 1; }
+.feature-cards--glow .fc-card:hover {
+  border-color: transparent;
+  box-shadow: 0 24px 60px -18px rgba(101, 76, 216, 0.55);
+}
+
+/* ── Glass variant — translucent surface with backdrop blur, soft top edge */
+.feature-cards--glass .fc-card {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 32px;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+.feature-cards--glass .fc-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 30%);
+  pointer-events: none;
+}
+.feature-cards--glass .fc-card:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 24px 60px -22px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Editorial variant — borderless, deeper drop shadow, smaller radius */
+.feature-cards--editorial .fc-card {
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    0 22px 50px -22px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+.feature-cards--editorial .fc-card:hover {
+  border-color: transparent;
+  box-shadow:
+    0 30px 70px -22px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.fc-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Gradient text helper */
+.fc-grad-text {
+  background: var(--fc-grad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Small caption helper — sans-serif Inter, gentle letter-spacing */
+.fc-mono-cap {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--fc-ink-3);
+  text-transform: uppercase;
+}
+
+/* ───── Send card ───── */
+.fc-plane {
+  animation: fc-plane-bob 2.6s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes fc-plane-bob {
+  0%, 100% { transform: translateY(0) }
+  50%      { transform: translateY(-8px) }
+}
+.fc-particle {
+  animation: fc-particle 1.8s ease-out infinite;
+}
+@keyframes fc-particle {
+  0%   { opacity: 0; transform: translateY(0) scale(1) }
+  10%  { opacity: 0.7 }
+  100% { opacity: 0; transform: translateY(-90px) scale(0.4) }
+}
+.fc-amount {
+  animation: fc-amount 8.4s linear infinite;
+  opacity: 0;
+}
+@keyframes fc-amount {
+  0%   { opacity: 0; transform: translateY(14px); filter: blur(6px) }
+  6%   { opacity: 1; transform: translateY(0);   filter: blur(0) }
+  16%  { opacity: 1; transform: translateY(0);   filter: blur(0) }
+  22%  { opacity: 0; transform: translateY(-14px); filter: blur(6px) }
+  100% { opacity: 0 }
+}
+
+/* ───── Swap card ───── */
+.fc-coin-stage {
+  perspective: 900px;
+  perspective-origin: 50% 42%;
+  position: relative;
+}
+.fc-coin {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  transform-style: preserve-3d;
+  animation: fc-flip 7.6s cubic-bezier(0.55, 0.05, 0.45, 0.95) infinite;
+  /* Slight tilt so the 3D thickness reads even when facing forward */
+  --fc-coin-tilt: rotateX(-10deg);
+}
+/* Hold XLM (3s) → fast double-flip + settle on USDC (0.8s) → hold USDC (3s)
+   → fast double-flip + settle on XLM (0.8s).  540° per swap = two visible
+   flips before landing on the other face. */
+@keyframes fc-flip {
+  0%, 39.5% { transform: var(--fc-coin-tilt) rotateY(0deg) }
+  50%       { transform: var(--fc-coin-tilt) rotateY(540deg) }
+  89.5%     { transform: var(--fc-coin-tilt) rotateY(540deg) }
+  100%      { transform: var(--fc-coin-tilt) rotateY(1080deg) }
+}
+.fc-coin-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The SVG owns the 3D look (gradient face, gloss, rim). The face div is
+     just a placement layer with a Z translate to give the coin thickness. */
+}
+.fc-coin-face svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+}
+.fc-coin-front {
+  transform: translateZ(6px);
+}
+.fc-coin-back {
+  transform: translateZ(-6px) rotateY(180deg);
+}
+/* Rim slices — stacked thin disks at staggered Z values; you see the stack
+   from the side during rotation, which reads as the coin's metallic band.
+   Each slice uses the coin's edge gradient so it blends into either face. */
+.fc-coin-rim {
+  position: absolute;
+  inset: 1px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.18), rgba(255,255,255,0) 45%),
+    linear-gradient(180deg, #2a2d3a 0%, #4a5063 50%, #1c1f2c 100%);
+}
+/* Floor shadow under the coin — narrows as the coin turns edge-on */
+.fc-coin-shadow {
+  position: absolute;
+  width: 150px;
+  height: 14px;
+  left: 50%;
+  bottom: -38px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), rgba(0,0,0,0) 70%);
+  filter: blur(4px);
+  animation: fc-coin-shadow 7.6s cubic-bezier(0.55, 0.05, 0.45, 0.95) infinite;
+}
+@keyframes fc-coin-shadow {
+  0%, 39.5%, 50%, 89.5%, 100% { width: 150px; opacity: 0.55 }
+  44%, 94%                    { width: 60px;  opacity: 0.3  }
+}
+
+/* ───── Discover card ───── */
+.fc-radar {
+  transform-origin: 160px 160px;
+  animation: fc-orbit 6s linear infinite;
+}
+@keyframes fc-orbit {
+  from { transform: rotate(0deg) }
+  to   { transform: rotate(360deg) }
+}
+/* Discover blips — HTML overlay positioned over the radar SVG.  The dot and
+   icon share the same wrapper and both scale from its center, so the user
+   sees a single in-place morph: small dot → quick swell → app icon at full
+   size → shrink back to dot.
+
+   Both elements are absolutely centered.  The dot is 7px so its scale(1) is
+   small; the icon is 48px (100% of its 48px wrapper) so its scale(0.15) is
+   ~7px, matching the dot's resting size for a continuous handoff. */
+.fc-blip-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  transform-origin: center;
+  animation: fc-blip-dot 6s linear infinite;
+}
+.fc-blip-icon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(0.15);
+  transform-origin: center;
+  animation: fc-blip-icon 6s linear infinite;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Per-segment easing — `linear` on the parent animation just keeps the
+   wall-clock cycle steady; the per-keyframe `animation-timing-function`
+   does the real work.  Entry uses ease-out-back so the icon overshoots
+   and snaps back; the exit uses ease-in so it accelerates as it leaves. */
+@keyframes fc-blip-dot {
+  /* idle */
+  0%, 75% {
+    opacity: 0.7;
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); /* ease-out-back */
+  }
+  /* puff: dot pops outward */
+  79% {
+    opacity: 1;
+    transform: scale(2.8);
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); /* ease-in */
+  }
+  /* fades fast while the icon takes over */
+  84%, 95% {
+    opacity: 0;
+    transform: scale(2.6);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); /* ease-out-cubic */
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+@keyframes fc-blip-icon {
+  0%, 76% {
+    opacity: 0;
+    transform: scale(0.15);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); /* ease-out-back: pop with overshoot */
+  }
+  /* peak: snaps past 1.0 */
+  86% {
+    opacity: 1;
+    transform: scale(1.18);
+    animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); /* ease-out-quint: settle */
+  }
+  /* settle and hold */
+  90%, 94% {
+    opacity: 1;
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); /* ease-in: accelerate out */
+  }
+  /* exit */
+  100% {
+    opacity: 0;
+    transform: scale(0.15);
+  }
+}
+
+/* ───── History card ───── */
+.fc-stagger > * {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fc-fade-up 0.6s ease-out forwards;
+}
+
+@keyframes fc-fade-up {
+  to { opacity: 1; transform: translateY(0) }
+}
+
+/* Activity feed — true rotating queue.  6 items rotate through 4 visible
+   slots.  Beat order, by design: the existing rows push down (and the
+   bottom one fades out) FIRST, then the new row scale-pops in at the top.
+   That sequencing is achieved by scheduling each row's shift-to-next-slot
+   keyframes BEFORE the next row's entry keyframes in wall-clock time. */
+.fc-feed-wrap {
+  --fc-slot: 56px;     /* vertical offset between adjacent slots — wider than
+                          the row height so adjacent rows have a clean gap */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 48px;
+  /* Top: short fade so the entry pop reads.  Bottom: longer gradient blur-out
+     so the row that's leaving dissolves into the card edge instead of
+     hard-cutting. */
+  mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 70%, transparent 100%);
+}
+/* Stack fills the padded box; rows are absolutely positioned within it. */
+.fc-feed-stack {
+  position: relative;
+  width: 100%;
+  height: calc(var(--fc-slot) * 4);
+}
+.fc-feed-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform-origin: center;
+  /* Parent timing is `linear` — the per-keyframe `animation-timing-function`
+     does the real work: ease-out-back for the entry pop, ease-in-out for
+     each push-down shift, ease-in for the exit fade. */
+  animation: fc-feed-rotate 12s linear infinite both;
+  will-change: opacity, transform;
+}
+/* Cycle T = 12s, period between events = 2s (= 16.67% of cycle).
+   The shift-to-next-slot keyframes are placed ~3.33% earlier in each row's
+   timeline than the next row's entry keyframes, so wall-clock the entire
+   list shifts down (and the bottom one fades out) BEFORE the new top row
+   pops in.  Slot 0 is briefly empty between shift completion and pop start. */
+@keyframes fc-feed-rotate {
+  /* hidden above, waiting */
+  0%, 13.33% {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.55);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); /* ease-out-back */
+  }
+  /* enter slot 0 — scales up with a slight overshoot, full opacity */
+  16.67% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation-timing-function: linear; /* hold */
+  }
+  /* hold slot 0 (shorter than before — we leave earlier so the next row's
+     entry happens AFTER we've already shifted to slot 1) */
+  26.67% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); /* ease-in-out for shift */
+  }
+  /* push down to slot 1 — completes by phase 30%, which in wall-clock is
+     ~0.4s before the next row reaches its entry phase 13.33% */
+  30% {
+    transform: translateY(var(--fc-slot)) scale(1);
+    animation-timing-function: linear;
+  }
+  43.33% {
+    transform: translateY(var(--fc-slot)) scale(1);
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  /* slot 2 */
+  46.67% {
+    transform: translateY(calc(var(--fc-slot) * 2)) scale(1);
+    animation-timing-function: linear;
+  }
+  60% {
+    transform: translateY(calc(var(--fc-slot) * 2)) scale(1);
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  /* slot 3 (bottom of the visible queue) */
+  63.33% {
+    transform: translateY(calc(var(--fc-slot) * 3)) scale(1);
+    animation-timing-function: linear;
+  }
+  76.67% {
+    opacity: 1;
+    transform: translateY(calc(var(--fc-slot) * 3)) scale(1);
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); /* ease-in for exit */
+  }
+  /* Exit completes by 80% — also before the next row's entry, so the bottom
+     row is gone before the top pop starts. */
+  80% {
+    opacity: 0;
+    transform: translateY(calc(var(--fc-slot) * 3 + 12px)) scale(1);
+  }
+  /* off-stage above, hidden, ready to re-enter */
+  100% {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.55);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-feed-row {
+    animation: none !important;
+    opacity: 1;
+    position: relative !important;
+    top: 0 !important;
+    margin-bottom: 12px;
+  }
+}
+
+/* ───── Earn card ─────
+   Circular progress ring sweeps once per cycle, while the trailing digit
+   rolls 0→9 in lockstep with the fill.  The "4% interest" tag fades in
+   just after the ring settles. */
+.fc-earn {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.fc-earn-svg {
+  position: absolute;
+  inset: 0;
+  width: 65%;
+  height: 65%;
+  margin: auto;
+  filter: drop-shadow(0 0 14px rgba(95, 255, 175, 0.22));
+}
+/* `pathLength="100"` on the circle normalizes the path length so dashoffset
+   can be expressed in 0–100 units regardless of radius. */
+.fc-earn-arc {
+  animation: fc-earn-fill 6s cubic-bezier(0.25, 1, 0.5, 1) infinite both;
+  will-change: stroke-dashoffset;
+}
+@keyframes fc-earn-fill {
+  0%   { stroke-dashoffset: 100; }
+  60%  { stroke-dashoffset: 15; }
+  90%  { stroke-dashoffset: 15; }
+  100% { stroke-dashoffset: 100; }
+}
+.fc-earn-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  z-index: 1;
+}
+.fc-earn-amount {
+  display: inline-flex;
+  align-items: baseline;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -1.2px;
+  color: var(--fc-ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.fc-earn-currency { margin-right: 1px; }
+/* Rolling digit slot — clip a vertical strip and translate the column. */
+.fc-earn-roll {
+  display: inline-block;
+  height: 1em;
+  width: 0.62em;
+  overflow: hidden;
+  vertical-align: baseline;
+}
+.fc-earn-roll-track {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  animation: fc-earn-roll 6s cubic-bezier(0.25, 1, 0.5, 1) infinite both;
+  will-change: transform;
+}
+.fc-earn-roll-track > span {
+  height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes fc-earn-roll {
+  0%   { transform: translateY(0); }
+  60%  { transform: translateY(-9em); }
+  90%  { transform: translateY(-9em); }
+  100% { transform: translateY(0); }
+}
+.fc-earn-rate {
+  font-size: 11px;
+  color: var(--fc-ink-3);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  animation: fc-earn-rate-fade 6s ease-out infinite both;
+}
+@keyframes fc-earn-rate-fade {
+  0%, 50% { opacity: 0; }
+  65%, 92% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-earn-arc { animation: none; stroke-dashoffset: 15; }
+  .fc-earn-roll-track { animation: none; transform: translateY(-9em); }
+  .fc-earn-rate { animation: none; opacity: 1; }
+}
+
+/* ───── Collectibles card ───── */
+.fc-marquee-wrap {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 130px;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+}
+.fc-marquee {
+  display: flex;
+  gap: 10px;
+  width: max-content;
+  will-change: transform;
+}
+.fc-marquee-a { animation: fc-mq-a 14s linear infinite }
+.fc-marquee-b { animation: fc-mq-b 17s linear infinite }
+.fc-marquee-c { animation: fc-mq-a 20s linear infinite }
+@keyframes fc-mq-a {
+  from { transform: translateX(0) }
+  to   { transform: translateX(-50%) }
+}
+@keyframes fc-mq-b {
+  from { transform: translateX(-50%) }
+  to   { transform: translateX(0) }
+}
+.fc-tile {
+  width: 130px;
+  height: 130px;
+  flex: 0 0 130px;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.fc-tile img,
+.fc-tile svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  /* Soften the digital feel: a hint of desaturation + the SVG turbulence
+     filter wobbles each pixel edge for a marker-sketch look. */
+  filter: url(#fc-handdrawn) saturate(0.92);
+}
+@media (prefers-reduced-motion: reduce) {
+  .fc-tile img,
+  .fc-tile svg {
+    filter: none;
+  }
+}
+
+/* ───── Receive card ───── */
+.fc-qr-halo {
+  position: absolute;
+  inset: -4px;
+  border-radius: 22px;
+  background: var(--fc-grad);
+  filter: blur(14px);
+  opacity: 0.6;
+  z-index: -1;
+  animation: fc-halo 3.4s ease-in-out infinite;
+}
+@keyframes fc-halo {
+  0%, 100% { opacity: 0.55; transform: scale(1) }
+  50%      { opacity: 0.85; transform: scale(1.04) }
+}
+
+/* QR shimmer — a diagonal highlight sweeps across the card every cycle.
+   The keyframes hold the highlight off-canvas for the first ~60% of the
+   cycle, sweep across between 60–80%, and rest until the next loop —
+   producing a delayed glint rather than a continuous shine. */
+.fc-qr-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.7) 50%,
+    transparent 65%
+  );
+  transform: translateX(-110%);
+  animation: fc-qr-shimmer 4.5s ease-in-out infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+@keyframes fc-qr-shimmer {
+  0%, 60%   { transform: translateX(-110%) }
+  82%       { transform: translateX(110%) }
+  100%      { transform: translateX(110%) }
+}
+
+/* Reduced motion — pause loops, keep static layouts */
+@media (prefers-reduced-motion: reduce) {
+  .fc-plane,
+  .fc-particle,
+  .fc-amount,
+  .fc-coin,
+  .fc-radar,
+  .fc-blip,
+  .fc-marquee-a,
+  .fc-marquee-b,
+  .fc-marquee-c,
+  .fc-qr-halo,
+  .fc-stagger > * {
+    animation: none !important;
+  }
+  .fc-stagger > * {
+    opacity: 1;
+    transform: none;
+  }
+  .fc-card {
+    transition: none !important;
+  }
+}
+
 /* Prose overrides for legal pages */
 .prose-invert {
   --tw-prose-body: #a1a1aa;     /* zinc-400 */

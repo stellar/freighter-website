@@ -37,11 +37,14 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
       onClick={() => setOpen(!open)}
       className="flex gap-4 items-start text-left w-full cursor-pointer"
     >
-      {/* Plus/minus icon */}
-      <PlusBold
-        size={18}
-        className={`shrink-0 mt-1 text-[#B3A8FF] transition-transform duration-200 ${open ? "rotate-45" : ""}`}
-      />
+      {/* Plus/minus icon — spring rotation */}
+      <motion.div
+        animate={{ rotate: open ? 45 : 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className="shrink-0 mt-1 text-[#B3A8FF]"
+      >
+        <PlusBold size={18} />
+      </motion.div>
       {/* Question + Answer */}
       <div className="flex-1 min-w-0">
         <h3 className="text-xl font-normal text-text-primary leading-7">
@@ -50,10 +53,10 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         <AnimatePresence>
           {open && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
+              initial={{ height: 0, opacity: 0, filter: "blur(4px)" }}
+              animate={{ height: "auto", opacity: 1, filter: "blur(0px)" }}
+              exit={{ height: 0, opacity: 0, filter: "blur(4px)" }}
+              transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
               className="overflow-hidden"
             >
               <p className="text-base text-text-secondary leading-6 mt-4">

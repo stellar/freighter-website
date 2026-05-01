@@ -14,7 +14,20 @@ export default function Home() {
         <Navbar />
         <main className="flex flex-col gap-16 sm:gap-[120px]">
           <HeroSection />
-          <FeatureCarousel />
+          <div data-uidotsh-pick="Card style" className="contents">
+            <div data-uidotsh-option="Solid (current)" className="contents">
+              <FeatureCarousel cardStyle="solid" />
+            </div>
+            <div data-uidotsh-option="Glow ring" className="contents" hidden>
+              <FeatureCarousel cardStyle="glow" />
+            </div>
+            <div data-uidotsh-option="Glass" className="contents" hidden>
+              <FeatureCarousel cardStyle="glass" />
+            </div>
+            <div data-uidotsh-option="Editorial" className="contents" hidden>
+              <FeatureCarousel cardStyle="editorial" />
+            </div>
+          </div>
           <DownloadCards />
           <FeaturesGrid />
           <FAQSection />
