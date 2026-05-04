@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/home/HeroSection";
 import { FeatureCarousel } from "@/components/home/FeatureCarousel";
@@ -9,9 +8,8 @@ import { CTASection } from "@/components/home/CTASection";
 
 export default function Home() {
   return (
-    <div className="overflow-x-clip flex flex-col pt-8 pb-[72px]">
+    <div className="overflow-x-clip flex flex-col pt-3 pb-[72px]">
       <div className="flex flex-col gap-16 sm:gap-[120px]">
-        <Navbar />
         <main className="flex flex-col gap-16 sm:gap-[120px]">
           <HeroSection />
           <div data-uidotsh-pick="Card style" className="contents">

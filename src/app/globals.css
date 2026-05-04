@@ -465,6 +465,162 @@ button[class*="rounded-full"]:active {
 }
 
 /* ───── Discover card ───── */
+.fc-discover-apps {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 28px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(101, 76, 216, 0.34), transparent 34%),
+    radial-gradient(circle at 82% 18%, rgba(45, 212, 255, 0.16), transparent 36%),
+    linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0));
+}
+.fc-discover-orbit {
+  position: absolute;
+  inset: 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(179, 168, 255, 0.08);
+  background:
+    linear-gradient(90deg, rgba(179,168,255,0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(179,168,255,0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at center, #000 0%, transparent 68%);
+  -webkit-mask-image: radial-gradient(circle at center, #000 0%, transparent 68%);
+  opacity: 0.8;
+}
+.fc-discover-search,
+.fc-discover-featured,
+.fc-discover-trending {
+  position: relative;
+  z-index: 1;
+}
+.fc-discover-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 38px;
+  padding: 0 13px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  background: rgba(10, 11, 20, 0.62);
+  color: var(--fc-ink-2);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.fc-discover-search-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--fc-grad-cool);
+  box-shadow: 0 0 18px rgba(95, 255, 175, 0.5);
+}
+.fc-discover-featured {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 24px;
+}
+.fc-discover-tile {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  background: rgba(18, 20, 31, 0.86);
+  box-shadow:
+    0 14px 36px -26px rgba(0,0,0,0.9),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fc-discover-in 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+.fc-discover-tile-glow {
+  position: absolute;
+  top: -24px;
+  right: -18px;
+  width: 82px;
+  height: 82px;
+  border-radius: 999px;
+  opacity: 0.12;
+  filter: blur(4px);
+}
+.fc-discover-icon {
+  position: relative;
+  z-index: 1;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  object-fit: cover;
+  background: rgba(255,255,255,0.9);
+}
+.fc-discover-name {
+  color: var(--fc-ink);
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+.fc-discover-category {
+  margin-top: 4px;
+  color: var(--fc-ink-3);
+  font-size: 12px;
+  font-weight: 500;
+}
+.fc-discover-trending {
+  margin-top: 22px;
+}
+.fc-discover-label {
+  color: var(--fc-ink-3);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.fc-discover-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.fc-discover-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  max-width: 100%;
+  padding: 6px 10px 6px 7px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.045);
+  color: var(--fc-ink-2);
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fc-discover-in 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+.fc-discover-chip-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  object-fit: cover;
+  background: rgba(255,255,255,0.9);
+}
+@keyframes fc-discover-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .fc-radar {
   transform-origin: 160px 160px;
   animation: fc-orbit 6s linear infinite;
@@ -779,53 +935,83 @@ button[class*="rounded-full"]:active {
 }
 
 /* ───── Collectibles card ───── */
-.fc-marquee-wrap {
+.fc-collectibles {
   position: relative;
-  overflow: hidden;
   width: 100%;
-  height: 130px;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
-}
-.fc-marquee {
+  height: 100%;
   display: flex;
-  gap: 10px;
-  width: max-content;
-  will-change: transform;
-}
-.fc-marquee-a { animation: fc-mq-a 14s linear infinite }
-.fc-marquee-b { animation: fc-mq-b 17s linear infinite }
-.fc-marquee-c { animation: fc-mq-a 20s linear infinite }
-@keyframes fc-mq-a {
-  from { transform: translateX(0) }
-  to   { transform: translateX(-50%) }
-}
-@keyframes fc-mq-b {
-  from { transform: translateX(-50%) }
-  to   { transform: translateX(0) }
-}
-.fc-tile {
-  width: 130px;
-  height: 130px;
-  flex: 0 0 130px;
-  border-radius: 16px;
-  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding: 34px;
   overflow: hidden;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 210, 79, 0.12), transparent 34%),
+    radial-gradient(circle at 78% 78%, rgba(179, 168, 255, 0.16), transparent 36%);
 }
-.fc-tile img,
-.fc-tile svg {
+.fc-collectibles-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: min(100%, 236px);
+  aspect-ratio: 1 / 1;
+}
+.fc-collectible-tile {
+  position: relative;
+  min-width: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.fc-collectible-tile img {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
   image-rendering: pixelated;
-  /* Soften the digital feel: a hint of desaturation + the SVG turbulence
-     filter wobbles each pixel edge for a marker-sketch look. */
   filter: url(#fc-handdrawn) saturate(0.92);
 }
+.fc-collectible-focus {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: calc((100% - 12px) / 2);
+  height: calc((100% - 12px) / 2);
+  transform-origin: top left;
+  animation: fc-collectible-expand 5.6s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  box-shadow:
+    0 24px 60px -24px rgba(0,0,0,0.85),
+    0 0 0 1px rgba(255,255,255,0.1);
+}
+@keyframes fc-collectible-expand {
+  0%, 12% {
+    width: calc((100% - 12px) / 2);
+    height: calc((100% - 12px) / 2);
+    border-radius: 18px;
+  }
+  32%, 68% {
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
+  }
+  88%, 100% {
+    width: calc((100% - 12px) / 2);
+    height: calc((100% - 12px) / 2);
+    border-radius: 18px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .fc-tile img,
-  .fc-tile svg {
+  .fc-collectible-tile img {
     filter: none;
+  }
+  .fc-collectible-focus {
+    animation: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 22px;
   }
 }
 

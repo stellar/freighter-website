@@ -1,6 +1,7 @@
 "use client";
 
 import type { ComponentType, ReactNode } from "react";
+import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
 import {
   ArrowsClockwiseBold,
@@ -239,94 +240,85 @@ function SwapStage() {
    3. DISCOVER — radar / sonar
    ════════════════════════════════════════ */
 
-/* Each blip lives at a fixed angle around the dial.  The radar takes 6s to
-   complete a revolution, so the delay (= angle ÷ 60°/s − cycle offset)
-   lines up the icon-grow moment with the sweep crossing the blip. */
-const DISCOVER_BLIPS = [
-  { xPct: 70,    yPct: 28.75, color: "#5fffaf", icon: "/images/app-icon-1.png", delay: "-5.4s" },
-  { xPct: 78.75, yPct: 62.5,  color: "#ffd24f", icon: "/images/app-icon-2.png", delay: "-3.65s" },
-  { xPct: 28.75, yPct: 72.5,  color: "#ff4f8c", icon: "/images/app-icon-3.png", delay: "-2.1s" },
+const DISCOVER_APPS = [
+  {
+    name: "Blend",
+    category: "Lending",
+    icon: "/images/app-icon-1.png",
+    accent: "#5fffaf",
+  },
+  {
+    name: "StellarX",
+    category: "Trading",
+    icon: "/images/app-icon-4.png",
+    accent: "#b3a8ff",
+  },
+] as const;
+
+const DISCOVER_CHIPS = [
+  { name: "Soroban", icon: "/images/app-icon-3.png" },
+  { name: "USDC", icon: "/images/usdc-logo.png" },
+  { name: "Wallet", icon: "/images/freighter-icon.png" },
 ];
 
 function DiscoverStage() {
   return (
-    <div className="relative w-full h-full">
-      <svg
-        viewBox="0 0 320 320"
-        className="absolute inset-0 w-full h-full"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="fc-radar-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#6f4cff" />
-            <stop offset="60%" stopColor="#4f8cff" />
-            <stop offset="100%" stopColor="#2dd4ff" />
-          </linearGradient>
-          <linearGradient id="fc-radar-fill" x1="50%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stopColor="#6f4cff" stopOpacity="0" />
-            <stop offset="100%" stopColor="#2dd4ff" stopOpacity="0.32" />
-          </linearGradient>
-        </defs>
+    <div className="fc-discover-apps">
+      <div className="fc-discover-orbit" aria-hidden="true" />
 
-        {/* Concentric rings */}
-        <circle cx="160" cy="160" r="120" stroke="#1d2238" strokeWidth="1.25" fill="none" />
-        <circle cx="160" cy="160" r="80"  stroke="#1d2238" strokeWidth="1.25" fill="none" />
-        <circle cx="160" cy="160" r="40"  stroke="#1d2238" strokeWidth="1.25" fill="none" />
+      <div className="fc-discover-search">
+        <span className="fc-discover-search-dot" />
+        <span>Search Stellar apps</span>
+      </div>
 
-        {/* Crosshairs */}
-        <line x1="40" y1="160" x2="280" y2="160" stroke="#1d2238" strokeWidth="1" />
-        <line x1="160" y1="40" x2="160" y2="280" stroke="#1d2238" strokeWidth="1" />
+      <div className="fc-discover-featured">
+        {DISCOVER_APPS.map((app, i) => (
+          <div
+            key={app.name}
+            className="fc-discover-tile"
+            style={{ animationDelay: `${i * 0.18}s` }}
+          >
+            <span
+              className="fc-discover-tile-glow"
+              style={{ background: app.accent }}
+              aria-hidden="true"
+            />
+            <Image
+              src={app.icon}
+              alt=""
+              width={44}
+              height={44}
+              className="fc-discover-icon"
+            />
+            <div className="min-w-0">
+              <div className="fc-discover-name">{app.name}</div>
+              <div className="fc-discover-category">{app.category}</div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        {/* Sweep wedge */}
-        <g className="fc-radar">
-          <path
-            d="M160 160 L160 40 A120 120 0 0 1 280 160 Z"
-            fill="url(#fc-radar-fill)"
-            opacity="0.85"
-          />
-          <line
-            x1="160"
-            y1="160"
-            x2="280"
-            y2="160"
-            stroke="url(#fc-radar-grad)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </g>
-
-        {/* Center dot */}
-        <circle cx="160" cy="160" r="3.5" fill="url(#fc-radar-grad)" />
-      </svg>
-
-      {/* HTML overlay for blips — the dot and the icon share the same center
-          point, both scale around that center, and the dot's max scale is
-          tuned to match the icon's small-state size so they morph cleanly. */}
-      {DISCOVER_BLIPS.map((b, i) => (
-        <div
-          key={i}
-          className="absolute pointer-events-none"
-          style={{
-            left: `${b.xPct}%`,
-            top: `${b.yPct}%`,
-            width: 48,
-            height: 48,
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <span
-            className="fc-blip-dot"
-            style={{ background: b.color, animationDelay: b.delay }}
-          />
-          <img
-            src={b.icon}
-            alt=""
-            className="fc-blip-icon"
-            style={{ animationDelay: b.delay }}
-            draggable={false}
-          />
+      <div className="fc-discover-trending">
+        <div className="fc-discover-label">Trending</div>
+        <div className="fc-discover-chips">
+          {DISCOVER_CHIPS.map((chip, i) => (
+            <div
+              key={chip.name}
+              className="fc-discover-chip"
+              style={{ animationDelay: `${0.28 + i * 0.12}s` }}
+            >
+              <Image
+                src={chip.icon}
+                alt=""
+                width={22}
+                height={22}
+                className="fc-discover-chip-icon"
+              />
+              <span>{chip.name}</span>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
   );
 }
@@ -506,60 +498,28 @@ function HistoryStage() {
 }
 
 /* ════════════════════════════════════════
-   5. COLLECTIBLES — Nouns marquee
-   Real Noun PNGs (CC0, downloaded from noun.pics) live in
-   public/images/nouns/.  Each tile is one Noun; the marquee rows
-   shuffle the sequence so adjacent rows read as different Nouns.
+   5. COLLECTIBLES — static 2x2 grid with focus zoom
    ════════════════════════════════════════ */
 
-const NOUN_IDS = [1, 2, 7, 13, 17, 42, 55, 69, 88, 100, 142, 200];
-// Disjoint sets so no Noun appears in both rows.
-const ROW_A = NOUN_IDS.slice(0, 6);
-const ROW_B = NOUN_IDS.slice(6, 12);
+const COLLECTIBLE_NOUNS = [1, 42, 69, 100];
 
-function NounTile({ id }: { id: number }) {
+function NounTile({ id, className = "" }: { id: number; className?: string }) {
   return (
-    <img
-      src={`/images/nouns/noun-${id}.png`}
-      alt=""
-      width={130}
-      height={130}
-      loading="lazy"
-      draggable={false}
-    />
-  );
-}
-
-function MarqueeRow({
-  ids,
-  direction,
-  offset = 0,
-}: {
-  ids: number[];
-  direction: "a" | "b" | "c";
-  offset?: number;
-}) {
-  const sequence = [...ids, ...ids];
-  return (
-    <div className="fc-marquee-wrap">
-      <div className={`fc-marquee fc-marquee-${direction}`} style={{ marginLeft: offset }}>
-        {sequence.map((id, i) => (
-          <div key={i} className="fc-tile">
-            <NounTile id={id} />
-          </div>
-        ))}
-      </div>
+    <div className={`fc-collectible-tile ${className}`}>
+      <Image
+        src={`/images/nouns/noun-${id}.png`}
+        alt=""
+        width={130}
+        height={130}
+        draggable={false}
+      />
     </div>
   );
 }
 
 function CollectiblesStage() {
   return (
-    <div className="flex flex-col gap-3 w-full h-full justify-center">
-      {/* Hand-drawn filter: low-frequency fractal noise drives a tiny
-          displacement map so the pixel-perfect edges of each Noun take on
-          a subtle "freehand" wobble — like a marker sketch instead of pure
-          digital pixel art. */}
+    <div className="fc-collectibles">
       <svg
         width="0"
         height="0"
@@ -585,11 +545,12 @@ function CollectiblesStage() {
           </filter>
         </defs>
       </svg>
-      {/* 2 rows × 160 px overflows the square card on purpose — tiles get
-          cut at the top and bottom edges, suggesting the collection
-          continues beyond the frame. */}
-      <MarqueeRow ids={ROW_A} direction="a" />
-      <MarqueeRow ids={ROW_B} direction="b" offset={-60} />
+      <div className="fc-collectibles-grid">
+        {COLLECTIBLE_NOUNS.map((id) => (
+          <NounTile key={id} id={id} />
+        ))}
+        <NounTile id={COLLECTIBLE_NOUNS[0]} className="fc-collectible-focus" />
+      </div>
     </div>
   );
 }
