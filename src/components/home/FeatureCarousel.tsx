@@ -51,6 +51,7 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
         const count = w < 640 ? 1 : w < 900 ? 2 : 3;
         setVisibleCount(count);
         setCardWidth((w - (count - 1) * GAP) / count);
+        setCurrentIndex((prev) => Math.min(prev, Math.max(0, ITEMS.length - count)));
       }
     });
     observer.observe(container);
@@ -63,11 +64,6 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
 
   const goPrev = useCallback(() => {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  }, [maxIndex]);
-
-  // Reset index if it exceeds new maxIndex after resize
-  useEffect(() => {
-    setCurrentIndex((prev) => Math.min(prev, maxIndex));
   }, [maxIndex]);
 
   const handlePrev = () => goPrev();

@@ -8,7 +8,7 @@ import { CTASection } from "@/components/home/CTASection";
 
 export default function Home() {
   return (
-    <div className="overflow-x-clip flex flex-col pt-3 pb-[72px]">
+    <div className="overflow-x-clip flex flex-col pb-[72px]">
       <div className="flex flex-col gap-16 sm:gap-[120px]">
         <main className="flex flex-col gap-16 sm:gap-[120px]">
           <HeroSection />

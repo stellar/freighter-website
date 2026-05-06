@@ -205,6 +205,64 @@ function UsdcCoinFace() {
   );
 }
 
+function EurocCoinFace() {
+  return (
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <defs>
+        <radialGradient id="fc-euroc-face" cx="35%" cy="28%" r="80%">
+          <stop offset="0%" stopColor="#a9b8ff" />
+          <stop offset="58%" stopColor="#637cff" />
+          <stop offset="100%" stopColor="#283c9f" />
+        </radialGradient>
+        <radialGradient id="fc-euroc-gloss" cx="35%" cy="20%" r="55%">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.48" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="50" fill="#26358f" />
+      <circle cx="50" cy="50" r="45" fill="url(#fc-euroc-face)" />
+      <circle cx="50" cy="50" r="34" fill="none" stroke="#ffffff" strokeOpacity="0.82" strokeWidth="4" />
+      <text
+        x="50"
+        y="62"
+        textAnchor="middle"
+        fontSize="44"
+        fontWeight="800"
+        fill="#ffffff"
+        fontFamily="Inter, system-ui, sans-serif"
+      >
+        €
+      </text>
+      <circle cx="50" cy="50" r="45" fill="url(#fc-euroc-gloss)" />
+    </svg>
+  );
+}
+
+function ArstCoinFace() {
+  return (
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <defs>
+        <clipPath id="fc-arst-clip">
+          <circle cx="50" cy="50" r="45" />
+        </clipPath>
+        <radialGradient id="fc-arst-gloss" cx="35%" cy="20%" r="55%">
+          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="50" fill="#82baf8" />
+      <g clipPath="url(#fc-arst-clip)">
+        <rect x="5" y="5" width="90" height="30" fill="#74b9ff" />
+        <rect x="5" y="35" width="90" height="30" fill="#ffffff" />
+        <rect x="5" y="65" width="90" height="30" fill="#74b9ff" />
+        <circle cx="50" cy="50" r="8" fill="#ffd24f" />
+        <path d="M50 33 L53 45 L65 45 L55 52 L59 64 L50 57 L41 64 L45 52 L35 45 L47 45 Z" fill="#ffbf33" opacity="0.75" />
+      </g>
+      <circle cx="50" cy="50" r="45" fill="url(#fc-arst-gloss)" />
+    </svg>
+  );
+}
+
 function SwapStage() {
   // Stack of thin disks at staggered Z values — when the coin rotates past
   // 90° the user sees the edges of these disks lined up, which reads as the
@@ -227,10 +285,19 @@ function SwapStage() {
         <div className="fc-coin-face fc-coin-back">
           <UsdcCoinFace />
         </div>
+        <div className="fc-coin-face fc-coin-front fc-coin-euroc">
+          <EurocCoinFace />
+        </div>
+        <div className="fc-coin-face fc-coin-back fc-coin-arst">
+          <ArstCoinFace />
+        </div>
       </div>
       <div className="fc-coin-shadow" />
-      <span className="mt-8 text-[20px] font-medium text-white tracking-[-0.3px]">
-        XLM → USDC
+      <span className="fc-swap-label mt-8" aria-label="Swapping token">
+        <span>XLM</span>
+        <span>USDC</span>
+        <span>EUROC</span>
+        <span>ARST</span>
       </span>
     </div>
   );
@@ -342,16 +409,24 @@ function TokenTile({
   if (variant === "xlm") {
     return (
       <div className={`${base} bg-white`}>
-        <img src="/images/stellar-xlm-logo.png" alt="" className="w-[60%] h-[60%] object-contain" />
+        <Image
+          src="/images/stellar-xlm-logo.png"
+          alt=""
+          width={18}
+          height={18}
+          className="w-[60%] h-[60%] object-contain"
+        />
       </div>
     );
   }
   if (variant === "usdc") {
     return (
       <div className={`${base}`} style={{ background: "#2775ca" }}>
-        <img
+        <Image
           src="/images/usdc-logo.svg"
           alt=""
+          width={20}
+          height={20}
           className="w-[68%] h-[68%] object-contain"
         />
       </div>

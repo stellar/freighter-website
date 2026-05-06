@@ -53,9 +53,9 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
         <AnimatePresence>
           {open && (
             <motion.div
-              initial={{ height: 0, opacity: 0, filter: "blur(4px)" }}
-              animate={{ height: "auto", opacity: 1, filter: "blur(0px)" }}
-              exit={{ height: 0, opacity: 0, filter: "blur(4px)" }}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
               className="overflow-hidden"
             >

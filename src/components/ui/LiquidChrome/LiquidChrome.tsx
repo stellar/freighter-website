@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-// @ts-ignore
 import { Renderer, Program, Mesh, Triangle } from "ogl";
 
 import "./LiquidChrome.css";

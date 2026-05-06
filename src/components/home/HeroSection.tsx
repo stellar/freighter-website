@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
 import { ArrowDownBold } from "@/components/ui/PhosphorIcons";
+import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
 
 const springTransition = { type: "spring" as const, stiffness: 300, damping: 20 };
 
@@ -76,7 +77,7 @@ function HeroNav() {
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay: 0.1, ease: [0.25, 1, 0.5, 1] }}
-      className="absolute left-1/2 top-0 z-30 flex w-[min(calc(100%-32px),720px)] -translate-x-1/2 items-center justify-between rounded-b-[24px] bg-[#181818] px-6 py-3"
+      className="absolute left-1/2 top-3 z-30 flex w-[min(calc(100%-32px),720px)] -translate-x-1/2 items-center justify-between rounded-full bg-[#181818] px-6 py-3"
       aria-label="Primary navigation"
     >
       <Link href="/" className="logo-glow relative size-10 shrink-0 overflow-hidden rounded-[9px] bg-[#5842c3]">
@@ -118,13 +119,16 @@ function HeroNav() {
 
 export function HeroSection() {
   return (
-    <section className="px-3">
+    <section className="px-6 py-6">
       <motion.div
         variants={fadeSlideUp}
         initial="hidden"
         animate="visible"
-        className="relative mx-auto h-screen min-h-[650px] max-h-[1000px] w-full overflow-hidden rounded-[24px] bg-[#654cd8]"
+        className="relative mx-auto h-[100vh] min-h-[600px] max-h-[75vh] w-full overflow-hidden rounded-[24px] bg-[#6E56CF]"
       >
+        <IridescenceBackground />
+        <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(180deg,rgba(9,9,11,0.04),rgba(9,9,11,0.2))]" />
+
         <HeroNav />
 
         <div className="relative z-20 flex flex-col items-center gap-6 px-6 pt-[190px] sm:pt-[208px] lg:pt-[225px]">

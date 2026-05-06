@@ -1,16 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
 import { DownloadBold } from "@/components/ui/PhosphorIcons";
-
-const ColorBends = dynamic(
-  () => import("@/components/ui/ColorBends"),
-  { ssr: false }
-);
+import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
 
 export function CTASection() {
   return (
@@ -25,14 +20,8 @@ export function CTASection() {
         >
           {/* CTA card */}
           <div className="relative rounded-[16px] overflow-hidden">
-            <div className="absolute inset-0 z-0">
-              <ColorBends
-                colors={["#5842c3", "#3b1f8e", "#1a0a4a"]}
-                speed={0.2}
-                noise={0.06}
-                transparent={false}
-              />
-            </div>
+            <IridescenceBackground amplitude={0.07} />
+            <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(180deg,rgba(9,9,11,0.04),rgba(9,9,11,0.24))]" />
 
             <div className="relative z-10 flex flex-col items-center justify-center p-8 gap-8 h-[360px] sm:h-[420px] lg:h-[480px]">
               {/* Logo */}

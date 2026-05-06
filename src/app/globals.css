@@ -202,6 +202,9 @@ button[class*="rounded-full"]:active {
 
 /* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   a[class*="rounded-full"],
   button[class*="rounded-full"],
   .card-hover,
@@ -222,6 +225,22 @@ button[class*="rounded-full"]:active {
   }
   .qr-glow {
     animation: none !important;
+  }
+}
+
+@media (hover: none) {
+  a[class*="rounded-full"]:hover,
+  .logo-glow:hover,
+  .mockup-hover:hover,
+  .card-hover:hover,
+  .fc-card:hover {
+    transform: none;
+  }
+  .feature-cell:hover {
+    background-color: transparent;
+  }
+  .feature-cell:hover .feature-icon {
+    transform: none;
   }
 }
 
@@ -384,10 +403,10 @@ button[class*="rounded-full"]:active {
   opacity: 0;
 }
 @keyframes fc-amount {
-  0%   { opacity: 0; transform: translateY(14px); filter: blur(6px) }
-  6%   { opacity: 1; transform: translateY(0);   filter: blur(0) }
-  16%  { opacity: 1; transform: translateY(0);   filter: blur(0) }
-  22%  { opacity: 0; transform: translateY(-14px); filter: blur(6px) }
+  0%   { opacity: 0; transform: translateY(14px) }
+  6%   { opacity: 1; transform: translateY(0) }
+  16%  { opacity: 1; transform: translateY(0) }
+  22%  { opacity: 0; transform: translateY(-14px) }
   100% { opacity: 0 }
 }
 
@@ -402,18 +421,16 @@ button[class*="rounded-full"]:active {
   width: 160px;
   height: 160px;
   transform-style: preserve-3d;
-  animation: fc-flip 7.6s cubic-bezier(0.55, 0.05, 0.45, 0.95) infinite;
+  animation: fc-flip 12s cubic-bezier(0.55, 0.05, 0.45, 0.95) infinite;
   /* Slight tilt so the 3D thickness reads even when facing forward */
   --fc-coin-tilt: rotateX(-10deg);
 }
-/* Hold XLM (3s) → fast double-flip + settle on USDC (0.8s) → hold USDC (3s)
-   → fast double-flip + settle on XLM (0.8s).  540° per swap = two visible
-   flips before landing on the other face. */
 @keyframes fc-flip {
-  0%, 39.5% { transform: var(--fc-coin-tilt) rotateY(0deg) }
-  50%       { transform: var(--fc-coin-tilt) rotateY(540deg) }
-  89.5%     { transform: var(--fc-coin-tilt) rotateY(540deg) }
-  100%      { transform: var(--fc-coin-tilt) rotateY(1080deg) }
+  0%, 17%   { transform: var(--fc-coin-tilt) rotateY(0deg) }
+  25%, 42%  { transform: var(--fc-coin-tilt) rotateY(180deg) }
+  50%, 67%  { transform: var(--fc-coin-tilt) rotateY(360deg) }
+  75%, 92%  { transform: var(--fc-coin-tilt) rotateY(540deg) }
+  100%      { transform: var(--fc-coin-tilt) rotateY(720deg) }
 }
 .fc-coin-face {
   position: absolute;
@@ -432,9 +449,33 @@ button[class*="rounded-full"]:active {
 }
 .fc-coin-front {
   transform: translateZ(6px);
+  animation: fc-face-xlm 12s linear infinite;
 }
 .fc-coin-back {
   transform: translateZ(-6px) rotateY(180deg);
+  animation: fc-face-usdc 12s linear infinite;
+}
+.fc-coin-euroc {
+  animation-name: fc-face-euroc;
+}
+.fc-coin-arst {
+  animation-name: fc-face-arst;
+}
+@keyframes fc-face-xlm {
+  0%, 18%, 96%, 100% { opacity: 1 }
+  22%, 92% { opacity: 0 }
+}
+@keyframes fc-face-usdc {
+  0%, 20%, 46%, 100% { opacity: 0 }
+  24%, 42% { opacity: 1 }
+}
+@keyframes fc-face-euroc {
+  0%, 46%, 71%, 100% { opacity: 0 }
+  50%, 67% { opacity: 1 }
+}
+@keyframes fc-face-arst {
+  0%, 71%, 96%, 100% { opacity: 0 }
+  75%, 92% { opacity: 1 }
 }
 /* Rim slices — stacked thin disks at staggered Z values; you see the stack
    from the side during rotation, which reads as the coin's metallic band.
@@ -454,14 +495,53 @@ button[class*="rounded-full"]:active {
   height: 14px;
   left: 50%;
   bottom: -38px;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scaleX(1);
+  transform-origin: center;
   background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), rgba(0,0,0,0) 70%);
   filter: blur(4px);
-  animation: fc-coin-shadow 7.6s cubic-bezier(0.55, 0.05, 0.45, 0.95) infinite;
+  animation: fc-coin-shadow 12s cubic-bezier(0.55, 0.05, 0.45, 0.95) infinite;
 }
 @keyframes fc-coin-shadow {
-  0%, 39.5%, 50%, 89.5%, 100% { width: 150px; opacity: 0.55 }
-  44%, 94%                    { width: 60px;  opacity: 0.3  }
+  0%, 17%, 25%, 42%, 50%, 67%, 75%, 92%, 100% { transform: translateX(-50%) scaleX(1); opacity: 0.55 }
+  21%, 46%, 71%, 96% { transform: translateX(-50%) scaleX(0.4); opacity: 0.3 }
+}
+.fc-swap-label {
+  position: relative;
+  display: block;
+  width: 96px;
+  height: 28px;
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+  text-align: center;
+  letter-spacing: -0.3px;
+}
+.fc-swap-label span {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(8px);
+}
+.fc-swap-label span:nth-child(1) { animation: fc-swap-label-xlm 12s ease infinite; }
+.fc-swap-label span:nth-child(2) { animation: fc-swap-label-usdc 12s ease infinite; }
+.fc-swap-label span:nth-child(3) { animation: fc-swap-label-euroc 12s ease infinite; }
+.fc-swap-label span:nth-child(4) { animation: fc-swap-label-arst 12s ease infinite; }
+@keyframes fc-swap-label-xlm {
+  0%, 18%, 96%, 100% { opacity: 1; transform: translateY(0) }
+  22%, 92% { opacity: 0; transform: translateY(-8px) }
+}
+@keyframes fc-swap-label-usdc {
+  0%, 20%, 46%, 100% { opacity: 0; transform: translateY(8px) }
+  24%, 42% { opacity: 1; transform: translateY(0) }
+}
+@keyframes fc-swap-label-euroc {
+  0%, 46%, 71%, 100% { opacity: 0; transform: translateY(8px) }
+  50%, 67% { opacity: 1; transform: translateY(0) }
+}
+@keyframes fc-swap-label-arst {
+  0%, 71%, 96%, 100% { opacity: 0; transform: translateY(8px) }
+  75%, 92% { opacity: 1; transform: translateY(0) }
 }
 
 /* ───── Discover card ───── */
@@ -949,6 +1029,7 @@ button[class*="rounded-full"]:active {
     radial-gradient(circle at 78% 78%, rgba(179, 168, 255, 0.16), transparent 36%);
 }
 .fc-collectibles-grid {
+  --fc-collectible-focus-scale: 0.474576;
   position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -978,29 +1059,25 @@ button[class*="rounded-full"]:active {
   left: 0;
   top: 0;
   z-index: 2;
-  width: calc((100% - 12px) / 2);
-  height: calc((100% - 12px) / 2);
+  width: 100%;
+  height: 100%;
   transform-origin: top left;
-  animation: fc-collectible-expand 5.6s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  transform: scale(var(--fc-collectible-focus-scale));
+  animation: fc-collectible-expand 5.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  will-change: transform;
   box-shadow:
     0 24px 60px -24px rgba(0,0,0,0.85),
     0 0 0 1px rgba(255,255,255,0.1);
 }
 @keyframes fc-collectible-expand {
   0%, 12% {
-    width: calc((100% - 12px) / 2);
-    height: calc((100% - 12px) / 2);
-    border-radius: 18px;
+    transform: scale(var(--fc-collectible-focus-scale));
   }
   32%, 68% {
-    width: 100%;
-    height: 100%;
-    border-radius: 22px;
+    transform: scale(1);
   }
   88%, 100% {
-    width: calc((100% - 12px) / 2);
-    height: calc((100% - 12px) / 2);
-    border-radius: 18px;
+    transform: scale(var(--fc-collectible-focus-scale));
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1009,9 +1086,8 @@ button[class*="rounded-full"]:active {
   }
   .fc-collectible-focus {
     animation: none;
-    width: 100%;
-    height: 100%;
-    border-radius: 22px;
+    transform: scale(1);
+    will-change: auto;
   }
 }
 
@@ -1062,18 +1138,42 @@ button[class*="rounded-full"]:active {
   .fc-particle,
   .fc-amount,
   .fc-coin,
+  .fc-coin-shadow,
+  .fc-coin-front,
+  .fc-coin-back,
+  .fc-coin-euroc,
+  .fc-coin-arst,
+  .fc-swap-label span,
+  .fc-discover-tile,
+  .fc-discover-chip,
   .fc-radar,
-  .fc-blip,
+  .fc-blip-dot,
+  .fc-blip-icon,
   .fc-marquee-a,
   .fc-marquee-b,
   .fc-marquee-c,
   .fc-qr-halo,
+  .fc-qr-card::after,
   .fc-stagger > * {
     animation: none !important;
   }
+  .fc-discover-tile,
+  .fc-discover-chip,
   .fc-stagger > * {
     opacity: 1;
     transform: none;
+  }
+  .fc-coin-front,
+  .fc-swap-label span:first-child {
+    opacity: 1;
+  }
+  .fc-coin-back,
+  .fc-coin-euroc,
+  .fc-coin-arst,
+  .fc-swap-label span:not(:first-child),
+  .fc-blip-icon,
+  .fc-qr-card::after {
+    opacity: 0;
   }
   .fc-card {
     transition: none !important;

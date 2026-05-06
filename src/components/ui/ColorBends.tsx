@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useReducedMotion } from "framer-motion";
 import * as THREE from "three";
 
 const MAX_COLORS = 8;
@@ -128,6 +129,7 @@ export default function ColorBends({
   parallax = 0.5,
   noise = 0.1,
 }: ColorBendsProps) {
+  const shouldReduceMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const rafRef = useRef<number | null>(null);
@@ -209,7 +211,7 @@ export default function ColorBends({
 
     const loop = () => {
       const dt = clock.getDelta();
-      const elapsed = clock.elapsedTime;
+      const elapsed = shouldReduceMotion ? 0 : clock.elapsedTime;
       material.uniforms.uTime.value = elapsed;
 
       const deg = (rotationRef.current % 360) + autoRotateRef.current * elapsed;
@@ -219,9 +221,14 @@ export default function ColorBends({
       const cur = pointerCurrentRef.current;
       const tgt = pointerTargetRef.current;
       const amt = Math.min(1, dt * pointerSmoothRef.current);
+      if (shouldReduceMotion) tgt.set(0, 0);
       cur.lerp(tgt, amt);
       material.uniforms.uPointer.value.copy(cur);
       renderer.render(scene, camera);
+      if (shouldReduceMotion) {
+        rafRef.current = null;
+        return;
+      }
       rafRef.current = requestAnimationFrame(loop);
     };
     rafRef.current = requestAnimationFrame(loop);
@@ -238,7 +245,7 @@ export default function ColorBends({
         container.removeChild(renderer.domElement);
       }
     };
-  }, [frequency, mouseInfluence, noise, parallax, scale, speed, transparent, warpStrength]);
+  }, [frequency, mouseInfluence, noise, parallax, scale, shouldReduceMotion, speed, transparent, warpStrength]);
 
   useEffect(() => {
     const material = materialRef.current;

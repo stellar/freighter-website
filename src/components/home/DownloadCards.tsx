@@ -1,17 +1,12 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
 import { RoundedQR } from "@/components/ui/RoundedQR";
 import { LINKS } from "@/lib/constants";
 import Image from "next/image";
 import { AppleLogoBold, AndroidLogoBold } from "@/components/ui/PhosphorIcons";
-
-const ColorBends = dynamic(
-  () => import("@/components/ui/ColorBends"),
-  { ssr: false }
-);
+import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
 
 export function DownloadCards() {
   return (
@@ -26,14 +21,7 @@ export function DownloadCards() {
         >
           {/* For mobile */}
           <div className="card-hover relative h-[400px] md:h-[480px] rounded-[32px] bg-bg-elevated overflow-hidden p-8 flex flex-col">
-            <div className="absolute inset-0 z-0">
-              <ColorBends
-                colors={["#5842c3", "#3b1f8e", "#1a0a4a"]}
-                speed={0.2}
-                noise={0.06}
-                transparent={false}
-              />
-            </div>
+            <IridescenceBackground amplitude={0.06} />
 
             <h3 className="text-xl sm:text-2xl font-medium text-white tracking-[-0.96px] relative z-10">
               For mobile
@@ -56,25 +44,18 @@ export function DownloadCards() {
             </div>
 
             {/* Phone screenshot */}
-            <div className="absolute bottom-0 right-4 sm:right-8 w-[180px] sm:w-[220px] md:w-[260px] top-[72px] rounded-[2px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] overflow-hidden">
+            <div className="absolute bottom-[108px] -right-6 h-[360px] w-[166px] sm:-right-8 sm:h-[420px] sm:w-[194px] md:-right-10 md:h-[500px] md:w-[231px] rounded-[24px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] overflow-hidden">
               <Image src="/images/for-mobile.png" alt="Freighter mobile app" fill className="object-cover object-top" />
             </div>
             {/* QR code linking to freighter.app */}
-            <div className="qr-glow absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-10 size-[96px] rounded-[4px] bg-white p-2 shadow-lg">
-              <RoundedQR value="https://www.freighter.app" size={80} />
+            <div className="qr-glow absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-10 size-[96px] rounded-[8px] bg-white p-2 shadow-lg">
+              <RoundedQR value="https://apps.apple.com/us/app/freihter/id6743947720" size={80} />
             </div>
           </div>
 
           {/* For extension */}
           <div className="card-hover relative h-[400px] md:h-[480px] rounded-[32px] bg-bg-elevated overflow-hidden p-8 flex flex-col">
-            <div className="absolute inset-0 z-0">
-              <ColorBends
-                colors={["#5842c3", "#3b1f8e", "#1a0a4a"]}
-                speed={0.2}
-                noise={0.06}
-                transparent={false}
-              />
-            </div>
+            <IridescenceBackground amplitude={0.06} />
 
             <h3 className="text-xl sm:text-2xl font-medium text-white tracking-[-0.96px] relative z-10">
               For browser
@@ -94,7 +75,7 @@ export function DownloadCards() {
             </a>
 
             {/* Browser extension screenshot — 360×600 aspect ratio */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 top-[72px] aspect-[360/600] h-full overflow-hidden rounded-[16px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1]">
+            <div className="absolute bottom-[108px] -right-16 aspect-[360/600] h-[420px] overflow-hidden rounded-[24px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] sm:-right-20 sm:h-[500px] md:-right-24 md:h-[580px]">
               <Image src="/images/for-extension.png" alt="Freighter browser extension" fill className="object-cover object-top" />
             </div>
           </div>

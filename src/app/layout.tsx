@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Agentation } from "agentation";
+import { MotionProvider } from "@/components/providers/MotionProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -73,7 +74,7 @@ export default function RootLayout({
             __html: `console.log("%c⚡ Freighter","font-size:24px;font-weight:bold;color:#654cd8");console.log("%cYour everyday Stellar wallet — https://github.com/stellar/freighter","font-size:12px;color:#a1a1aa");`,
           }}
         />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         {process.env.NODE_ENV === "development" && <Agentation />}
       </body>
     </html>
