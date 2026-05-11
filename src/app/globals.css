@@ -18,10 +18,10 @@
   --color-text-secondary: #A0A0A0; /* Gray 11 */
   --color-text-tertiary: #707070;  /* Gray 9 */
 
-  --color-accent: #6E56CF;           /* Lilac 9  — solid */
-  --color-accent-secondary: #7C66DC; /* Lilac 10 — solid hover */
-  --color-accent-light: #9E8CFC;     /* Lilac 11 — accent text */
-  --color-accent-link: #9E8CFC;      /* Lilac 11 */
+  --color-accent: #7B68FF;           /* Brand primary — solid */
+  --color-accent-secondary: #8A78FF; /* Brand primary — hover */
+  --color-accent-light: #7B68FF;     /* Brand primary — icons and accent text */
+  --color-accent-link: #7B68FF;      /* Brand primary — text links */
 
   /* Easing — single source of truth. Mirror the JS constants in
      `lib/animations.ts` so paired CSS + Framer Motion animations
@@ -65,7 +65,7 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #6E56CF, #7C66DC);
+  background: linear-gradient(135deg, #7B68FF, #8A78FF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -103,7 +103,7 @@ body {
               transform 0.3s var(--ease-out);
 }
 .logo-glow:hover {
-  box-shadow: 0 0 16px 2px rgba(110, 86, 207, 0.4); /* Lilac 9 */
+  box-shadow: 0 0 16px 2px rgba(123, 104, 255, 0.4); /* Lilac 9 */
   transform: scale(1.05);
 }
 
@@ -129,8 +129,8 @@ body {
   padding: 1px;
   background: linear-gradient(
     135deg,
-    rgba(110, 86, 207, 0.3),  /* Lilac 9 */
-    rgba(124, 102, 220, 0.1)  /* Lilac 10 */
+    rgba(123, 104, 255, 0.3),  /* Brand primary */
+    rgba(138, 120, 255, 0.1)   /* Brand primary — hover */
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -280,16 +280,16 @@ body {
   --fc-ink-2: #A0A0A0;         /* Gray 11 */
   --fc-ink-3: #7E7E7E;         /* Gray 10 */
   --fc-ink-4: #505050;         /* Gray 8 */
-  --fc-pur-1: #6E56CF;         /* Lilac 9 */
-  --fc-pur-2: #7C66DC;         /* Lilac 10 */
+  --fc-pur-1: #7B68FF;         /* Brand primary */
+  --fc-pur-2: #8A78FF;         /* Brand primary — hover */
   --fc-blu-1: #2dd4ff;
   --fc-blu-2: #4f8cff;
   --fc-grn: #5fffaf;
   --fc-gold: #ffd24f;
   --fc-pink: #ff4f8c;
   --fc-orange: #ff6b35;
-  --fc-grad: linear-gradient(135deg, #6E56CF 0%, #4f8cff 60%, #2dd4ff 100%);
-  --fc-grad-pbb: linear-gradient(135deg, #7C66DC 0%, #4f8cff 50%, #2dd4ff 100%);
+  --fc-grad: linear-gradient(135deg, #7B68FF 0%, #4f8cff 60%, #2dd4ff 100%);
+  --fc-grad-pbb: linear-gradient(135deg, #8A78FF 0%, #4f8cff 50%, #2dd4ff 100%);
   --fc-grad-cool: linear-gradient(135deg, #2dd4ff 0%, #5fffaf 100%);
   --fc-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -318,7 +318,7 @@ body {
 .fc-card:hover {
   transform: translateY(-4px);
   border-color: var(--fc-line-2);
-  box-shadow: 0 18px 50px -20px rgba(110, 86, 207, 0.35); /* Lilac 9 */
+  box-shadow: 0 18px 50px -20px rgba(123, 104, 255, 0.35); /* Lilac 9 */
 }
 
 /* ── Glow ring variant — animated purple→cyan border ring fades in on hover */
@@ -328,7 +328,7 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1.5px;
-  background: linear-gradient(135deg, #6E56CF 0%, #4f8cff 50%, #2dd4ff 100%);
+  background: linear-gradient(135deg, #7B68FF 0%, #4f8cff 50%, #2dd4ff 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
@@ -339,7 +339,7 @@ body {
 .feature-cards--glow .fc-card:hover::after { opacity: 1; }
 .feature-cards--glow .fc-card:hover {
   border-color: transparent;
-  box-shadow: 0 24px 60px -18px rgba(110, 86, 207, 0.55); /* Lilac 9 */
+  box-shadow: 0 24px 60px -18px rgba(123, 104, 255, 0.55); /* Lilac 9 */
 }
 
 /* ── Glass variant — translucent surface with backdrop blur, soft top edge */
@@ -436,7 +436,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--color-accent); /* Lilac 9 — matches Deposit card */
+  background: var(--color-bg-hover); /* Gray 4 — matches other cards */
   display: flex;
   flex-direction: column;
   padding: clamp(12px, 4.4cqw, 18px);
@@ -446,8 +446,8 @@ body {
 
 .fc-send-panel {
   flex: 1;
-  background: color-mix(in srgb, #1a1244 70%, var(--color-accent));
-  border: 1px solid color-mix(in srgb, #ffffff 12%, transparent);
+  background: var(--color-bg-elevated); /* Gray 2 */
+  border: 1px solid var(--color-border); /* Gray 3 */
   border-radius: clamp(20px, 7cqw, 32px);
   padding: clamp(14px, 5cqw, 22px);
   display: flex;
@@ -457,12 +457,30 @@ body {
   color: var(--color-text-primary);
 }
 
+.fc-send-recipient {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(4px, 1.4cqw, 6px);
+  font-size: clamp(12px, 3.8cqw, 15px);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.fc-send-recipient-label {
+  color: var(--color-text-tertiary);
+}
+.fc-send-recipient-address {
+  color: var(--color-text-primary);
+  font-weight: 650;
+}
+
 .fc-send-currency {
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: clamp(6px, 2cqw, 8px);
-  background: color-mix(in srgb, #1a1244 50%, var(--color-accent));
+  background: var(--color-bg-hover); /* Gray 4 — pill on Gray 2 panel */
   border-radius: 999px;
   padding: clamp(3px, 1cqw, 4px) clamp(10px, 3cqw, 14px) clamp(3px, 1cqw, 4px) clamp(3px, 1cqw, 4px);
 }
@@ -484,7 +502,7 @@ body {
 .fc-send-amount {
   display: inline-flex;
   align-items: center;
-  font-weight: 600;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.035em;
   font-size: clamp(40px, 18cqw, 72px);
@@ -495,43 +513,18 @@ body {
   color: var(--color-text-primary);
   margin-right: 0.04em;
 }
-.fc-send-amount-highlight {
-  background: rgba(110, 86, 207, 0.22); /* Lilac 9 @ low opacity */
-  padding: 0 4px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-}
 .fc-send-amount-num {
   color: var(--color-text-primary);
 }
-.fc-send-amount-caret {
-  display: inline-block;
-  width: 2px;
-  height: 0.85em;
-  background: var(--color-accent-light); /* Lilac 11 */
-  margin-left: 2px;
-  animation: fc-send-caret 1.1s steps(1) infinite;
-}
-@keyframes fc-send-caret {
-  0%, 50% { opacity: 1; }
-  50.01%, 100% { opacity: 0; }
-}
-
-.fc-send-balance {
-  font-size: clamp(11px, 3.4cqw, 14px);
-  font-weight: 500;
+.fc-send-amount-decimals {
   color: var(--color-text-tertiary);
-}
-.fc-send-balance-num {
-  color: var(--color-text-primary);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .fc-send-action {
-  background: color-mix(in srgb, #1a1244 70%, var(--color-accent));
-  color: #ffffff;
-  border: 1px solid color-mix(in srgb, #ffffff 12%, transparent);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
   border-radius: clamp(10px, 3.5cqw, 14px);
   display: flex;
   align-items: center;
@@ -543,9 +536,9 @@ body {
 }
 
 /* ───── Swap card ─────
-   Two stacked recessed panels showing a USDC ↔ XLM conversion, with a
-   small swap-arrow button overlapping the divider between them. The
-   amount in each panel cycles through preset pairs. */
+   "You sell" / "You receive" panels with the amount on the left and a
+   currency pill on the right, plus a footer row showing the USD value
+   and account balance. A chevron-down sits in the divider between them. */
 .fc-swap-screen {
   container-type: inline-size;
   position: relative;
@@ -557,19 +550,49 @@ body {
   flex-direction: column;
   justify-content: center;
   padding: clamp(12px, 4.4cqw, 18px);
-  gap: clamp(8px, 2.8cqw, 12px);
+  /* 4px gap on each side of the zero-height divider = 8px between panels */
+  gap: 4px;
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 .fc-swap-panel {
   background: var(--color-bg-elevated); /* Gray 2 */
   border: 1px solid var(--color-border);
   border-radius: clamp(14px, 4.4cqw, 20px);
-  padding: clamp(14px, 4.8cqw, 22px);
+  padding: clamp(20px, 6.4cqw, 28px) clamp(14px, 4.8cqw, 20px);
+  min-height: clamp(120px, 38cqw, 170px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: clamp(12px, 3.6cqw, 18px);
+  color: var(--color-text-primary);
+}
+.fc-swap-panel-label {
+  font-size: clamp(12px, 3.6cqw, 14px);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--color-text-tertiary);
+  line-height: 1;
+}
+.fc-swap-panel-main {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: clamp(10px, 3.4cqw, 14px);
-  color: var(--color-text-primary);
+  gap: clamp(8px, 3cqw, 12px);
+}
+.fc-swap-panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: clamp(11px, 3.4cqw, 13px);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.fc-swap-panel-usd {
+  color: var(--color-text-tertiary);
+  display: inline-flex;
+  align-items: baseline;
 }
 .fc-swap-currency {
   flex-shrink: 0;
@@ -595,7 +618,7 @@ body {
   color: var(--color-text-secondary);
 }
 .fc-swap-amount {
-  font-size: clamp(28px, 12cqw, 48px);
+  font-size: clamp(28px, 11cqw, 44px);
   font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1;
@@ -603,18 +626,6 @@ body {
   font-variant-numeric: tabular-nums;
   display: inline-flex;
   align-items: baseline;
-}
-.fc-swap-amount-symbol {
-  color: var(--color-text-primary);
-  margin-right: 0.14em;
-}
-.fc-swap-amount-suffix {
-  margin-left: 0.3em;
-  font-size: 0.42em;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--color-text-tertiary);
-  align-self: center;
 }
 .fc-swap-divider {
   position: relative;
@@ -633,7 +644,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-accent-light);
+  color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
 }
 .fc-swap-divider-icon {
@@ -642,9 +653,9 @@ body {
 }
 
 /* ───── Discover card ─────
-   A single horizontal row of enlarged category pills scrolling as a
+   A vertical stack of enlarged category pills scrolling downward as a
    seamless marquee. One pill carries the Lilac highlight so the
-   active filter reads even while the row moves. */
+   active filter reads even while the column moves. */
 .fc-discover {
   container-type: inline-size;
   position: absolute;
@@ -652,44 +663,45 @@ body {
   overflow: hidden;
   background: var(--color-bg-hover);
   display: flex;
-  align-items: center;
+  justify-content: center;
   mask-image: linear-gradient(
-    to right,
+    to bottom,
     transparent 0,
-    #000 8%,
-    #000 92%,
+    #000 10%,
+    #000 90%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
-    to right,
+    to bottom,
     transparent 0,
-    #000 8%,
-    #000 92%,
+    #000 10%,
+    #000 90%,
     transparent 100%
   );
 }
 .fc-discover-track {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: clamp(20px, 7cqw, 32px);
-  width: max-content;
-  animation: fc-discover-scroll 36s linear infinite;
+  gap: clamp(10px, 3.4cqw, 16px);
+  height: max-content;
+  animation: fc-discover-scroll 28s linear infinite;
   will-change: transform;
 }
 @keyframes fc-discover-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
 }
 .fc-discover-pill {
   display: inline-flex;
   align-items: center;
-  gap: clamp(14px, 5cqw, 22px);
-  padding: clamp(24px, 8cqw, 36px) clamp(32px, 11cqw, 52px);
+  gap: clamp(10px, 3.2cqw, 14px);
+  padding: clamp(12px, 4cqw, 16px) clamp(20px, 6.4cqw, 28px);
   border-radius: 999px;
   border: 1.5px solid var(--color-border-hover);
   background: transparent;
   color: var(--color-text-secondary);
-  font-size: clamp(40px, 14cqw, 64px);
+  font-size: clamp(20px, 6.4cqw, 28px);
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1;
@@ -701,14 +713,14 @@ body {
     border-color 0.4s var(--ease-out);
 }
 .fc-discover-pill-icon {
-  width: clamp(32px, 11cqw, 48px);
-  height: clamp(32px, 11cqw, 48px);
+  width: clamp(18px, 5.6cqw, 24px);
+  height: clamp(18px, 5.6cqw, 24px);
   flex-shrink: 0;
 }
 .fc-discover-pill--active {
-  background: var(--color-accent); /* Lilac 9 */
-  border-color: var(--color-accent);
-  color: #ffffff;
+  background: var(--fc-pill-bg, var(--color-accent));
+  border-color: var(--fc-pill-bg, var(--color-accent));
+  color: var(--fc-pill-fg, #ffffff);
 }
 
 /* ───── History card ───── */
@@ -739,12 +751,22 @@ body {
   mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 70%, transparent 100%);
   -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 8%, #000 70%, transparent 100%);
 }
+.fc-feed-heading {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
 /* Stack fills the padded box; rows are absolutely positioned within it. */
 .fc-feed-stack {
   position: relative;
   width: 100%;
   height: calc(var(--fc-slot) * 4);
-  margin-top: 32px;
+  margin-top: 16px;
 }
 .fc-feed-row {
   position: absolute;
@@ -853,19 +875,30 @@ body {
   align-items: center;
   justify-content: center;
   padding: clamp(16px, 6cqw, 26px);
-  gap: clamp(8px, 2.6cqw, 12px);
+  gap: clamp(18px, 5.6cqw, 26px);
   background: var(--color-bg-hover); /* Gray 4 — matches other cards */
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 .fc-earn-step {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: clamp(8px, 2.6cqw, 12px);
-  background: color-mix(in srgb, #1a1244 70%, var(--color-accent));
+  background: #ffffff;
   border-radius: 999px;
   padding: clamp(6px, 2cqw, 9px) clamp(16px, 5.4cqw, 22px) clamp(6px, 2cqw, 9px) clamp(6px, 2cqw, 9px);
-  color: #ffffff;
+  color: #161616;
   transition: background-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+.fc-earn-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0;
+  height: clamp(18px, 5.6cqw, 26px);
+  border-left: 4px dotted var(--color-accent);
+  transform: translateX(-50%);
 }
 .fc-earn-step-check {
   width: clamp(24px, 8cqw, 32px);
@@ -875,8 +908,9 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  color: color-mix(in srgb, #1a1244 70%, var(--color-accent));
+  background: #c0c0c0; /* Light gray while loading */
+  color: #ffffff;
+  transition: background-color 0.4s var(--ease-out);
 }
 .fc-earn-step-check svg {
   width: 60%;
@@ -887,7 +921,7 @@ body {
   width: 56%;
   height: 56%;
   border-radius: 999px;
-  border: 2px solid color-mix(in srgb, #1a1244 70%, var(--color-accent));
+  border: 2px solid #ffffff;
   border-top-color: transparent;
   display: block;
   animation: fc-earn-spin 0.8s linear infinite;
@@ -899,11 +933,11 @@ body {
   font-size: clamp(16px, 5.2cqw, 22px);
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: #ffffff;
+  color: #161616;
   white-space: nowrap;
 }
-.fc-earn-step--done {
-  background: color-mix(in srgb, #1a1244 55%, var(--color-accent));
+.fc-earn-step--done .fc-earn-step-check {
+  background: #22c55e; /* green */
 }
 
 /* ───── Collectibles card ───── */
@@ -949,31 +983,27 @@ body {
    grid still reads correctly even when animations are paused (off-screen)
    or fill-mode hasn't applied the 0% keyframe yet. The `animation-fill-mode:
    both` ensures the 0% keyframes also reapply once the animation begins. */
+.fc-collectible-tile {
+  background: #333333; /* Gray, one step above the card surface */
+  --fc-collectible-icon-color: #5c5c5c;
+}
 .fc-collectible-tile--sky {
-  background: #2c4a6b;
-  --fc-collectible-icon-color: #b8d8f0;
   transform: translate(0, 0) scale(var(--fc-collectible-scale));
   border-radius: calc(16px / var(--fc-collectible-scale));
   z-index: 4;
   animation: fc-collectible-focus-sky 8s var(--ease-in-out) infinite both;
 }
 .fc-collectible-tile--plum {
-  background: #4a3470;
-  --fc-collectible-icon-color: #d4b8f0;
   transform: translate(calc(100% + var(--fc-collectible-gap)), 0) scale(1);
   z-index: 1;
   animation: fc-collectible-focus-plum 8s var(--ease-in-out) infinite both;
 }
 .fc-collectible-tile--moss {
-  background: #2e5d3e;
-  --fc-collectible-icon-color: #b0e4c0;
   transform: translate(0, calc(100% + var(--fc-collectible-gap))) scale(1);
   z-index: 1;
   animation: fc-collectible-focus-moss 8s var(--ease-in-out) infinite both;
 }
 .fc-collectible-tile--clay {
-  background: #6b3a24;
-  --fc-collectible-icon-color: #f0b890;
   transform: translate(
     calc(100% + var(--fc-collectible-gap)),
     calc(100% + var(--fc-collectible-gap))
@@ -1037,13 +1067,45 @@ body {
   border: 1px solid var(--color-border);
   border-radius: clamp(12px, 4cqw, 18px);
   padding: clamp(10px, 3.4cqw, 14px) clamp(12px, 4cqw, 16px);
+  opacity: 0.5;
+  transform-origin: center center;
+  transition:
+    opacity 0.4s var(--ease-out),
+    transform 0.4s var(--ease-out);
+}
+.fc-wallet-row--selected {
+  opacity: 1;
+  transform: scale(1.1);
 }
 .fc-wallet-row-avatar {
+  position: relative;
   width: clamp(34px, 11cqw, 44px);
   height: clamp(34px, 11cqw, 44px);
   flex-shrink: 0;
   border-radius: 999px;
+  display: block;
+}
+.fc-wallet-row-avatar > svg {
+  border-radius: 999px;
   overflow: hidden;
+}
+.fc-wallet-row-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: clamp(14px, 4.6cqw, 18px);
+  height: clamp(14px, 4.6cqw, 18px);
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-bg-elevated);
+}
+.fc-wallet-row-badge svg {
+  width: 70%;
+  height: 70%;
   display: block;
 }
 .fc-wallet-row-avatar svg {
@@ -1194,7 +1256,6 @@ body {
 
 /* Reduced motion — pause loops, keep static layouts */
 @media (prefers-reduced-motion: reduce) {
-  .fc-send-amount-caret,
   .fc-collectible-tile,
   .fc-discover-track,
   .fc-earn-step-spinner,

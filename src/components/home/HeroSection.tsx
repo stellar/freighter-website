@@ -124,7 +124,7 @@ export function HeroSection() {
         variants={fadeSlideUp}
         initial="hidden"
         animate="visible"
-        className="relative mx-auto h-[100vh] min-h-[600px] max-h-[75vh] w-full overflow-hidden rounded-[24px] bg-[#6E56CF]"
+        className="relative mx-auto h-[100vh] min-h-[600px] max-h-[75vh] w-full overflow-hidden rounded-[24px] bg-[#7B68FF]"
       >
         <IridescenceBackground />
         <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(180deg,rgba(9,9,11,0.04),rgba(9,9,11,0.2))]" />

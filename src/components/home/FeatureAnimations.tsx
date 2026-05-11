@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ComponentType, type CSSProperties, type ReactNode } from "react";
 import Image from "next/image";
 import {
   ArrowDownBold,
   BridgeBold,
   CaretDownBold,
   ChartLineUpBold,
-  CheckBold,
   CheckCircleBold,
   CurrencyDollarBold,
   GameControllerBold,
@@ -79,22 +78,21 @@ function SendStage() {
   return (
     <div className="fc-send-screen" aria-label="Choosing send amount">
       <div className="fc-send-panel" aria-hidden="true">
-        <div className="fc-send-currency">
-          <UsdcIcon className="fc-send-currency-icon" />
-          <span className="fc-send-currency-code">USDC</span>
-          <CaretDownBold size={14} className="fc-send-currency-caret" />
+        <div className="fc-send-recipient">
+          <span className="fc-send-recipient-label">To:</span>
+          <span className="fc-send-recipient-address">G80FJ...8HPOD</span>
         </div>
 
         <div className="fc-send-amount">
           <span className="fc-send-amount-symbol">$</span>
-          <span className="fc-send-amount-highlight">
-            <SlidingNumber number={amount} className="fc-send-amount-num" />
-            <span className="fc-send-amount-caret" />
-          </span>
+          <SlidingNumber number={amount} className="fc-send-amount-num" />
+          <span className="fc-send-amount-decimals">.00</span>
         </div>
 
-        <div className="fc-send-balance">
-          Balance: <span className="fc-send-balance-num">$4,921.22</span>
+        <div className="fc-send-currency">
+          <UsdcIcon className="fc-send-currency-icon" />
+          <span className="fc-send-currency-code">USDC</span>
+          <CaretDownBold size={14} className="fc-send-currency-caret" />
         </div>
       </div>
 
@@ -109,33 +107,14 @@ function SendStage() {
        them. Cycles through preset USDC ↔ XLM pairs.
    ════════════════════════════════════════ */
 
-const SWAP_PAIRS = [
-  { usdc: 10, xlm: 25.64 },
-  { usdc: 25, xlm: 64.1 },
-  { usdc: 50, xlm: 128.2 },
-  { usdc: 100, xlm: 256.41 },
-] as const;
+const XLM_TO_USD = 0.39;
 
-function SwapArrowsIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="none">
-      <path
-        d="M8 3 V19 M8 19 L4.5 15.5 M8 19 L11.5 15.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M16 21 V5 M16 5 L12.5 8.5 M16 5 L19.5 8.5"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const SWAP_PAIRS = [
+  { xlm: 10, usdc: 3.9 },
+  { xlm: 25, usdc: 9.75 },
+  { xlm: 50, usdc: 19.5 },
+  { xlm: 100, usdc: 39 },
+] as const;
 
 function SwapStage() {
   const [index, setIndex] = useState(0);
@@ -156,32 +135,46 @@ function SwapStage() {
   return (
     <div className="fc-swap-screen" aria-label="Swapping currencies">
       <div className="fc-swap-panel" aria-hidden="true">
-        <div className="fc-swap-amount">
-          <span className="fc-swap-amount-symbol">$</span>
-          <SlidingNumber number={pair.usdc} />
+        <div className="fc-swap-panel-label">You sell</div>
+        <div className="fc-swap-panel-main">
+          <div className="fc-swap-amount">
+            <SlidingNumber number={pair.xlm} />
+          </div>
+          <div className="fc-swap-currency">
+            <XlmIcon className="fc-swap-currency-icon" />
+            <span className="fc-swap-currency-code">XLM</span>
+            <CaretDownBold size={12} className="fc-swap-currency-caret" />
+          </div>
         </div>
-        <div className="fc-swap-currency">
-          <UsdcIcon className="fc-swap-currency-icon" />
-          <span className="fc-swap-currency-code">USDC</span>
-          <CaretDownBold size={12} className="fc-swap-currency-caret" />
+        <div className="fc-swap-panel-footer">
+          <span className="fc-swap-panel-usd">
+            $<SlidingNumber number={pair.xlm * XLM_TO_USD} decimalPlaces={2} />
+          </span>
         </div>
       </div>
 
       <div className="fc-swap-divider" aria-hidden="true">
         <div className="fc-swap-divider-button">
-          <SwapArrowsIcon className="fc-swap-divider-icon" />
+          <CaretDownBold className="fc-swap-divider-icon" />
         </div>
       </div>
 
       <div className="fc-swap-panel" aria-hidden="true">
-        <div className="fc-swap-amount">
-          <SlidingNumber number={pair.xlm} decimalPlaces={2} />
-          <span className="fc-swap-amount-suffix">XLM</span>
+        <div className="fc-swap-panel-label">You receive</div>
+        <div className="fc-swap-panel-main">
+          <div className="fc-swap-amount">
+            <SlidingNumber number={pair.usdc} decimalPlaces={2} />
+          </div>
+          <div className="fc-swap-currency">
+            <UsdcIcon className="fc-swap-currency-icon" />
+            <span className="fc-swap-currency-code">USDC</span>
+            <CaretDownBold size={12} className="fc-swap-currency-caret" />
+          </div>
         </div>
-        <div className="fc-swap-currency">
-          <XlmIcon className="fc-swap-currency-icon" />
-          <span className="fc-swap-currency-code">XLM</span>
-          <CaretDownBold size={12} className="fc-swap-currency-caret" />
+        <div className="fc-swap-panel-footer">
+          <span className="fc-swap-panel-usd">
+            $<SlidingNumber number={pair.usdc} decimalPlaces={2} />
+          </span>
         </div>
       </div>
     </div>
@@ -220,13 +213,13 @@ function ArstCoinFace() {
    ════════════════════════════════════════ */
 
 const DISCOVER_CATEGORIES = [
-  { label: "DeFi", Icon: CurrencyDollarBold },
-  { label: "NFTs", Icon: ImageSquareBold },
-  { label: "Gaming", Icon: GameControllerBold },
-  { label: "Bridge", Icon: BridgeBold },
-  { label: "Yield", Icon: ChartLineUpBold },
-  { label: "Social", Icon: UsersThreeBold },
-  { label: "Tools", Icon: WrenchBold },
+  { label: "DeFi", Icon: CurrencyDollarBold, bg: "#3ecf8e", fg: "#0a3320" },
+  { label: "NFTs", Icon: ImageSquareBold, bg: "#ff5fa2", fg: "#ffffff" },
+  { label: "Gaming", Icon: GameControllerBold, bg: "#ff8a4c", fg: "#ffffff" },
+  { label: "Bridge", Icon: BridgeBold, bg: "#4cb9ff", fg: "#04263f" },
+  { label: "Yield", Icon: ChartLineUpBold, bg: "#ffd24f", fg: "#3a2a14" },
+  { label: "Social", Icon: UsersThreeBold, bg: "#ff7474", fg: "#ffffff" },
+  { label: "Tools", Icon: WrenchBold, bg: "#7B68FF", fg: "#ffffff" },
 ] as const;
 
 function DiscoverStage() {
@@ -274,7 +267,7 @@ function DiscoverStage() {
       aria-label="Browsing discover categories"
     >
       <div className="fc-discover-track" aria-hidden="true">
-        {doubled.map(({ label, Icon }, i) => (
+        {doubled.map(({ label, Icon, bg, fg }, i) => (
           <span
             key={i}
             data-idx={i}
@@ -282,6 +275,12 @@ function DiscoverStage() {
               pillRefs.current[i] = el;
             }}
             className={`fc-discover-pill${activeKeys.has(i) ? " fc-discover-pill--active" : ""}`}
+            style={
+              {
+                "--fc-pill-bg": bg,
+                "--fc-pill-fg": fg,
+              } as CSSProperties
+            }
           >
             <Icon className="fc-discover-pill-icon" />
             <span>{label}</span>
@@ -445,6 +444,7 @@ function HistoryRow({ item }: { item: HistoryItem }) {
 function HistoryStage() {
   return (
     <div className="fc-feed-wrap" aria-hidden="true">
+      <div className="fc-feed-heading">This Month</div>
       <div className="fc-feed-stack">
         {HISTORY_ITEMS.map((item, i) => (
           <div
@@ -593,21 +593,45 @@ const WALLETS = [
 ] as const;
 
 function WalletsStage() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      return;
+    }
+    const id = window.setInterval(() => {
+      setSelectedIndex((i) => (i + 1) % WALLETS.length);
+    }, 1800);
+    return () => window.clearInterval(id);
+  }, []);
+
   return (
     <div className="fc-wallet-stage" aria-label="Multiple wallets">
       <div className="fc-wallet-list" aria-hidden="true">
-        {WALLETS.map((w) => (
-          <div key={w.address} className="fc-wallet-row">
-            <span className="fc-wallet-row-avatar">
-              <WalletIdenticon cells={w.cells} on={w.on} off={w.off} />
-            </span>
-            <span className="fc-wallet-row-text">
-              <span className="fc-wallet-row-name">{w.name}</span>
-              <span className="fc-wallet-row-address">{w.address}</span>
-            </span>
-            <span className="fc-wallet-row-balance">{w.balance}</span>
-          </div>
-        ))}
+        {WALLETS.map((w, i) => {
+          const isSelected = i === selectedIndex;
+          return (
+            <div
+              key={w.address}
+              className={`fc-wallet-row${isSelected ? " fc-wallet-row--selected" : ""}`}
+            >
+              <span className="fc-wallet-row-avatar">
+                <WalletIdenticon cells={w.cells} on={w.on} off={w.off} />
+                {isSelected && (
+                  <span className="fc-wallet-row-badge">
+                    <ThickCheck />
+                  </span>
+                )}
+              </span>
+              <span className="fc-wallet-row-text">
+                <span className="fc-wallet-row-name">{w.name}</span>
+                <span className="fc-wallet-row-address">{w.address}</span>
+              </span>
+              <span className="fc-wallet-row-balance">{w.balance}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -626,6 +650,20 @@ const DEPOSIT_STEPS = [
   { loading: "Selecting amount", done: "Amount: $500" },
   { loading: "Confirming", done: "Deposited" },
 ] as const;
+
+function ThickCheck() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 12.5 L10 17 L19 7.5"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function EarnStage() {
   // Counter advances 0 → DEPOSIT_STEPS.length, with one extra tick of
@@ -657,7 +695,7 @@ function EarnStage() {
           >
             <span className="fc-earn-step-check">
               {isDone ? (
-                <CheckBold />
+                <ThickCheck />
               ) : (
                 <span className="fc-earn-step-spinner" />
               )}

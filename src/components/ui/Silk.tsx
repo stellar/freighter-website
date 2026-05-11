@@ -95,7 +95,7 @@ function SilkPlane({
     () => ({
       uTime: new THREE.Uniform(0),
       uResolution: new THREE.Uniform(new THREE.Vector2(1, 1)),
-      uColor: new THREE.Uniform(hexToColor("#6E56CF")),
+      uColor: new THREE.Uniform(hexToColor("#7B68FF")),
       uSpeed: new THREE.Uniform(0),
       uScale: new THREE.Uniform(1),
       uRotation: new THREE.Uniform(0),
@@ -130,7 +130,7 @@ function SilkPlane({
 }
 
 export function Silk({
-  color = "#6E56CF",
+  color = "#7B68FF",
   speed = 0.42,
   scale = 1.85,
   rotation = -18,

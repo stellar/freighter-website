@@ -72,7 +72,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-bg-page text-text-primary font-sans">
         <script
           dangerouslySetInnerHTML={{
-            __html: `console.log("%c⚡ Freighter","font-size:24px;font-weight:bold;color:#6E56CF");console.log("%cYour everyday Stellar wallet — https://github.com/stellar/freighter","font-size:12px;color:#A0A0A0");`,
+            __html: `console.log("%c⚡ Freighter","font-size:24px;font-weight:bold;color:#7B68FF");console.log("%cYour everyday Stellar wallet — https://github.com/stellar/freighter","font-size:12px;color:#A0A0A0");`,
           }}
         />
         <MotionProvider>{children}</MotionProvider>
