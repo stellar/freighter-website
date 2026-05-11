@@ -11,6 +11,7 @@ import {
   Wallet,
   CaretLeft,
   CaretRight,
+  CaretDown,
   ArrowsDownUp,
   ArrowsClockwise,
   ArrowUp,
@@ -28,6 +29,11 @@ import {
   AppleLogo,
   AndroidLogo,
   TrendUp,
+  Bridge,
+  GameController,
+  UsersThree,
+  Wrench,
+  ChartLineUp,
   type IconProps,
 } from "@phosphor-icons/react";
 
@@ -49,6 +55,7 @@ export const DownloadSimpleBold = bold(DownloadSimple);
 export const WalletBold = bold(Wallet);
 export const CaretLeftBold = bold(CaretLeft);
 export const CaretRightBold = bold(CaretRight);
+export const CaretDownBold = bold(CaretDown);
 export const ArrowsDownUpBold = bold(ArrowsDownUp);
 export const ArrowsClockwiseBold = bold(ArrowsClockwise);
 export const ArrowUpBold = bold(ArrowUp);
@@ -66,3 +73,8 @@ export const PlusBold = bold(Plus);
 export const AppleLogoBold = bold(AppleLogo);
 export const AndroidLogoBold = bold(AndroidLogo);
 export const TrendUpBold = bold(TrendUp);
+export const BridgeBold = bold(Bridge);
+export const GameControllerBold = bold(GameController);
+export const UsersThreeBold = bold(UsersThree);
+export const WrenchBold = bold(Wrench);
+export const ChartLineUpBold = bold(ChartLineUp);

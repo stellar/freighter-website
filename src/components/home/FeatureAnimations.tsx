@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useState, type ComponentType, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import Image from "next/image";
 import {
   ArrowDownBold,
+  BridgeBold,
   CaretDownBold,
+  ChartLineUpBold,
   CheckCircleBold,
+  CurrencyDollarBold,
+  GameControllerBold,
   ImageSquareBold,
+  UsersThreeBold,
+  WrenchBold,
 } from "@/components/ui/PhosphorIcons";
 import { SlidingNumber } from "@/components/ui/sliding-number";
 
@@ -207,17 +213,78 @@ function ArstCoinFace() {
 }
 
 /* ════════════════════════════════════════
-   3. DISCOVER — browsing app cards
+   3. DISCOVER — pill toggles for browsing
+       categories. The active pill cycles through
+       the set to show the filter behaviour.
    ════════════════════════════════════════ */
 
-const DISCOVER_PANELS = ["top", "center", "bottom"] as const;
+const DISCOVER_CATEGORIES = [
+  { label: "DeFi", Icon: CurrencyDollarBold },
+  { label: "NFTs", Icon: ImageSquareBold },
+  { label: "Gaming", Icon: GameControllerBold },
+  { label: "Bridge", Icon: BridgeBold },
+  { label: "Yield", Icon: ChartLineUpBold },
+  { label: "Social", Icon: UsersThreeBold },
+  { label: "Tools", Icon: WrenchBold },
+] as const;
 
 function DiscoverStage() {
+  // Duplicate the category set so the marquee loop is seamless.
+  const doubled = [...DISCOVER_CATEGORIES, ...DISCOVER_CATEGORIES];
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pillRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const [activeKeys, setActiveKeys] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    const root = containerRef.current;
+    if (!root) {
+      return;
+    }
+    // A pill counts as "on screen" once it has fully crossed into the
+    // card; this prevents the half-clipped edge pills from looking
+    // half-coloured under the fade mask.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        setActiveKeys((prev) => {
+          const next = new Set(prev);
+          for (const entry of entries) {
+            const idx = Number((entry.target as HTMLElement).dataset.idx);
+            if (entry.intersectionRatio >= 0.85) {
+              next.add(idx);
+            } else {
+              next.delete(idx);
+            }
+          }
+          return next;
+        });
+      },
+      { root, threshold: [0, 0.85, 1] },
+    );
+    for (const pill of pillRefs.current) {
+      if (pill) observer.observe(pill);
+    }
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="fc-discover-apps" aria-label="Browsing discover cards">
-      <div className="fc-discover-panel-track" aria-hidden="true">
-        {DISCOVER_PANELS.map((panel) => (
-          <span key={panel} className={`fc-discover-panel fc-discover-panel--${panel}`} />
+    <div
+      ref={containerRef}
+      className="fc-discover"
+      aria-label="Browsing discover categories"
+    >
+      <div className="fc-discover-track" aria-hidden="true">
+        {doubled.map(({ label, Icon }, i) => (
+          <span
+            key={i}
+            data-idx={i}
+            ref={(el) => {
+              pillRefs.current[i] = el;
+            }}
+            className={`fc-discover-pill${activeKeys.has(i) ? " fc-discover-pill--active" : ""}`}
+          >
+            <Icon className="fc-discover-pill-icon" />
+            <span>{label}</span>
+          </span>
         ))}
       </div>
     </div>
@@ -495,88 +562,83 @@ function WalletsStage() {
 }
 
 /* ════════════════════════════════════════
-   8. EARN — interest accruing on a balance
-   A circular progress ring sweeps to ~75% (three-quarters), while the
-   balance counts up from $0 → $349 to convey interest accumulating.
-   The "4% interest" tag fades in below the amount.
+   8. DEPOSIT — depositing from Coinbase
+   A Coinbase source row at the top connects to a Freighter destination
+   row at the bottom via a dashed pipeline. A small "$" coin animates
+   down the pipeline while the destination amount counts up.
    ════════════════════════════════════════ */
 
-const EARN_ARC_FILL = 0.75;
+const DEPOSIT_AMOUNTS = [250, 500, 1000, 2500] as const;
+
+function CoinbaseLogo() {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <circle cx="16" cy="16" r="16" fill="#0052FF" />
+      <path
+        d="M16 22.5a6.5 6.5 0 1 1 6.4-7.7h3.3a9.8 9.8 0 1 0 0 2.4h-3.3a6.5 6.5 0 0 1-6.4 5.3Z"
+        fill="#FFFFFF"
+      />
+    </svg>
+  );
+}
+
+function FreighterMark() {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true">
+      <circle cx="16" cy="16" r="16" fill="#6E56CF" />
+      <path
+        d="M9 12.5h14M9 16h14M9 19.5h10"
+        stroke="#FFFFFF"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 function EarnStage() {
-  const [display, setDisplay] = useState({ amount: 0, progress: 0, showRate: false });
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
-      const frame = requestAnimationFrame(() => {
-        setDisplay({ amount: 349, progress: 1, showRate: true });
-      });
-      return () => cancelAnimationFrame(frame);
+      return;
     }
-
-    let frame = 0;
-    const duration = 5600;
-    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-
-    const tick = () => {
-      const cycle = (performance.now() % duration) / duration;
-      const active = Math.min(1, Math.max(0, (cycle - 0.08) / 0.64));
-      const reset = cycle > 0.92 ? Math.max(0, 1 - (cycle - 0.92) / 0.08) : 1;
-      const progress = easeOutCubic(active) * reset;
-
-      setDisplay({
-        amount: Math.round(349 * progress),
-        progress,
-        showRate: cycle > 0.68 && cycle < 0.92,
-      });
-
-      frame = requestAnimationFrame(tick);
-    };
-
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % DEPOSIT_AMOUNTS.length);
+    }, 2400);
+    return () => window.clearInterval(id);
   }, []);
 
-  const arcOffset = 100 - display.progress * EARN_ARC_FILL * 100;
+  const amount = DEPOSIT_AMOUNTS[index];
 
   return (
-    <div className="fc-earn">
-      <svg
-        viewBox="0 0 200 200"
-        className="fc-earn-svg"
-        aria-hidden="true"
-      >
-        <circle
-          cx="100"
-          cy="100"
-          r="92"
-          fill="none"
-          stroke="rgba(255,255,255,0.08)"
-          strokeWidth="10"
-        />
-        <circle
-          className="fc-earn-arc"
-          cx="100"
-          cy="100"
-          r="92"
-          fill="none"
-          stroke="#5fffaf"
-          strokeWidth="10"
-          strokeLinecap="round"
-          pathLength="100"
-          transform="rotate(-90 100 100)"
-          style={{ strokeDasharray: 100, strokeDashoffset: arcOffset }}
-        />
-      </svg>
-      <div className="fc-earn-text">
-        <div className="fc-earn-amount" aria-label={`$${display.amount}`}>
-          <span aria-hidden="true">$</span>
-          <SlidingNumber number={display.amount} aria-hidden="true" />
-        </div>
-        <div className={`fc-earn-rate${display.showRate ? " fc-earn-rate--visible" : ""}`}>
-          Earned 13.2% APY*
-        </div>
+    <div className="fc-earn" aria-label="Depositing from Coinbase">
+      <div className="fc-earn-row" aria-hidden="true">
+        <span className="fc-earn-row-logo">
+          <CoinbaseLogo />
+        </span>
+        <span className="fc-earn-row-text">
+          <span className="fc-earn-row-name">Coinbase</span>
+          <span className="fc-earn-row-sub">Funding source</span>
+        </span>
+      </div>
+
+      <div className="fc-earn-pipe" aria-hidden="true">
+        <span className="fc-earn-pipe-line" />
+        <span className="fc-earn-pipe-coin">$</span>
+      </div>
+
+      <div className="fc-earn-row fc-earn-row--target" aria-hidden="true">
+        <span className="fc-earn-row-logo">
+          <FreighterMark />
+        </span>
+        <span className="fc-earn-row-text">
+          <span className="fc-earn-row-amount">
+            +$<SlidingNumber number={amount} />
+          </span>
+          <span className="fc-earn-row-sub">Deposited to Freighter</span>
+        </span>
       </div>
     </div>
   );

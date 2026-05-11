@@ -641,56 +641,74 @@ body {
   height: 55%;
 }
 
-/* ───── Discover card ───── */
-.fc-discover-apps {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: var(--color-bg-hover);
-}
-.fc-discover-panel-track {
+/* ───── Discover card ─────
+   A single horizontal row of enlarged category pills scrolling as a
+   seamless marquee. One pill carries the Lilac highlight so the
+   active filter reads even while the row moves. */
+.fc-discover {
+  container-type: inline-size;
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  background: var(--color-bg-hover);
+  display: flex;
+  align-items: center;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
 }
-.fc-discover-panel {
-  position: absolute;
-  left: 28px;
-  width: calc(100% - 56px);
-  height: 210px;
-  border-radius: 10px;
-  background: #191919;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.025),
-    0 20px 36px rgba(0, 0, 0, 0.12);
-  will-change: transform, opacity;
+.fc-discover-track {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(20px, 7cqw, 32px);
+  width: max-content;
+  animation: fc-discover-scroll 36s linear infinite;
+  will-change: transform;
 }
-.fc-discover-panel--top {
-  animation: fc-discover-shuffle-top 7.2s var(--ease-in-out) infinite;
+@keyframes fc-discover-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
-.fc-discover-panel--center {
-  animation: fc-discover-shuffle-center 7.2s var(--ease-in-out) infinite;
+.fc-discover-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(14px, 5cqw, 22px);
+  padding: clamp(24px, 8cqw, 36px) clamp(32px, 11cqw, 52px);
+  border-radius: 999px;
+  border: 1.5px solid var(--color-border-hover);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: clamp(40px, 14cqw, 64px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition:
+    background-color 0.4s var(--ease-out),
+    color 0.4s var(--ease-out),
+    border-color 0.4s var(--ease-out);
 }
-.fc-discover-panel--bottom {
-  animation: fc-discover-shuffle-bottom 7.2s var(--ease-in-out) infinite;
+.fc-discover-pill-icon {
+  width: clamp(32px, 11cqw, 48px);
+  height: clamp(32px, 11cqw, 48px);
+  flex-shrink: 0;
 }
-@keyframes fc-discover-shuffle-top {
-  0%, 18% { transform: translateY(-150px); opacity: 0.72; }
-  34%, 52% { transform: translateY(105px); opacity: 1; }
-  68%, 86% { transform: translateY(360px); opacity: 0.72; }
-  100% { transform: translateY(-150px); opacity: 0.72; }
-}
-@keyframes fc-discover-shuffle-center {
-  0%, 18% { transform: translateY(105px); opacity: 1; }
-  34%, 52% { transform: translateY(360px); opacity: 0.72; }
-  68%, 86% { transform: translateY(-150px); opacity: 0.72; }
-  100% { transform: translateY(105px); opacity: 1; }
-}
-@keyframes fc-discover-shuffle-bottom {
-  0%, 18% { transform: translateY(360px); opacity: 0.72; }
-  34%, 52% { transform: translateY(-150px); opacity: 0.72; }
-  68%, 86% { transform: translateY(105px); opacity: 1; }
-  100% { transform: translateY(360px); opacity: 0.72; }
+.fc-discover-pill--active {
+  background: var(--color-accent); /* Lilac 9 */
+  border-color: var(--color-accent);
+  color: #ffffff;
 }
 
 /* ───── History card ───── */
@@ -726,6 +744,7 @@ body {
   position: relative;
   width: 100%;
   height: calc(var(--fc-slot) * 4);
+  margin-top: 24px;
 }
 .fc-feed-row {
   position: absolute;
@@ -820,62 +839,117 @@ body {
   }
 }
 
-/* ───── Earn card ───── */
+/* ───── Deposit card ─────
+   Coinbase source row at the top, dashed pipeline in the middle, and
+   the Freighter destination row at the bottom. A small "$" coin
+   travels down the pipeline to convey the transfer. */
 .fc-earn {
+  container-type: inline-size;
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
-}
-.fc-earn-svg {
-  position: absolute;
-  inset: 0;
-  width: 72%;
-  height: 72%;
-  margin: auto;
-  filter: drop-shadow(0 0 14px rgba(95, 255, 175, 0.22));
-}
-.fc-earn-arc {
-  will-change: stroke-dashoffset;
-}
-.fc-earn-text {
-  position: absolute;
-  left: 50%;
-  top: 50%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  transform: translate(-50%, -50%);
-  z-index: 1;
+  justify-content: space-between;
+  padding: clamp(16px, 6cqw, 26px);
+  gap: clamp(6px, 2cqw, 10px);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
-.fc-earn-amount {
+.fc-earn-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 3.4cqw, 14px);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: clamp(12px, 4cqw, 18px);
+  padding: clamp(10px, 3.4cqw, 14px) clamp(12px, 4cqw, 16px);
+}
+.fc-earn-row-logo {
+  width: clamp(28px, 9.5cqw, 36px);
+  height: clamp(28px, 9.5cqw, 36px);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.fc-earn-row-logo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.fc-earn-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  line-height: 1.1;
+}
+.fc-earn-row-name {
+  font-size: clamp(14px, 4.4cqw, 17px);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--color-text-primary);
+}
+.fc-earn-row-amount {
+  font-size: clamp(16px, 5.2cqw, 22px);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  color: #5fffaf;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+}
+.fc-earn-row-sub {
+  font-size: clamp(11px, 3.4cqw, 13px);
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.01em;
+}
+
+.fc-earn-pipe {
+  position: relative;
+  flex: 1;
+  min-height: clamp(36px, 12cqw, 56px);
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+.fc-earn-pipe-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-image: linear-gradient(
+    180deg,
+    var(--color-border-hover) 50%,
+    transparent 50%
+  );
+  background-size: 2px 8px;
+  background-repeat: repeat-y;
+}
+.fc-earn-pipe-coin {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: clamp(22px, 7cqw, 28px);
+  height: clamp(22px, 7cqw, 28px);
+  border-radius: 999px;
+  background: #5fffaf;
+  color: #0a3320;
+  font-size: clamp(12px, 4cqw, 15px);
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 124px;
-  font-size: 40px;
-  font-weight: 500;
-  letter-spacing: -1.2px;
-  color: var(--fc-ink);
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-  text-align: center;
+  box-shadow: 0 4px 12px rgba(95, 255, 175, 0.32);
+  transform: translate(-50%, -50%);
+  animation: fc-earn-coin 2.4s var(--ease-in-out) infinite;
 }
-.fc-earn-rate {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  color: var(--fc-ink-3);
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 180ms ease;
-}
-.fc-earn-rate--visible {
-  opacity: 1;
+@keyframes fc-earn-coin {
+  0% { top: 0%; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
 }
 
 /* ───── Collectibles card ───── */
@@ -994,8 +1068,8 @@ body {
 }
 .fc-wallet-stack {
   position: relative;
-  width: min(82%, 260px);
-  height: 168px;
+  width: min(90%, 308px);
+  height: 200px;
   transform: translateY(4px);
 }
 .fc-wallet-card {
@@ -1009,7 +1083,7 @@ body {
   left: 4%;
   top: 0;
   width: 92%;
-  height: 120px;
+  height: 142px;
   background: #333333;
   opacity: 0.92;
   box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
@@ -1032,7 +1106,7 @@ body {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 132px;
+  height: 156px;
   background: #f7f7f7;
   border-radius: 12px;
   box-shadow:
@@ -1049,8 +1123,8 @@ body {
 .fc-wallet-avatar {
   left: 16px;
   top: 16px;
-  width: 52px;
-  height: 52px;
+  width: 60px;
+  height: 60px;
   border-radius: 999px;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -1063,7 +1137,7 @@ body {
 .fc-wallet-address {
   left: 16px;
   bottom: 16px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 650;
   line-height: 1;
   color: #969696;
@@ -1072,7 +1146,7 @@ body {
 .fc-wallet-balance {
   right: 16px;
   bottom: 16px;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   line-height: 1;
   color: #969696;
@@ -1210,8 +1284,9 @@ body {
 /* Reduced motion — pause loops, keep static layouts */
 @media (prefers-reduced-motion: reduce) {
   .fc-send-amount-caret,
-  .fc-discover-panel-track,
   .fc-collectible-tile,
+  .fc-discover-track,
+  .fc-earn-pipe-coin,
   .fc-marquee-a,
   .fc-marquee-b,
   .fc-marquee-c,
@@ -1230,7 +1305,6 @@ body {
     transform: translate(0, 0) scale(var(--fc-collectible-scale));
     z-index: 4;
   }
-  .fc-discover-panel-track,
   .fc-stagger > * {
     opacity: 1;
     transform: none;
