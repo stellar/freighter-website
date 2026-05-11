@@ -57,7 +57,7 @@ function XlmIcon({ className }: { className?: string }) {
        a separate Send button below.
    ════════════════════════════════════════ */
 
-const SEND_AMOUNTS = [100, 250, 500, 1000] as const;
+const SEND_AMOUNTS = [100, 250, 500, 750] as const;
 
 function SendStage() {
   const [index, setIndex] = useState(0);
@@ -67,10 +67,19 @@ function SendStage() {
     if (reduceMotion) {
       return;
     }
-    const id = window.setInterval(() => {
+    // Slower than Swap's 1800ms and offset by an initial delay so the
+    // two cards never tick in lock-step.
+    let intervalId: number | undefined;
+    const startId = window.setTimeout(() => {
       setIndex((i) => (i + 1) % SEND_AMOUNTS.length);
-    }, 1800);
-    return () => window.clearInterval(id);
+      intervalId = window.setInterval(() => {
+        setIndex((i) => (i + 1) % SEND_AMOUNTS.length);
+      }, 2800);
+    }, 1100);
+    return () => {
+      window.clearTimeout(startId);
+      if (intervalId !== undefined) window.clearInterval(intervalId);
+    };
   }, []);
 
   const amount = SEND_AMOUNTS[index];
@@ -223,69 +232,106 @@ const DISCOVER_CATEGORIES = [
 ] as const;
 
 function DiscoverStage() {
-  // Duplicate the category set so the marquee loop is seamless.
-  const doubled = [...DISCOVER_CATEGORIES, ...DISCOVER_CATEGORIES];
-  const containerRef = useRef<HTMLDivElement>(null);
+  // Triple the pill set so the carousel can loop infinitely: pills sit
+  // to the left of the active one (faded behind the mask) AND to the
+  // right of it at all times. When the active index reaches the third
+  // copy we silently snap back into the second copy — the visible
+  // viewport is identical so the swap is invisible.
+  const N = DISCOVER_CATEGORIES.length;
+  const items = [...DISCOVER_CATEGORIES, ...DISCOVER_CATEGORIES, ...DISCOVER_CATEGORIES];
+  const [activeIndex, setActiveIndex] = useState<number>(N);
+  const [transitionOn, setTransitionOn] = useState(true);
+  const trackRef = useRef<HTMLDivElement>(null);
   const pillRefs = useRef<Array<HTMLSpanElement | null>>([]);
-  const [activeKeys, setActiveKeys] = useState<Set<number>>(new Set());
+  const [trackOffset, setTrackOffset] = useState(0);
 
   useEffect(() => {
-    const root = containerRef.current;
-    if (!root) {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
       return;
     }
-    // A pill counts as "on screen" once it has fully crossed into the
-    // card; this prevents the half-clipped edge pills from looking
-    // half-coloured under the fade mask.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        setActiveKeys((prev) => {
-          const next = new Set(prev);
-          for (const entry of entries) {
-            const idx = Number((entry.target as HTMLElement).dataset.idx);
-            if (entry.intersectionRatio >= 0.85) {
-              next.add(idx);
-            } else {
-              next.delete(idx);
-            }
-          }
-          return next;
-        });
-      },
-      { root, threshold: [0, 0.85, 1] },
-    );
-    for (const pill of pillRefs.current) {
-      if (pill) observer.observe(pill);
-    }
-    return () => observer.disconnect();
+    const id = window.setInterval(() => {
+      setActiveIndex((i) => i + 1);
+    }, 2200);
+    return () => window.clearInterval(id);
   }, []);
 
+  // Anchor the active pill to the left of the visible track each time
+  // the selection advances. Measured after layout so pill widths are real.
+  useEffect(() => {
+    const track = trackRef.current;
+    const activePill = pillRefs.current[activeIndex];
+    if (!track || !activePill) {
+      return;
+    }
+    const paddingLeft = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+    setTrackOffset(paddingLeft - activePill.offsetLeft);
+  }, [activeIndex]);
+
+  // When the active pill has advanced into the third copy, wait for the
+  // in-flight transition to finish and then silently jump back into the
+  // second copy at the equivalent category — keeps the loop endless.
+  useEffect(() => {
+    if (activeIndex < 2 * N) {
+      return;
+    }
+    const t = window.setTimeout(() => {
+      setTransitionOn(false);
+      setActiveIndex((i) => i - N);
+      // Re-enable transitions two frames later so the jump itself
+      // doesn't animate but subsequent advances do.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setTransitionOn(true));
+      });
+    }, 650);
+    return () => window.clearTimeout(t);
+  }, [activeIndex, N]);
+
+  const realIndex = activeIndex % N;
+
   return (
-    <div
-      ref={containerRef}
-      className="fc-discover"
-      aria-label="Browsing discover categories"
-    >
-      <div className="fc-discover-track" aria-hidden="true">
-        {doubled.map(({ label, Icon, bg, fg }, i) => (
-          <span
-            key={i}
-            data-idx={i}
-            ref={(el) => {
-              pillRefs.current[i] = el;
-            }}
-            className={`fc-discover-pill${activeKeys.has(i) ? " fc-discover-pill--active" : ""}`}
-            style={
-              {
-                "--fc-pill-bg": bg,
-                "--fc-pill-fg": fg,
-              } as CSSProperties
-            }
-          >
-            <Icon className="fc-discover-pill-icon" />
-            <span>{label}</span>
-          </span>
-        ))}
+    <div className="fc-discover" aria-label="Browsing discover categories">
+      <div className="fc-discover-pills" aria-hidden="true">
+        <div
+          ref={trackRef}
+          className="fc-discover-pills-track"
+          style={{
+            transform: `translateX(${trackOffset}px)`,
+            transition: transitionOn ? undefined : "none",
+          }}
+        >
+          {items.map(({ label, Icon, bg, fg }, i) => {
+            const isActive = i === activeIndex;
+            return (
+              <span
+                key={i}
+                ref={(el) => {
+                  pillRefs.current[i] = el;
+                }}
+                className="fc-discover-pill"
+                data-active={isActive ? "" : undefined}
+                style={
+                  isActive
+                    ? ({ "--fc-pill-bg": bg, "--fc-pill-fg": fg } as CSSProperties)
+                    : undefined
+                }
+              >
+                <Icon className="fc-discover-pill-icon" />
+                <span>{label}</span>
+              </span>
+            );
+          })}
+        </div>
+      </div>
+
+      <div
+        key={realIndex}
+        className="fc-discover-rows"
+        aria-hidden="true"
+      >
+        <div className="fc-discover-row" />
+        <div className="fc-discover-row" />
+        <div className="fc-discover-row" />
       </div>
     </div>
   );
@@ -444,7 +490,7 @@ function HistoryRow({ item }: { item: HistoryItem }) {
 function HistoryStage() {
   return (
     <div className="fc-feed-wrap" aria-hidden="true">
-      <div className="fc-feed-heading">This Month</div>
+      <div className="fc-feed-heading">This month</div>
       <div className="fc-feed-stack">
         {HISTORY_ITEMS.map((item, i) => (
           <div
@@ -638,18 +684,20 @@ function WalletsStage() {
 }
 
 /* ════════════════════════════════════════
-   8. DEPOSIT — three pill-shaped steps in the
-       deposit flow (Connect, Select amount,
-       Deposit). Each step shows a white check
-       in a circle on the left. A subtle "active"
-       glow cycles through them.
+   8. DEPOSIT — single dashed pill that cycles
+       through deposit-flow states, surrounded
+       by concentric dashed rings.
    ════════════════════════════════════════ */
 
-const DEPOSIT_STEPS = [
-  { loading: "Coinbase Auth", done: "Connected" },
-  { loading: "Selecting amount", done: "Amount: $500" },
-  { loading: "Confirming", done: "Deposited" },
+const DEPOSIT_STATES = [
+  "Connecting",
+  "Selecting amount",
+  "Amount: $500",
+  "Confirming",
+  "Deposited",
 ] as const;
+
+const DEPOSIT_RING_COUNT = 6;
 
 function ThickCheck() {
   return (
@@ -666,46 +714,81 @@ function ThickCheck() {
 }
 
 function EarnStage() {
-  // Counter advances 0 → DEPOSIT_STEPS.length, with one extra tick of
-  // "all complete" before resetting. Each step shows a loader with its
-  // in-progress label, then transitions to a check with the done label.
-  const [completed, setCompleted] = useState(0);
+  const [stateIndex, setStateIndex] = useState(0);
+  const pillRef = useRef<HTMLDivElement>(null);
+  const [pillSize, setPillSize] = useState<{ width: number; height: number } | null>(null);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
-      setCompleted(DEPOSIT_STEPS.length);
       return;
     }
     const id = window.setInterval(() => {
-      setCompleted((c) => (c + 1) % (DEPOSIT_STEPS.length + 1));
-    }, 1300);
+      setStateIndex((i) => (i + 1) % DEPOSIT_STATES.length);
+    }, 1500);
     return () => window.clearInterval(id);
   }, []);
 
+  // Track the pill's actual rendered size so the surrounding rings can
+  // ease toward the pill's current width / height. Use `offsetWidth` /
+  // `offsetHeight` (includes padding + border) so the rings sit outside
+  // the pill's visible edge, not its content box — otherwise the first
+  // ring hugs the pill too tightly.
+  useEffect(() => {
+    const pill = pillRef.current;
+    if (!pill || typeof ResizeObserver === "undefined") {
+      return;
+    }
+    const measure = () => {
+      setPillSize({ width: pill.offsetWidth, height: pill.offsetHeight });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(pill);
+    measure();
+    return () => observer.disconnect();
+  }, []);
+
+  const isDone = stateIndex === DEPOSIT_STATES.length - 1;
+
   return (
     <div className="fc-earn" aria-label="Deposit flow">
-      {DEPOSIT_STEPS.map((step, i) => {
-        const isDone = i < completed;
-        return (
-          <div
-            key={i}
-            className={`fc-earn-step${isDone ? " fc-earn-step--done" : ""}`}
-            aria-hidden="true"
-          >
-            <span className="fc-earn-step-check">
-              {isDone ? (
-                <ThickCheck />
-              ) : (
-                <span className="fc-earn-step-spinner" />
-              )}
+      <div className="fc-earn-rings" aria-hidden="true">
+        {Array.from({ length: DEPOSIT_RING_COUNT }, (_, i) => {
+          // Skip the inner-most ring slot so the closest ring already
+          // sits two gap-widths out from the pill.
+          const step = i + 2;
+          // Each ring grows by a fixed pixel offset per step so the
+          // overall shape echoes the pill's aspect ratio.
+          const horizontalStep = 28;
+          const verticalStep = 22;
+          const style: CSSProperties = pillSize
+            ? {
+                width: `${pillSize.width + step * horizontalStep * 2}px`,
+                height: `${pillSize.height + step * verticalStep * 2}px`,
+                opacity: Math.max(0, 0.55 - step * 0.07),
+              }
+            : { opacity: 0 };
+          return <span key={i} className="fc-earn-ring" style={style} />;
+        })}
+      </div>
+      <div
+        ref={pillRef}
+        className={`fc-earn-pill${isDone ? " fc-earn-pill--done" : ""}`}
+        aria-hidden="true"
+      >
+        <span className="fc-earn-pill-leader">
+          {isDone ? (
+            <span className="fc-earn-pill-check">
+              <ThickCheck />
             </span>
-            <span className="fc-earn-step-label">
-              {isDone ? step.done : step.loading}
-            </span>
-          </div>
-        );
-      })}
+          ) : (
+            <span className="fc-earn-pill-spinner" />
+          )}
+        </span>
+        <span key={stateIndex} className="fc-earn-pill-text">
+          {DEPOSIT_STATES[stateIndex]}
+        </span>
+      </div>
     </div>
   );
 }

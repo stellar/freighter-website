@@ -48,6 +48,15 @@ function bold(Icon: React.ComponentType<IconProps>) {
   return BoldIcon;
 }
 
+// Wrapper components with fill weight baked in
+function fill(Icon: React.ComponentType<IconProps>) {
+  const FillIcon = (props: Omit<IconProps, "weight">) => (
+    <Icon weight="fill" {...props} />
+  );
+  FillIcon.displayName = `${Icon.displayName || "Icon"}Fill`;
+  return FillIcon;
+}
+
 export const PaperPlaneTiltBold = bold(PaperPlaneTilt);
 export const SwapBold = bold(Swap);
 export const CompassBold = bold(Compass);
@@ -82,3 +91,13 @@ export const WrenchBold = bold(Wrench);
 export const ChartLineUpBold = bold(ChartLineUp);
 export const LinkSimpleBold = bold(LinkSimple);
 export const CheckBold = bold(Check);
+
+// Filled variants used by the FeatureCarousel labels
+export const PaperPlaneTiltFill = fill(PaperPlaneTilt);
+export const SwapFill = fill(Swap);
+export const CompassFill = fill(Compass);
+export const ClockCounterClockwiseFill = fill(ClockCounterClockwise);
+export const DiamondFill = fill(Diamond);
+export const DownloadSimpleFill = fill(DownloadSimple);
+export const WalletFill = fill(Wallet);
+export const TrendUpFill = fill(TrendUp);
