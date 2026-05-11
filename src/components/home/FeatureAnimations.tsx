@@ -1,240 +1,183 @@
 "use client";
 
-import type { ComponentType, ReactNode } from "react";
+import { useEffect, useState, type ComponentType, type ReactNode } from "react";
 import Image from "next/image";
-import { QRCodeSVG } from "qrcode.react";
 import {
-  ArrowsClockwiseBold,
-  ArrowUpBold,
   ArrowDownBold,
+  CaretDownBold,
   CheckCircleBold,
-  ArrowSquareInBold,
+  ImageSquareBold,
 } from "@/components/ui/PhosphorIcons";
+import { SlidingNumber } from "@/components/ui/sliding-number";
 
 /* ───────────────────────────────────────────────────
    Shared frame — clean card with stage; title lives
    outside the card in the carousel layout.
    ─────────────────────────────────────────────────── */
 
-function FeatureCard({ children }: { children: ReactNode }) {
+function FeatureCard({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className="fc-card">
+    <div className={`fc-card${className ? ` ${className}` : ""}`}>
       <div className="fc-stage">{children}</div>
     </div>
   );
 }
 
+/* Token chips — USDC sits in a blue disc with the white $ mark; XLM
+   sits in a white disc with the black Stellar mark. Matches the
+   styling used by the History card's TokenTile. */
+
+function UsdcIcon({ className }: { className?: string }) {
+  return (
+    <span className={`fc-token-chip fc-token-chip--usdc${className ? ` ${className}` : ""}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/images/usdc-logo.svg" alt="" />
+    </span>
+  );
+}
+
+function XlmIcon({ className }: { className?: string }) {
+  return (
+    <span className={`fc-token-chip fc-token-chip--xlm${className ? ` ${className}` : ""}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/images/stellar-xlm-logo.png" alt="" />
+    </span>
+  );
+}
+
 /* ════════════════════════════════════════
-   1. SEND — paper plane + particles + amount carousel
+   1. SEND — gray frame with white panel, USDC
+       currency selector, cycling amount, and
+       a separate Send button below.
    ════════════════════════════════════════ */
 
-const SEND_AMOUNTS = ["25 XLM", "2,500 XLM", "100 USDC", "$50.00", "1,000 XLM", "420 USDC"];
+const SEND_AMOUNTS = [100, 250, 500, 1000] as const;
 
 function SendStage() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      return;
+    }
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % SEND_AMOUNTS.length);
+    }, 1800);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const amount = SEND_AMOUNTS[index];
+
   return (
-    <div className="relative w-full h-full">
-      <svg
-        viewBox="0 0 320 320"
-        className="absolute inset-0 w-full h-full"
-        aria-hidden="true"
-      >
-        {/* Trail particles — soft white puffs */}
-        {[0, 1, 2, 3].map((i) => (
-          <circle
-            key={i}
-            className="fc-particle"
-            cx={150 + (i % 2) * 20}
-            cy={170 + i * 4}
-            r="2.5"
-            fill="#ffffff"
-            opacity="0.7"
-            style={{ animationDelay: `${i * 0.4}s` }}
-          />
-        ))}
-
-        {/* Plane body — friendly, white, with rounded corners and a soft
-            drop shadow underneath */}
-        <g className="fc-plane">
-          {/* Soft floor shadow that bobs with the plane */}
-          <ellipse cx="160" cy="172" rx="38" ry="5" fill="#000000" opacity="0.18" />
-
-          {/* Outer body with rounded joins */}
-          <path
-            d="M160 64 L198 156 L160 138 L122 156 Z"
-            fill="#ffffff"
-            stroke="#ffffff"
-            strokeWidth="6"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-          />
-          {/* Right wing — a touch darker for dimension */}
-          <path
-            d="M160 64 L198 156 L160 138 Z"
-            fill="#000000"
-            opacity="0.06"
-          />
-          {/* Center fold — soft gray line */}
-          <path
-            d="M160 76 L160 134"
-            stroke="#cfd2dc"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
-        </g>
-      </svg>
-
-      {/* Amount carousel + caption */}
-      <div className="absolute left-0 right-0 bottom-[66px] flex flex-col items-center">
-        <div className="relative h-[46px] w-full overflow-hidden">
-          {SEND_AMOUNTS.map((amt, i) => (
-            <span
-              key={amt}
-              className="fc-amount absolute inset-0 flex items-center justify-center text-[32px] font-medium leading-none"
-              style={{ animationDelay: `${i * 1.4}s`, color: "#4f8cff" }}
-            >
-              {amt}
-            </span>
-          ))}
+    <div className="fc-send-screen" aria-label="Choosing send amount">
+      <div className="fc-send-panel" aria-hidden="true">
+        <div className="fc-send-currency">
+          <UsdcIcon className="fc-send-currency-icon" />
+          <span className="fc-send-currency-code">USDC</span>
+          <CaretDownBold size={14} className="fc-send-currency-caret" />
         </div>
-        <span className="fc-mono-cap mt-2">SENDING</span>
+
+        <div className="fc-send-amount">
+          <span className="fc-send-amount-symbol">$</span>
+          <span className="fc-send-amount-highlight">
+            <SlidingNumber number={amount} className="fc-send-amount-num" />
+            <span className="fc-send-amount-caret" />
+          </span>
+        </div>
+
+        <div className="fc-send-balance">
+          Balance: <span className="fc-send-balance-num">$4,921.22</span>
+        </div>
       </div>
+
+      <div className="fc-send-action" aria-hidden="true">Send</div>
     </div>
   );
 }
 
 /* ════════════════════════════════════════
-   2. SWAP — 3D coin flip with real token logos
+   2. SWAP — two stacked currency panels with
+       a small swap-indicator circle between
+       them. Cycles through preset USDC ↔ XLM pairs.
    ════════════════════════════════════════ */
 
-/* Each coin face is a complete circular SVG with its own radial face gradient,
-   darker outer rim, embossed iconography, and a specular gloss overlay. The
-   stage div is just a placement layer — the SVG owns the 3D look. */
+const SWAP_PAIRS = [
+  { usdc: 10, xlm: 25.64 },
+  { usdc: 25, xlm: 64.1 },
+  { usdc: 50, xlm: 128.2 },
+  { usdc: 100, xlm: 256.41 },
+] as const;
 
-function XlmCoinFace() {
+function SwapArrowsIcon({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 100 100" aria-hidden="true">
-      <defs>
-        <radialGradient id="fc-xlm-face" cx="35%" cy="28%" r="80%">
-          <stop offset="0%"   stopColor="#fbfbfc" />
-          <stop offset="55%"  stopColor="#d6d8de" />
-          <stop offset="100%" stopColor="#9da0aa" />
-        </radialGradient>
-        <radialGradient id="fc-xlm-gloss" cx="35%" cy="20%" r="55%">
-          <stop offset="0%"   stopColor="#ffffff" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-        </radialGradient>
-        {/* A subtle inner bevel that pushes the coin's edge into the rim */}
-        <radialGradient id="fc-xlm-bevel" cx="50%" cy="50%" r="50%">
-          <stop offset="86%" stopColor="#ffffff" stopOpacity="0" />
-          <stop offset="94%" stopColor="#ffffff" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#000000" stopOpacity="0.25" />
-        </radialGradient>
-      </defs>
-
-      {/* Outer rim */}
-      <circle cx="50" cy="50" r="50" fill="#a4a7b1" />
-      {/* Slight inner bevel between rim and face */}
-      <circle cx="50" cy="50" r="50" fill="url(#fc-xlm-bevel)" />
-      {/* Inner face */}
-      <circle cx="50" cy="50" r="45" fill="url(#fc-xlm-face)" />
-
-      {/* Real Stellar mark — clipped to the inner face circle so the logo
-          can extend right up to the coin's bevel without spilling onto the
-          rim. */}
-      <defs>
-        <clipPath id="fc-xlm-clip">
-          <circle cx="50" cy="50" r="45" />
-        </clipPath>
-      </defs>
-      <g clipPath="url(#fc-xlm-clip)">
-        <image
-          href="/images/stellar-xlm-logo.png"
-          x="25"
-          y="25"
-          width="50"
-          height="50"
-          preserveAspectRatio="xMidYMid meet"
-        />
-      </g>
-
-      {/* Glossy specular highlight on top-left */}
-      <circle cx="50" cy="50" r="45" fill="url(#fc-xlm-gloss)" />
-    </svg>
-  );
-}
-
-function UsdcCoinFace() {
-  return (
-    <svg viewBox="0 0 100 100" aria-hidden="true">
-      <defs>
-        <radialGradient id="fc-usdc-face" cx="35%" cy="28%" r="80%">
-          <stop offset="0%"   stopColor="#7fc3ee" />
-          <stop offset="55%"  stopColor="#2890e0" />
-          <stop offset="100%" stopColor="#1a5f9b" />
-        </radialGradient>
-        <radialGradient id="fc-usdc-gloss" cx="35%" cy="20%" r="55%">
-          <stop offset="0%"   stopColor="#ffffff" stopOpacity="0.5" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-        </radialGradient>
-        <radialGradient id="fc-usdc-bevel" cx="50%" cy="50%" r="50%">
-          <stop offset="86%" stopColor="#ffffff" stopOpacity="0" />
-          <stop offset="94%" stopColor="#ffffff" stopOpacity="0.32" />
-          <stop offset="100%" stopColor="#000000" stopOpacity="0.3" />
-        </radialGradient>
-      </defs>
-
-      {/* Outer rim — slightly darker than the face */}
-      <circle cx="50" cy="50" r="50" fill="#1d6cb0" />
-      <circle cx="50" cy="50" r="50" fill="url(#fc-usdc-bevel)" />
-      {/* Inner face */}
-      <circle cx="50" cy="50" r="45" fill="url(#fc-usdc-face)" />
-
-      {/* USDC mark — the SVG ships pre-filled white, so it can be dropped
-          straight onto the blue face without any luminance trickery. */}
-      <image
-        href="/images/usdc-logo.svg"
-        x="18"
-        y="18"
-        width="64"
-        height="64"
-        preserveAspectRatio="xMidYMid meet"
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true" fill="none">
+      <path
+        d="M8 3 V19 M8 19 L4.5 15.5 M8 19 L11.5 15.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
-
-      <circle cx="50" cy="50" r="45" fill="url(#fc-usdc-gloss)" />
+      <path
+        d="M16 21 V5 M16 5 L12.5 8.5 M16 5 L19.5 8.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
-function EurocCoinFace() {
+function SwapStage() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      return;
+    }
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % SWAP_PAIRS.length);
+    }, 1800);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const pair = SWAP_PAIRS[index];
+
   return (
-    <svg viewBox="0 0 100 100" aria-hidden="true">
-      <defs>
-        <radialGradient id="fc-euroc-face" cx="35%" cy="28%" r="80%">
-          <stop offset="0%" stopColor="#a9b8ff" />
-          <stop offset="58%" stopColor="#637cff" />
-          <stop offset="100%" stopColor="#283c9f" />
-        </radialGradient>
-        <radialGradient id="fc-euroc-gloss" cx="35%" cy="20%" r="55%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.48" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle cx="50" cy="50" r="50" fill="#26358f" />
-      <circle cx="50" cy="50" r="45" fill="url(#fc-euroc-face)" />
-      <circle cx="50" cy="50" r="34" fill="none" stroke="#ffffff" strokeOpacity="0.82" strokeWidth="4" />
-      <text
-        x="50"
-        y="62"
-        textAnchor="middle"
-        fontSize="44"
-        fontWeight="800"
-        fill="#ffffff"
-        fontFamily="Inter, system-ui, sans-serif"
-      >
-        €
-      </text>
-      <circle cx="50" cy="50" r="45" fill="url(#fc-euroc-gloss)" />
-    </svg>
+    <div className="fc-swap-screen" aria-label="Swapping currencies">
+      <div className="fc-swap-panel" aria-hidden="true">
+        <div className="fc-swap-amount">
+          <span className="fc-swap-amount-symbol">$</span>
+          <SlidingNumber number={pair.usdc} />
+        </div>
+        <div className="fc-swap-currency">
+          <UsdcIcon className="fc-swap-currency-icon" />
+          <span className="fc-swap-currency-code">USDC</span>
+          <CaretDownBold size={12} className="fc-swap-currency-caret" />
+        </div>
+      </div>
+
+      <div className="fc-swap-divider" aria-hidden="true">
+        <div className="fc-swap-divider-button">
+          <SwapArrowsIcon className="fc-swap-divider-icon" />
+        </div>
+      </div>
+
+      <div className="fc-swap-panel" aria-hidden="true">
+        <div className="fc-swap-amount">
+          <SlidingNumber number={pair.xlm} decimalPlaces={2} />
+          <span className="fc-swap-amount-suffix">XLM</span>
+        </div>
+        <div className="fc-swap-currency">
+          <XlmIcon className="fc-swap-currency-icon" />
+          <span className="fc-swap-currency-code">XLM</span>
+          <CaretDownBold size={12} className="fc-swap-currency-caret" />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -263,128 +206,19 @@ function ArstCoinFace() {
   );
 }
 
-function SwapStage() {
-  // Stack of thin disks at staggered Z values — when the coin rotates past
-  // 90° the user sees the edges of these disks lined up, which reads as the
-  // coin's metallic rim.
-  const rimSlices = [-3, -1.5, 0, 1.5, 3];
-
-  return (
-    <div className="fc-coin-stage flex flex-col items-center justify-center w-full h-full">
-      <div className="fc-coin">
-        {rimSlices.map((z) => (
-          <div
-            key={z}
-            className="fc-coin-rim"
-            style={{ transform: `translateZ(${z}px)` }}
-          />
-        ))}
-        <div className="fc-coin-face fc-coin-front">
-          <XlmCoinFace />
-        </div>
-        <div className="fc-coin-face fc-coin-back">
-          <UsdcCoinFace />
-        </div>
-        <div className="fc-coin-face fc-coin-front fc-coin-euroc">
-          <EurocCoinFace />
-        </div>
-        <div className="fc-coin-face fc-coin-back fc-coin-arst">
-          <ArstCoinFace />
-        </div>
-      </div>
-      <div className="fc-coin-shadow" />
-      <span className="fc-swap-label mt-8" aria-label="Swapping token">
-        <span>XLM</span>
-        <span>USDC</span>
-        <span>EUROC</span>
-        <span>ARST</span>
-      </span>
-    </div>
-  );
-}
-
 /* ════════════════════════════════════════
-   3. DISCOVER — radar / sonar
+   3. DISCOVER — browsing app cards
    ════════════════════════════════════════ */
 
-const DISCOVER_APPS = [
-  {
-    name: "Blend",
-    category: "Lending",
-    icon: "/images/app-icon-1.png",
-    accent: "#5fffaf",
-  },
-  {
-    name: "StellarX",
-    category: "Trading",
-    icon: "/images/app-icon-4.png",
-    accent: "#b3a8ff",
-  },
-] as const;
-
-const DISCOVER_CHIPS = [
-  { name: "Soroban", icon: "/images/app-icon-3.png" },
-  { name: "USDC", icon: "/images/usdc-logo.png" },
-  { name: "Wallet", icon: "/images/freighter-icon.png" },
-];
+const DISCOVER_PANELS = ["top", "center", "bottom"] as const;
 
 function DiscoverStage() {
   return (
-    <div className="fc-discover-apps">
-      <div className="fc-discover-orbit" aria-hidden="true" />
-
-      <div className="fc-discover-search">
-        <span className="fc-discover-search-dot" />
-        <span>Search Stellar apps</span>
-      </div>
-
-      <div className="fc-discover-featured">
-        {DISCOVER_APPS.map((app, i) => (
-          <div
-            key={app.name}
-            className="fc-discover-tile"
-            style={{ animationDelay: `${i * 0.18}s` }}
-          >
-            <span
-              className="fc-discover-tile-glow"
-              style={{ background: app.accent }}
-              aria-hidden="true"
-            />
-            <Image
-              src={app.icon}
-              alt=""
-              width={44}
-              height={44}
-              className="fc-discover-icon"
-            />
-            <div className="min-w-0">
-              <div className="fc-discover-name">{app.name}</div>
-              <div className="fc-discover-category">{app.category}</div>
-            </div>
-          </div>
+    <div className="fc-discover-apps" aria-label="Browsing discover cards">
+      <div className="fc-discover-panel-track" aria-hidden="true">
+        {DISCOVER_PANELS.map((panel) => (
+          <span key={panel} className={`fc-discover-panel fc-discover-panel--${panel}`} />
         ))}
-      </div>
-
-      <div className="fc-discover-trending">
-        <div className="fc-discover-label">Trending</div>
-        <div className="fc-discover-chips">
-          {DISCOVER_CHIPS.map((chip, i) => (
-            <div
-              key={chip.name}
-              className="fc-discover-chip"
-              style={{ animationDelay: `${0.28 + i * 0.12}s` }}
-            >
-              <Image
-                src={chip.icon}
-                alt=""
-                width={22}
-                height={22}
-                className="fc-discover-chip-icon"
-              />
-              <span>{chip.name}</span>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
@@ -401,19 +235,19 @@ function TokenTile({
   background,
   letter,
 }: {
-  variant: "xlm" | "usdc" | "color";
+  variant: "xlm" | "usdc" | "arst" | "color";
   background?: string;
   letter?: string;
 }) {
-  const base = "w-[30px] h-[30px] shrink-0 rounded-full flex items-center justify-center overflow-hidden";
+  const base = "w-[40px] h-[40px] shrink-0 rounded-full flex items-center justify-center overflow-hidden";
   if (variant === "xlm") {
     return (
       <div className={`${base} bg-white`}>
         <Image
           src="/images/stellar-xlm-logo.png"
           alt=""
-          width={18}
-          height={18}
+          width={24}
+          height={24}
           className="w-[60%] h-[60%] object-contain"
         />
       </div>
@@ -425,138 +259,124 @@ function TokenTile({
         <Image
           src="/images/usdc-logo.svg"
           alt=""
-          width={20}
-          height={20}
+          width={28}
+          height={28}
           className="w-[68%] h-[68%] object-contain"
         />
       </div>
     );
   }
+  if (variant === "arst") {
+    return (
+      <div className={base}>
+        <ArstCoinFace />
+      </div>
+    );
+  }
   return (
     <div className={base} style={{ background }}>
-      <span className="text-[11px] font-bold text-white">{letter}</span>
+      <span className="text-[14px] font-bold text-white">{letter}</span>
     </div>
   );
 }
 
-/* The little "Swapped" stack: USDC pill in front of XLM pill, slightly
-   overlapping like a deck of cards. */
+/* The little "Swapped" stack: XLM top-left, USDC bottom-right — they
+   stagger diagonally to fit the same 40×40 footprint as a single token
+   tile while reading clearly as two distinct coins. */
 function SwapTile() {
+  const chipBase =
+    "absolute w-[28px] h-[28px] rounded-full flex items-center justify-center overflow-hidden ring-1 ring-[var(--fc-line)]";
   return (
-    <div className="relative w-[40px] h-[30px] shrink-0">
-      <div className="absolute left-0 top-0">
-        <TokenTile variant="xlm" />
+    <div className="relative w-[40px] h-[40px] shrink-0">
+      <div className={`${chipBase} left-0 top-0 bg-white`}>
+        <Image
+          src="/images/stellar-xlm-logo.png"
+          alt=""
+          width={20}
+          height={20}
+          className="w-[70%] h-[70%] object-contain"
+        />
       </div>
-      <div className="absolute left-[12px] top-0">
-        <TokenTile variant="usdc" />
+      <div className={`${chipBase} right-0 bottom-0`} style={{ background: "#2775ca" }}>
+        <Image
+          src="/images/usdc-logo.svg"
+          alt=""
+          width={20}
+          height={20}
+          className="w-[70%] h-[70%] object-contain"
+        />
       </div>
     </div>
   );
 }
 
 type HistoryItem = {
-  title: ReactNode;
-  subtitle: string;
-  subIcon: ComponentType<{ size?: number; className?: string }>;
+  action: string;
   primary: string;
-  primaryColor: "green" | "white" | "muted";
-  secondary?: string;
+  primaryColor: "green" | "white";
   tile: ReactNode;
 };
 
 const HISTORY_ITEMS: HistoryItem[] = [
   {
     tile: <SwapTile />,
-    title: (
-      <span className="inline-flex items-center gap-1">
-        XLM <span className="text-[var(--fc-ink-3)]">→</span> USDC
-      </span>
-    ),
-    subtitle: "Swapped",
-    subIcon: ArrowsClockwiseBold,
+    action: "Swapped",
     primary: "+40.40 USDC",
     primaryColor: "green",
-    secondary: "−100.00 XLM",
   },
   {
     tile: <TokenTile variant="xlm" />,
-    title: "XLM",
-    subtitle: "Sent",
-    subIcon: ArrowUpBold,
-    primary: "−$20.20",
+    action: "Sent",
+    primary: "−50.00 XLM",
     primaryColor: "white",
-    secondary: "−50.00 XLM",
   },
   {
     tile: <TokenTile variant="xlm" />,
-    title: "XLM",
-    subtitle: "Received",
-    subIcon: ArrowDownBold,
-    primary: "+$10.10",
+    action: "Received",
+    primary: "+25.00 XLM",
     primaryColor: "green",
-    secondary: "+25.00 XLM",
-  },
-  {
-    tile: <TokenTile variant="xlm" />,
-    title: "Stellar Lumens",
-    subtitle: "Trustline added",
-    subIcon: CheckCircleBold,
-    primary: "Unlimited",
-    primaryColor: "muted",
   },
   {
     tile: <TokenTile variant="usdc" />,
-    title: "Contract Name",
-    subtitle: "Interacted",
-    subIcon: ArrowSquareInBold,
-    primary: "−$20.00",
+    action: "Sent",
+    primary: "−15.00 USDC",
     primaryColor: "white",
-    secondary: "−20.00 USDC",
   },
   {
-    tile: <TokenTile variant="color" background="linear-gradient(135deg, #8a5cff, #4f8cff)" letter="A" />,
-    title: "AQUA",
-    subtitle: "Received",
-    subIcon: ArrowDownBold,
-    primary: "+$10.58",
+    tile: <TokenTile variant="usdc" />,
+    action: "Interacted",
+    primary: "−20.00 USDC",
+    primaryColor: "white",
+  },
+  {
+    tile: <TokenTile variant="arst" />,
+    action: "Received",
+    primary: "+50.00 ARST",
     primaryColor: "green",
-    secondary: "+50.00 AQUA",
   },
 ];
 
 function HistoryRow({ item }: { item: HistoryItem }) {
-  const SubIcon = item.subIcon;
   const colorClass =
     item.primaryColor === "green"
-      ? "text-[#5fffaf]"
-      : item.primaryColor === "white"
-      ? "text-[var(--fc-ink)]"
-      : "text-[var(--fc-ink-3)]";
+      ? "text-[var(--fc-grn)]"
+      : "text-[var(--fc-ink)]";
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3.5">
       {item.tile}
-      <div className="flex flex-col leading-tight min-w-0 flex-1">
-        <span className="text-[12px] font-semibold text-[var(--fc-ink)] truncate">
-          {item.title}
-        </span>
-        <span className="text-[10px] text-[var(--fc-ink-3)] flex items-center gap-1 mt-[2px]">
-          <SubIcon size={10} />
-          {item.subtitle}
-        </span>
-      </div>
-      <div className="flex flex-col items-end leading-tight shrink-0">
-        <span className={`text-[12px] font-semibold ${colorClass}`}>{item.primary}</span>
-        {item.secondary && (
-          <span className="text-[10px] text-[var(--fc-ink-3)] mt-[2px]">{item.secondary}</span>
-        )}
-      </div>
+      <span className="flex-1 text-[15px] font-medium text-[var(--fc-ink)]">
+        {item.action}
+      </span>
+      <span className={`text-[15px] font-semibold tabular-nums shrink-0 ${colorClass}`}>
+        {item.primary}
+      </span>
     </div>
   );
 }
 
 function HistoryStage() {
   return (
-    <div className="fc-feed-wrap">
+    <div className="fc-feed-wrap" aria-hidden="true">
       <div className="fc-feed-stack">
         {HISTORY_ITEMS.map((item, i) => (
           <div
@@ -573,209 +393,57 @@ function HistoryStage() {
 }
 
 /* ════════════════════════════════════════
-   5. COLLECTIBLES — static 2x2 grid with focus zoom
+   5. COLLECTIBLES — 2x2 gallery placeholders
    ════════════════════════════════════════ */
 
-const COLLECTIBLE_NOUNS = [1, 42, 69, 100];
-
-function NounTile({ id, className = "" }: { id: number; className?: string }) {
-  return (
-    <div className={`fc-collectible-tile ${className}`}>
-      <Image
-        src={`/images/nouns/noun-${id}.png`}
-        alt=""
-        width={130}
-        height={130}
-        draggable={false}
-      />
-    </div>
-  );
-}
+const COLLECTIBLE_TILES = ["sky", "plum", "moss", "clay"] as const;
 
 function CollectiblesStage() {
   return (
     <div className="fc-collectibles">
-      <svg
-        width="0"
-        height="0"
-        style={{ position: "absolute" }}
-        aria-hidden="true"
-      >
-        <defs>
-          <filter id="fc-handdrawn" x="-6%" y="-6%" width="112%" height="112%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.045"
-              numOctaves="2"
-              seed="4"
-              result="noise"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="3"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-      </svg>
       <div className="fc-collectibles-grid">
-        {COLLECTIBLE_NOUNS.map((id) => (
-          <NounTile key={id} id={id} />
+        {COLLECTIBLE_TILES.map((tone) => (
+          <div key={tone} className={`fc-collectible-tile fc-collectible-tile--${tone}`}>
+            <ImageSquareBold className="fc-collectible-icon" />
+          </div>
         ))}
-        <NounTile id={COLLECTIBLE_NOUNS[0]} className="fc-collectible-focus" />
       </div>
     </div>
   );
 }
 
 /* ════════════════════════════════════════
-   6. RECEIVE — QR code + gradient halo
+   6. RECEIVE — incoming payment notification
+   A notification card slides down from the top with a green arrow-down
+   badge, the received amount, and a check that pops in once it lands.
    ════════════════════════════════════════ */
 
 function ReceiveStage() {
+  const items = [
+    { amount: "+$50.00 USDC", meta: "Received", variant: "front" },
+    { amount: "+$24.18 XLM", meta: "Received", variant: "middle" },
+    { amount: "+$12.50 AQUA", meta: "Received", variant: "back" },
+  ];
+
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
-      <div className="relative">
-        <div className="fc-qr-halo" />
+    <div className="fc-receive-incoming">
+      <div className="fc-receive-incoming-glow" aria-hidden="true" />
+      {items.map((item) => (
         <div
-          className="fc-qr-card relative w-[160px] h-[160px] rounded-[18px] p-3 overflow-hidden"
-          style={{ background: "linear-gradient(135deg, #fff, #e8e9f5)" }}
+          key={item.variant}
+          className={`fc-receive-incoming-card fc-receive-incoming-card--${item.variant}`}
+          aria-hidden="true"
         >
-          <QRCodeSVG
-            value="https://freighter.app"
-            level="M"
-            bgColor="transparent"
-            fgColor="#0a0b14"
-            marginSize={0}
-            className="w-full h-full"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ════════════════════════════════════════
-   7. WALLETS — account list with Stellar identicons
-   ════════════════════════════════════════ */
-
-/* Deterministic FNV-1a-ish hash so the identicon is stable for a given
-   address.  We then read 15 bits to fill a 3×5 half-grid which is
-   mirrored horizontally to give the classic 5×5 symmetric "blockies"
-   pattern.  Color is derived from the same hash. */
-function identiconHash(seed: string): number {
-  let h = 2166136261;
-  for (let i = 0; i < seed.length; i++) {
-    h ^= seed.charCodeAt(i);
-    h = Math.imul(h, 16777619) >>> 0;
-  }
-  return h;
-}
-
-function Identicon({ seed }: { seed: string }) {
-  const h = identiconHash(seed);
-  const hue = h % 360;
-  const fg = `hsl(${hue} 72% 62%)`;
-  const bg = `hsl(${(hue + 30) % 360} 28% 18%)`;
-
-  const N = 5;
-  const halfCols = Math.ceil(N / 2); // 3
-  const cells: boolean[] = [];
-  let bits = h;
-  for (let i = 0; i < N * halfCols; i++) {
-    cells.push((bits & 1) === 1);
-    bits >>>= 1;
-    if (bits === 0) bits = identiconHash(seed + i);
-  }
-
-  return (
-    <svg viewBox={`0 0 ${N} ${N}`} shapeRendering="crispEdges" className="w-full h-full">
-      <rect width={N} height={N} fill={bg} />
-      {cells.flatMap((on, idx) => {
-        if (!on) return [];
-        const row = Math.floor(idx / halfCols);
-        const col = idx % halfCols;
-        const out = [
-          <rect key={`l-${idx}`} x={col} y={row} width={1} height={1} fill={fg} />,
-        ];
-        if (col !== halfCols - 1) {
-          out.push(
-            <rect key={`r-${idx}`} x={N - 1 - col} y={row} width={1} height={1} fill={fg} />,
-          );
-        }
-        return out;
-      })}
-    </svg>
-  );
-}
-
-/* Made-up Stellar G-addresses — base32 (A–Z, 2–7), 56 chars, prefixed G.
-   They are not real keys; they're just for visual demo. */
-const ACCOUNTS: Array<{
-  name: string;
-  address: string;
-  balance: string;
-  hardware?: boolean;
-}> = [
-  {
-    name: "Main",
-    address: "GBVKI4Q2K7WCO4ZBDJ4CYWP3FQHVCQUYY27VGMXCLSWN3I3R6X4Q3EAB",
-    balance: "$28,940",
-  },
-  {
-    name: "Trading",
-    address: "GAQT3FZP7BXY2OMVDJWGE5LK4NCIH6PSLM5R3VFTYBJW2QHXRDA7TLZQ",
-    balance: "$12,408",
-  },
-  {
-    name: "Savings",
-    address: "GCBNPL3XGZRY7MHJ4KFE2DSWVQ56A8UCT9PR4OYI3HFDEAB7MQK2NSDF",
-    balance: "$6,942",
-  },
-  {
-    name: "Ledger",
-    address: "GDQHZX5ABRYE2NF8MS4CG7VJW36LP9IUKT5R2OB4DAFCYE3HMQK7PWVR",
-    balance: "$0.50",
-    hardware: true,
-  },
-];
-
-function truncateAddress(addr: string) {
-  return `${addr.slice(0, 5)}…${addr.slice(-5)}`;
-}
-
-function WalletsStage() {
-  return (
-    <div className="w-full px-5 py-12 flex flex-col gap-2 fc-stagger">
-      {ACCOUNTS.map((a, i) => (
-        <div
-          key={a.name}
-          className="flex items-center gap-3 px-3 py-[10px] rounded-[12px]"
-          style={{
-            background: "rgba(255,255,255,0.025)",
-            border: "1px solid rgba(255,255,255,0.05)",
-            animationDelay: `${0.05 + i * 0.05}s`,
-          }}
-        >
-          <div className="w-[32px] h-[32px] rounded-full shrink-0 overflow-hidden">
-            <Identicon seed={a.address} />
-          </div>
-          <div className="flex flex-col leading-tight min-w-0 flex-1">
-            <span className="text-[11px] font-semibold text-[var(--fc-ink)] inline-flex items-center gap-1">
-              {a.name}
-              {a.hardware && (
-                <span className="text-[var(--fc-ink-3)] text-[9px]" aria-label="hardware">
-                  ◇
-                </span>
-              )}
-            </span>
-            <span className="text-[9px] text-[var(--fc-ink-3)] tracking-wide">
-              {truncateAddress(a.address)}
-            </span>
-          </div>
-          <span className="text-[13px] font-semibold text-[var(--fc-ink)]">{a.balance}</span>
+          <span className="fc-receive-incoming-badge">
+            <ArrowDownBold size={14} />
+          </span>
+          <span className="fc-receive-incoming-text">
+            <span className="fc-receive-incoming-amount">{item.amount}</span>
+            <span className="fc-receive-incoming-meta">{item.meta}</span>
+          </span>
+          <span className="fc-receive-incoming-check">
+            <CheckCircleBold size={16} />
+          </span>
         </div>
       ))}
     </div>
@@ -783,17 +451,95 @@ function WalletsStage() {
 }
 
 /* ════════════════════════════════════════
-   8. EARN — interest accruing on a balance
-   A circular progress ring sweeps to ~85%, while the balance counts up
-   from $300 → $349 to convey interest accumulating. The "4% interest"
-   tag fades in below the amount.
+   7. WALLETS — stacked wallet cards
    ════════════════════════════════════════ */
 
+function WalletIdenticon() {
+  const cells = [
+    [1, 0, 1, 0, 1],
+    [0, 1, 1, 1, 0],
+    [1, 1, 0, 1, 1],
+    [0, 1, 0, 1, 0],
+    [1, 0, 1, 0, 1],
+  ];
+
+  return (
+    <svg viewBox="0 0 5 5" shapeRendering="crispEdges" aria-hidden="true">
+      <rect width="5" height="5" fill="#d9d9d9" />
+      {cells.flatMap((row, y) =>
+        row.map((on, x) =>
+          on ? <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill="#737373" /> : null,
+        ),
+      )}
+    </svg>
+  );
+}
+
+function WalletsStage() {
+  return (
+    <div className="fc-wallet-stage" aria-label="Multiple wallets stacked together">
+      <div className="fc-wallet-stack" aria-hidden="true">
+        <span className="fc-wallet-card fc-wallet-card--back fc-wallet-card--left" />
+        <span className="fc-wallet-card fc-wallet-card--back fc-wallet-card--center" />
+        <span className="fc-wallet-card fc-wallet-card--back fc-wallet-card--right" />
+        <span className="fc-wallet-card fc-wallet-card--front">
+          <span className="fc-wallet-avatar">
+            <WalletIdenticon />
+          </span>
+          <span className="fc-wallet-address">GC6N...K4P9</span>
+          <span className="fc-wallet-balance">$281</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
+   8. EARN — interest accruing on a balance
+   A circular progress ring sweeps to ~75% (three-quarters), while the
+   balance counts up from $0 → $349 to convey interest accumulating.
+   The "4% interest" tag fades in below the amount.
+   ════════════════════════════════════════ */
+
+const EARN_ARC_FILL = 0.75;
+
 function EarnStage() {
-  /* SVG progress ring — the arc uses `pathLength="100"` so dasharray /
-     dashoffset can be expressed in 0–100 percent units regardless of the
-     actual circle radius.  That's what makes the keyframes work without
-     needing to plumb the circumference through a CSS variable. */
+  const [display, setDisplay] = useState({ amount: 0, progress: 0, showRate: false });
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      const frame = requestAnimationFrame(() => {
+        setDisplay({ amount: 349, progress: 1, showRate: true });
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+
+    let frame = 0;
+    const duration = 5600;
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    const tick = () => {
+      const cycle = (performance.now() % duration) / duration;
+      const active = Math.min(1, Math.max(0, (cycle - 0.08) / 0.64));
+      const reset = cycle > 0.92 ? Math.max(0, 1 - (cycle - 0.92) / 0.08) : 1;
+      const progress = easeOutCubic(active) * reset;
+
+      setDisplay({
+        amount: Math.round(349 * progress),
+        progress,
+        showRate: cycle > 0.68 && cycle < 0.92,
+      });
+
+      frame = requestAnimationFrame(tick);
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  const arcOffset = 100 - display.progress * EARN_ARC_FILL * 100;
+
   return (
     <div className="fc-earn">
       <svg
@@ -819,32 +565,18 @@ function EarnStage() {
           strokeWidth="10"
           strokeLinecap="round"
           pathLength="100"
-          strokeDasharray="100"
-          strokeDashoffset="100"
           transform="rotate(-90 100 100)"
+          style={{ strokeDasharray: 100, strokeDashoffset: arcOffset }}
         />
       </svg>
       <div className="fc-earn-text">
-        <div className="fc-earn-amount">
-          <span className="fc-earn-currency">$</span>
-          <span>3</span>
-          <span>4</span>
-          <span className="fc-earn-roll">
-            <span className="fc-earn-roll-track">
-              <span>0</span>
-              <span>1</span>
-              <span>2</span>
-              <span>3</span>
-              <span>4</span>
-              <span>5</span>
-              <span>6</span>
-              <span>7</span>
-              <span>8</span>
-              <span>9</span>
-            </span>
-          </span>
+        <div className="fc-earn-amount" aria-label={`$${display.amount}`}>
+          <span aria-hidden="true">$</span>
+          <SlidingNumber number={display.amount} aria-hidden="true" />
         </div>
-        <div className="fc-earn-rate">4% interest</div>
+        <div className={`fc-earn-rate${display.showRate ? " fc-earn-rate--visible" : ""}`}>
+          Earned 13.2% APY*
+        </div>
       </div>
     </div>
   );
@@ -861,7 +593,7 @@ export function HistoryAnimation()      { return <FeatureCard><HistoryStage /></
 export function CollectiblesAnimation() { return <FeatureCard><CollectiblesStage /></FeatureCard>; }
 export function ReceiveAnimation()      { return <FeatureCard><ReceiveStage /></FeatureCard>; }
 export function WalletsAnimation()      { return <FeatureCard><WalletsStage /></FeatureCard>; }
-export function EarnAnimation()         { return <FeatureCard><EarnStage /></FeatureCard>; }
+export function EarnAnimation()         { return <FeatureCard className="fc-card--raised"><EarnStage /></FeatureCard>; }
 
 export const FEATURE_ANIMATIONS: Record<string, ComponentType> = {
   Send: SendAnimation,
@@ -871,5 +603,5 @@ export const FEATURE_ANIMATIONS: Record<string, ComponentType> = {
   Collectibles: CollectiblesAnimation,
   Receive: ReceiveAnimation,
   Wallets: WalletsAnimation,
-  Earn: EarnAnimation,
+  Deposit: EarnAnimation,
 };

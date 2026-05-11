@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, type PanInfo } from "framer-motion";
+import { motion, useInView, type PanInfo } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
 import {
   PaperPlaneTiltBold,
@@ -20,7 +20,7 @@ import { FEATURE_ANIMATIONS } from "./FeatureAnimations";
 const ITEMS = [
   { label: "Send", icon: PaperPlaneTiltBold },
   { label: "Swap", icon: SwapBold },
-  { label: "Earn", icon: TrendUpBold },
+  { label: "Deposit", icon: TrendUpBold },
   { label: "Discover", icon: CompassBold },
   { label: "History", icon: ClockCounterClockwiseBold },
   { label: "Collectibles", icon: DiamondBold },
@@ -37,6 +37,11 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
   const [cardWidth, setCardWidth] = useState(320);
   const [visibleCount, setVisibleCount] = useState(3);
   const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  // Pause the dozens of CSS keyframe loops inside each card when the
+  // section is off-screen — saves a meaningful amount of GPU/CPU on
+  // long pages where the carousel is one of many sections.
+  const inView = useInView(sectionRef, { margin: "200px 0px" });
 
   const maxIndex = Math.max(0, ITEMS.length - visibleCount);
 
@@ -83,7 +88,7 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
   const isEditorial = cardStyle === "editorial";
 
   return (
-    <section className={`feature-cards feature-cards--${cardStyle}`}>
+    <section ref={sectionRef} className={`feature-cards feature-cards--${cardStyle}${inView ? "" : " feature-cards--paused"}`}>
       <div className="max-w-[1024px] mx-auto px-6">
         {/* Header row */}
         <motion.div
@@ -99,14 +104,14 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
           <div className="flex gap-2 shrink-0 ml-4">
             <button
               onClick={handlePrev}
-              className="size-11 rounded-full bg-bg-elevated flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors cursor-pointer"
+              className="size-11 rounded-full bg-bg-hover flex items-center justify-center text-text-primary hover:bg-[#303036] transition-colors cursor-pointer"
               aria-label="Previous"
             >
               <CaretLeftBold size={16} />
             </button>
             <button
               onClick={handleNext}
-              className="size-11 rounded-full bg-bg-elevated flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors cursor-pointer"
+              className="size-11 rounded-full bg-bg-hover flex items-center justify-center text-text-primary hover:bg-[#303036] transition-colors cursor-pointer"
               aria-label="Next"
             >
               <CaretRightBold size={16} />
@@ -129,21 +134,11 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
             {ITEMS.map((item, i) => {
               const Icon = item.icon;
               const Animation = FEATURE_ANIMATIONS[item.label];
-              const isInView = i >= currentIndex && i < currentIndex + visibleCount;
-              const edgeScale = isInView ? 1 : 0.95;
-              const edgeOpacity = isInView ? 1 : 0.4;
-              const edgeBlur = isInView ? 0 : 4;
               return (
                 <motion.div
                   key={item.label}
                   className="shrink-0"
                   style={{ width: cardWidth }}
-                  animate={{
-                    scale: edgeScale,
-                    opacity: edgeOpacity,
-                    filter: `blur(${edgeBlur}px)`,
-                  }}
-                  transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
                 >
                   {Animation ? <Animation /> : <div className="fc-card" />}
                   {isEditorial ? (
@@ -157,7 +152,7 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
                     </div>
                   ) : (
                     <div className="flex items-center gap-3 mt-4">
-                      <div className="size-[35px] rounded-full bg-bg-elevated shrink-0 flex items-center justify-center text-accent-light">
+                      <div className="size-[35px] rounded-full border border-white/10 bg-bg-hover shrink-0 flex items-center justify-center text-accent-light">
                         <Icon size={18} />
                       </div>
                       <span className="text-base sm:text-lg font-medium text-white tracking-[-0.96px]">
