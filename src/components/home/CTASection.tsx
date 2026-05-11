@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { fadeSlideUp } from "@/lib/animations";
+import { fadeSlideUp, EASE_OUT } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
 import { DownloadBold } from "@/components/ui/PhosphorIcons";
 import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
@@ -20,7 +20,7 @@ export function CTASection() {
         >
           {/* CTA card */}
           <div className="relative rounded-[16px] overflow-hidden">
-            <IridescenceBackground amplitude={0.07} />
+            <IridescenceBackground amplitude={0.07} patternClassName="scale-[2.2] rotate-90" />
             <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(180deg,rgba(9,9,11,0.04),rgba(9,9,11,0.24))]" />
 
             <div className="relative z-10 flex flex-col items-center justify-center p-8 gap-8 h-[360px] sm:h-[420px] lg:h-[480px]">
@@ -29,7 +29,7 @@ export function CTASection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+                transition={{ duration: 0.5, ease: EASE_OUT }}
               >
                 <Image
                   src="/images/logo.svg"
@@ -46,7 +46,7 @@ export function CTASection() {
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.1, duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+                  transition={{ delay: 0.1, duration: 0.5, ease: EASE_OUT }}
                   className="text-3xl sm:text-4xl lg:text-[48px] font-medium text-white tracking-[-1.92px] text-center leading-[1.17]"
                 >
                   Try Freighter today
@@ -56,7 +56,7 @@ export function CTASection() {
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.15, duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+                  transition={{ delay: 0.15, duration: 0.5, ease: EASE_OUT }}
                   className="text-base sm:text-lg text-white/60 text-center text-pretty max-w-[40ch]"
                 >
                   Open source and free to use
@@ -68,20 +68,20 @@ export function CTASection() {
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-                className="flex flex-col items-stretch gap-3 w-full max-w-xs"
+                transition={{ delay: 0.2, duration: 0.5, ease: EASE_OUT }}
+                className="flex w-full max-w-xs flex-col items-stretch gap-3"
               >
                 <div className="flex gap-3">
                   <a
                     href={LINKS.iosApp}
-                    className="inline-flex items-center justify-center gap-1 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition-colors whitespace-nowrap flex-1 basis-0 min-w-0"
+                    className="inline-flex min-w-0 flex-1 basis-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
                   >
                     <DownloadBold size={16} className="shrink-0 opacity-50" />
                     iOS
                   </a>
                   <a
                     href={LINKS.androidApp}
-                    className="inline-flex items-center justify-center gap-1 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition-colors whitespace-nowrap flex-1 basis-0 min-w-0"
+                    className="inline-flex min-w-0 flex-1 basis-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
                   >
                     <DownloadBold size={16} className="shrink-0 opacity-50" />
                     Android
@@ -91,7 +91,7 @@ export function CTASection() {
                   href={LINKS.chromeExtension}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition-colors whitespace-nowrap w-full"
+                  className="inline-flex w-[calc((100%-0.75rem)/2)] items-center justify-center gap-1 self-center whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
                 >
                   <DownloadBold size={16} className="shrink-0 opacity-50" />
                   Browser

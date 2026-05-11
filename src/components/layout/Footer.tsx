@@ -3,7 +3,9 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { EASE_OUT } from "@/lib/animations";
 import { SITE, LINKS } from "@/lib/constants";
+import { CaretDownBold } from "@/components/ui/PhosphorIcons";
 
 const footerLinks = [
   { label: "GitHub", href: SITE.github, external: true },
@@ -14,13 +16,32 @@ const footerLinks = [
 ];
 
 const discordLinks = [
-  { label: "Stellar Global", href: "https://discord.gg/stellarglobal" },
   { label: "Stellar Developers", href: "https://discord.gg/stellardev" },
+  { label: "Stellar Global", href: "https://discord.gg/stellarglobal" },
 ];
 
 export function Footer() {
   const [discordOpen, setDiscordOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openDiscordMenu = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setDiscordOpen(true);
+  };
+
+  const scheduleDiscordMenuClose = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+    }
+    closeTimerRef.current = setTimeout(() => {
+      setDiscordOpen(false);
+      closeTimerRef.current = null;
+    }, 180);
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -31,12 +52,17 @@ export function Footer() {
     if (discordOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
   }, [discordOpen]);
 
   return (
-    <footer>
-      <div className="max-w-[1024px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-4 text-sm font-normal text-text-secondary">
+    <footer className="mt-8 pb-[72px]">
+      <div className="max-w-[1024px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-3 text-sm font-normal text-text-secondary">
         <p>&copy; 2026 Stellar Development Foundation</p>
         <nav className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           {footerLinks.map((link) =>
@@ -62,12 +88,22 @@ export function Footer() {
           )}
 
           {/* Discord with dropdown */}
-          <div ref={menuRef} className="relative">
+          <div
+            ref={menuRef}
+            className="relative"
+            onMouseEnter={openDiscordMenu}
+            onMouseLeave={scheduleDiscordMenuClose}
+            onFocus={openDiscordMenu}
+          >
             <button
               onClick={() => setDiscordOpen(!discordOpen)}
-              className="hover:text-text-primary transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 hover:text-text-primary transition-colors cursor-pointer"
             >
-              Discord
+              <span>Discord</span>
+              <CaretDownBold
+                size={12}
+                className={`transition-transform duration-150 ${discordOpen ? "rotate-180" : ""}`}
+              />
             </button>
             <AnimatePresence>
               {discordOpen && (
@@ -75,20 +111,22 @@ export function Footer() {
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 4 }}
-                  transition={{ duration: 0.15, ease: [0.25, 1, 0.5, 1] }}
-                  className="absolute bottom-full mb-2 right-0 bg-bg-elevated border border-border rounded-lg py-1 min-w-[180px] shadow-lg"
+                  transition={{ duration: 0.15, ease: EASE_OUT }}
+                  className="absolute bottom-full right-0 z-50 min-w-[180px] pb-2"
                 >
-                  {discordLinks.map((link) => (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
+                  <div className="rounded-lg border border-white/10 bg-[#1b1b1b] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
+                    {discordLinks.map((link) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

@@ -14,7 +14,7 @@ export function GlowCard({ children, className }: GlowCardProps) {
     <motion.div
       variants={fadeSlideUp}
       className={clsx(
-        "group relative bg-bg-elevated border border-border rounded-2xl p-8 transition-all duration-300 hover:border-border-hover",
+        "group relative bg-bg-elevated border border-border rounded-2xl p-8 transition-colors duration-300 hover:border-border-hover",
         className
       )}
     >

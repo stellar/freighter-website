@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fadeSlideUp } from "@/lib/animations";
+import { fadeSlideUp, EASE_OUT } from "@/lib/animations";
 import Link from "next/link";
 import { PlusBold, ArrowRightBold } from "@/components/ui/PhosphorIcons";
 
@@ -41,7 +41,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
       <motion.div
         animate={{ rotate: open ? 45 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className="shrink-0 mt-1 text-[#B3A8FF]"
+        className="shrink-0 mt-1 text-accent-light"
       >
         <PlusBold size={18} />
       </motion.div>
@@ -56,7 +56,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
+              transition={{ duration: 0.3, ease: EASE_OUT }}
               className="overflow-hidden"
             >
               <p className="text-base text-text-secondary leading-6 mt-4">

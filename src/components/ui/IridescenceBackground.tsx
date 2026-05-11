@@ -8,6 +8,7 @@ const Iridescence = dynamic(() => import("@/components/ui/Iridescence/Iridescenc
 
 type IridescenceBackgroundProps = {
   className?: string;
+  patternClassName?: string;
   speed?: number;
   amplitude?: number;
   mouseReact?: boolean;
@@ -21,18 +22,21 @@ const FREIGHTER_PURPLE: [number, number, number] = [
 
 export function IridescenceBackground({
   className = "",
+  patternClassName = "",
   speed = 0.5,
   amplitude = 0.08,
   mouseReact = false,
 }: IridescenceBackgroundProps) {
   return (
     <div className={`absolute inset-0 z-0 bg-[#7650ff] ${className}`} aria-hidden="true">
-      <Iridescence
-        color={FREIGHTER_PURPLE}
-        speed={speed}
-        amplitude={amplitude}
-        mouseReact={mouseReact}
-      />
+      <div className={`absolute inset-0 ${patternClassName}`}>
+        <Iridescence
+          color={FREIGHTER_PURPLE}
+          speed={speed}
+          amplitude={amplitude}
+          mouseReact={mouseReact}
+        />
+      </div>
     </div>
   );
 }

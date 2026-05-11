@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { staggerContainer, fadeSlideUp } from "@/lib/animations";
+import { staggerContainer, fadeSlideUp, EASE_OUT } from "@/lib/animations";
 
 interface ChangelogEntry {
   version: string;
@@ -78,31 +78,40 @@ export function ChangelogContent({ entries }: { entries: ChangelogEntry[] }) {
       : entries.filter((e) => e.platform === filter);
 
   return (
-    <>
-      {/* Filter tabs */}
-      <div className="inline-flex bg-bg-elevated rounded-lg p-1 mt-8">
-        {(["all", "extension", "mobile"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setFilter(tab)}
-            className="relative px-4 py-2 text-sm font-medium rounded-md capitalize cursor-pointer transition-colors"
-          >
-            {filter === tab && (
-              <motion.div
-                layoutId="changelog-tab"
-                className="absolute inset-0 bg-bg-hover rounded-md"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              />
-            )}
-            <span className={`relative z-10 ${filter === tab ? "text-text-primary" : "text-text-tertiary hover:text-text-secondary"}`}>
-              {tab}
-            </span>
-          </button>
-        ))}
+    <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+      <div className="lg:sticky lg:top-32">
+        <h1 className="text-4xl font-semibold tracking-tight text-text-primary md:text-5xl">
+          Changelog
+        </h1>
+        <p className="mt-4 text-lg text-text-secondary">
+          Keep up with the latest Freighter updates.
+        </p>
+
+        {/* Filter tabs */}
+        <div className="mt-8 inline-flex rounded-lg bg-bg-elevated p-1">
+          {(["all", "extension", "mobile"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setFilter(tab)}
+              className="relative cursor-pointer rounded-md px-4 py-2 text-sm font-medium capitalize transition-colors"
+            >
+              {filter === tab && (
+                <motion.div
+                  layoutId="changelog-tab"
+                  className="absolute inset-0 rounded-md bg-bg-hover"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
+              )}
+              <span className={`relative z-10 ${filter === tab ? "text-text-primary" : "text-text-tertiary hover:text-text-secondary"}`}>
+                {tab}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Timeline */}
-      <div className="mt-12 relative">
+      <div className="relative w-full max-w-[720px]">
         {/* Vertical line */}
         <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
 
@@ -112,7 +121,7 @@ export function ChangelogContent({ entries }: { entries: ChangelogEntry[] }) {
             initial={{ opacity: 0, filter: "blur(6px)", y: 8 }}
             animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
             exit={{ opacity: 0, filter: "blur(6px)", y: -8 }}
-            transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
+            transition={{ duration: 0.3, ease: EASE_OUT }}
           >
             <motion.div
               variants={staggerContainer}
@@ -130,19 +139,19 @@ export function ChangelogContent({ entries }: { entries: ChangelogEntry[] }) {
                   <div className="absolute left-0 top-2 w-[15px] h-[15px] rounded-full border-2 border-accent bg-bg-primary" />
 
                   <div className="bg-bg-elevated rounded-xl border border-border p-6">
-                    <div className="flex flex-wrap items-center gap-3 mb-2">
+                    <div className="mb-3 flex flex-wrap items-center gap-3">
                       <a
                         href={entry.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-mono bg-accent/10 text-accent px-2 py-1 rounded hover:bg-accent/20 transition-colors"
+                        className="text-xs font-mono bg-accent/10 text-accent px-2 py-1 rounded-full hover:bg-accent/20 transition-colors"
                       >
                         v{entry.version}
                       </a>
-                      <span className="text-xs font-medium uppercase tracking-wider bg-bg-hover text-text-tertiary px-2 py-1 rounded">
+                      <span className="text-xs font-medium uppercase tracking-wider bg-bg-hover text-text-tertiary px-2 py-1 rounded-full">
                         {entry.platform}
                       </span>
-                      <span className="text-sm text-text-tertiary">
+                      <span className="ml-auto text-sm text-text-tertiary">
                         {entry.date}
                       </span>
                     </div>
@@ -157,6 +166,6 @@ export function ChangelogContent({ entries }: { entries: ChangelogEntry[] }) {
           </motion.div>
         </AnimatePresence>
       </div>
-    </>
+    </div>
   );
 }

@@ -8,7 +8,10 @@ import { CTASection } from "@/components/home/CTASection";
 
 export default function Home() {
   return (
-    <div className="overflow-x-clip flex flex-col pb-[72px]">
+    <div
+      className="overflow-x-clip flex flex-col"
+      style={{ background: "linear-gradient(198deg, #1C1C1C 0%, #161616 100%)" }}
+    >
       <div className="flex flex-col gap-16 sm:gap-[120px]">
         <main className="flex flex-col gap-16 sm:gap-[120px]">
           <HeroSection />
@@ -32,9 +35,7 @@ export default function Home() {
           <CTASection />
         </main>
       </div>
-      <div className="mt-8">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }

@@ -13,7 +13,7 @@ export default function TermsPage() {
     <>
       <Navbar />
       <main className="pt-32 pb-24">
-        <div className="max-w-3xl mx-auto px-6">
+        <div className="max-w-[1024px] mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-semibold text-text-primary tracking-tight">
             Freighter Terms of Service
           </h1>

@@ -100,15 +100,37 @@ export default function Iridescence({
     resize();
 
     const mesh = new Mesh(gl, { geometry, program });
-    let animateId: number;
+    // Pause RAF when the canvas is scrolled off-screen — the shader is
+    // expensive (8-iteration loop per pixel) and there's no point rendering
+    // pixels nobody can see.
+    let animateId: number | null = null;
+    let inView = true;
 
     function update(t: number) {
-      animateId = requestAnimationFrame(update);
+      if (!inView) {
+        animateId = null;
+        return;
+      }
       program.uniforms.uTime.value = t * 0.001;
       renderer.render({ scene: mesh });
+      animateId = requestAnimationFrame(update);
     }
-    animateId = requestAnimationFrame(update);
+    function start() {
+      if (animateId !== null) return;
+      animateId = requestAnimationFrame(update);
+    }
+
+    start();
     ctn.appendChild(gl.canvas);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) start();
+      },
+      { rootMargin: "100px" }
+    );
+    observer.observe(ctn);
 
     function handleMouseMove(e: MouseEvent) {
       const rect = ctn.getBoundingClientRect();
@@ -123,7 +145,8 @@ export default function Iridescence({
     }
 
     return () => {
-      cancelAnimationFrame(animateId);
+      if (animateId !== null) cancelAnimationFrame(animateId);
+      observer.disconnect();
       window.removeEventListener("resize", resize);
       if (mouseReact) {
         ctn.removeEventListener("mousemove", handleMouseMove);

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { fadeSlideUp } from "@/lib/animations";
+import { fadeSlideUp, EASE_OUT } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
 import { ArrowDownBold } from "@/components/ui/PhosphorIcons";
 import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
@@ -15,14 +15,14 @@ const HERO_NAV_LINKS = [
   { label: "Docs", href: LINKS.docs, external: true },
   { label: "Github", href: "https://github.com/stellar/freighter", external: true },
   { label: "Changelog", href: "/changelog", external: false },
-  { label: "Help", href: LINKS.help, external: true },
+  { label: "Feedback", href: LINKS.feedback, external: true },
 ] as const;
 
 type PhoneId = "left" | "middle" | "right";
 
 const PHONES: { id: PhoneId; src: string; alt: string }[] = [
-  { id: "left", src: "/images/discover-phone.png", alt: "Freighter wallet" },
-  { id: "middle", src: "/images/mobile-mockup.png", alt: "Freighter mobile" },
+  { id: "left", src: "/images/swap.png", alt: "Freighter swap" },
+  { id: "middle", src: "/images/discover-phone.png", alt: "Freighter wallet" },
   { id: "right", src: "/images/discover.png", alt: "Freighter discover" },
 ];
 
@@ -50,11 +50,12 @@ function PhoneMockups() {
           transition={
             entered
               ? springTransition
-              : { delay: 0.55 + i * 0.1, duration: 0.7, ease: [0.25, 1, 0.5, 1] }
+              : { delay: 0.55 + i * 0.1, duration: 0.7, ease: EASE_OUT }
           }
           onMouseEnter={() => setHovered(phone.id)}
           onMouseLeave={() => setHovered(null)}
-          className="pointer-events-auto w-[150px] sm:w-[220px] lg:w-[300px] xl:w-[330px] aspect-[330/717] rounded-[20px] sm:rounded-[24px] lg:rounded-[32px] bg-zinc-800 shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] overflow-hidden cursor-pointer shrink-0"
+          onContextMenu={(event) => event.preventDefault()}
+          className="pointer-events-auto w-[150px] sm:w-[220px] lg:w-[300px] xl:w-[330px] aspect-[330/717] select-none rounded-[16px] bg-zinc-800 shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] overflow-hidden cursor-default shrink-0"
         >
           <Image
             src={phone.src}
@@ -62,8 +63,9 @@ function PhoneMockups() {
             width={330}
             height={717}
             priority
+            draggable={false}
             sizes="(max-width: 640px) 150px, (max-width: 1024px) 220px, (max-width: 1280px) 300px, 330px"
-            className="w-full h-full object-cover pointer-events-none"
+            className="w-full h-full select-none object-cover pointer-events-none"
           />
         </motion.div>
       ))}
@@ -76,11 +78,11 @@ function HeroNav() {
     <motion.nav
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay: 0.1, ease: [0.25, 1, 0.5, 1] }}
-      className="absolute left-1/2 top-3 z-30 flex w-[min(calc(100%-32px),720px)] -translate-x-1/2 items-center justify-between rounded-full bg-[#181818] px-6 py-3"
+      transition={{ duration: 0.45, delay: 0.1, ease: EASE_OUT }}
+      className="absolute left-1/2 top-3 z-30 flex w-[min(calc(100%-32px),720px)] -translate-x-1/2 items-center justify-between rounded-full bg-[#181818] p-3"
       aria-label="Primary navigation"
     >
-      <Link href="/" className="logo-glow relative size-10 shrink-0 overflow-hidden rounded-[9px] bg-[#5842c3]">
+      <Link href="/" className="logo-glow relative ml-3 size-10 shrink-0 overflow-hidden rounded-[9px] bg-[#5842c3]">
         <Image
           src="/images/freighter-icon.png"
           alt="Freighter"
@@ -91,14 +93,14 @@ function HeroNav() {
         />
       </Link>
 
-      <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-6 sm:flex">
+      <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-4 sm:flex">
         {HERO_NAV_LINKS.map((item) => (
           <Link
             key={item.label}
             href={item.href}
             target={item.external ? "_blank" : undefined}
             rel={item.external ? "noopener noreferrer" : undefined}
-            className="text-sm font-medium leading-5 text-[#ededed] transition-colors duration-200 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70"
+            className="text-sm font-medium leading-5 text-text-secondary transition-colors duration-200 hover:text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70"
           >
             {item.label}
           </Link>
@@ -106,9 +108,7 @@ function HeroNav() {
       </div>
 
       <a
-        href={LINKS.chromeExtension}
-        target="_blank"
-        rel="noopener noreferrer"
+        href="#download"
         className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#e8e8e8] px-4 py-2 text-base font-semibold text-[#171717] transition-colors duration-200 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70"
       >
         Download
