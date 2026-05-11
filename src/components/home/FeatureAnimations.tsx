@@ -7,6 +7,7 @@ import {
   BridgeBold,
   CaretDownBold,
   ChartLineUpBold,
+  CheckBold,
   CheckCircleBold,
   CurrencyDollarBold,
   GameControllerBold,
@@ -518,128 +519,155 @@ function ReceiveStage() {
 }
 
 /* ════════════════════════════════════════
-   7. WALLETS — stacked wallet cards
+   7. WALLETS — column list of accounts. Each row
+       has an identicon, address, and balance, so
+       the card reads as a real wallet switcher.
    ════════════════════════════════════════ */
 
-function WalletIdenticon() {
-  const cells = [
-    [1, 0, 1, 0, 1],
-    [0, 1, 1, 1, 0],
-    [1, 1, 0, 1, 1],
-    [0, 1, 0, 1, 0],
-    [1, 0, 1, 0, 1],
-  ];
+type IdenticonCells = ReadonlyArray<ReadonlyArray<0 | 1>>;
 
+function WalletIdenticon({
+  cells,
+  on,
+  off,
+}: {
+  cells: IdenticonCells;
+  on: string;
+  off: string;
+}) {
   return (
     <svg viewBox="0 0 5 5" shapeRendering="crispEdges" aria-hidden="true">
-      <rect width="5" height="5" fill="#d9d9d9" />
+      <rect width="5" height="5" fill={off} />
       {cells.flatMap((row, y) =>
-        row.map((on, x) =>
-          on ? <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill="#737373" /> : null,
+        row.map((cell, x) =>
+          cell ? <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill={on} /> : null,
         ),
       )}
     </svg>
   );
 }
 
+const WALLETS = [
+  {
+    name: "Personal",
+    address: "GC6N...K4P9",
+    balance: "$1,420.18",
+    cells: [
+      [1, 0, 1, 0, 1],
+      [0, 1, 1, 1, 0],
+      [1, 1, 0, 1, 1],
+      [0, 1, 0, 1, 0],
+      [1, 0, 1, 0, 1],
+    ] as IdenticonCells,
+    on: "#9E8CFC",
+    off: "#3A2F6E",
+  },
+  {
+    name: "Trading",
+    address: "GBQH...28HF",
+    balance: "$483.62",
+    cells: [
+      [0, 1, 1, 1, 0],
+      [1, 1, 0, 1, 1],
+      [0, 1, 1, 1, 0],
+      [1, 0, 1, 0, 1],
+      [0, 1, 1, 1, 0],
+    ] as IdenticonCells,
+    on: "#5fffaf",
+    off: "#163b2c",
+  },
+  {
+    name: "Savings",
+    address: "GAZX...8L2J",
+    balance: "$94.10",
+    cells: [
+      [1, 1, 0, 1, 1],
+      [1, 0, 1, 0, 1],
+      [0, 1, 1, 1, 0],
+      [1, 0, 1, 0, 1],
+      [1, 1, 0, 1, 1],
+    ] as IdenticonCells,
+    on: "#f4b860",
+    off: "#3a2a14",
+  },
+] as const;
+
 function WalletsStage() {
   return (
-    <div className="fc-wallet-stage" aria-label="Multiple wallets stacked together">
-      <div className="fc-wallet-stack" aria-hidden="true">
-        <span className="fc-wallet-card fc-wallet-card--back fc-wallet-card--left" />
-        <span className="fc-wallet-card fc-wallet-card--back fc-wallet-card--center" />
-        <span className="fc-wallet-card fc-wallet-card--back fc-wallet-card--right" />
-        <span className="fc-wallet-card fc-wallet-card--front">
-          <span className="fc-wallet-avatar">
-            <WalletIdenticon />
-          </span>
-          <span className="fc-wallet-address">GC6N...K4P9</span>
-          <span className="fc-wallet-balance">$281</span>
-        </span>
+    <div className="fc-wallet-stage" aria-label="Multiple wallets">
+      <div className="fc-wallet-list" aria-hidden="true">
+        {WALLETS.map((w) => (
+          <div key={w.address} className="fc-wallet-row">
+            <span className="fc-wallet-row-avatar">
+              <WalletIdenticon cells={w.cells} on={w.on} off={w.off} />
+            </span>
+            <span className="fc-wallet-row-text">
+              <span className="fc-wallet-row-name">{w.name}</span>
+              <span className="fc-wallet-row-address">{w.address}</span>
+            </span>
+            <span className="fc-wallet-row-balance">{w.balance}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
 /* ════════════════════════════════════════
-   8. DEPOSIT — depositing from Coinbase
-   A Coinbase source row at the top connects to a Freighter destination
-   row at the bottom via a dashed pipeline. A small "$" coin animates
-   down the pipeline while the destination amount counts up.
+   8. DEPOSIT — three pill-shaped steps in the
+       deposit flow (Connect, Select amount,
+       Deposit). Each step shows a white check
+       in a circle on the left. A subtle "active"
+       glow cycles through them.
    ════════════════════════════════════════ */
 
-const DEPOSIT_AMOUNTS = [250, 500, 1000, 2500] as const;
-
-function CoinbaseLogo() {
-  return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <circle cx="16" cy="16" r="16" fill="#0052FF" />
-      <path
-        d="M16 22.5a6.5 6.5 0 1 1 6.4-7.7h3.3a9.8 9.8 0 1 0 0 2.4h-3.3a6.5 6.5 0 0 1-6.4 5.3Z"
-        fill="#FFFFFF"
-      />
-    </svg>
-  );
-}
-
-function FreighterMark() {
-  return (
-    <svg viewBox="0 0 32 32" aria-hidden="true">
-      <circle cx="16" cy="16" r="16" fill="#6E56CF" />
-      <path
-        d="M9 12.5h14M9 16h14M9 19.5h10"
-        stroke="#FFFFFF"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+const DEPOSIT_STEPS = [
+  { loading: "Coinbase Auth", done: "Connected" },
+  { loading: "Selecting amount", done: "Amount: $500" },
+  { loading: "Confirming", done: "Deposited" },
+] as const;
 
 function EarnStage() {
-  const [index, setIndex] = useState(0);
+  // Counter advances 0 → DEPOSIT_STEPS.length, with one extra tick of
+  // "all complete" before resetting. Each step shows a loader with its
+  // in-progress label, then transitions to a check with the done label.
+  const [completed, setCompleted] = useState(0);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
+      setCompleted(DEPOSIT_STEPS.length);
       return;
     }
     const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % DEPOSIT_AMOUNTS.length);
-    }, 2400);
+      setCompleted((c) => (c + 1) % (DEPOSIT_STEPS.length + 1));
+    }, 1300);
     return () => window.clearInterval(id);
   }, []);
 
-  const amount = DEPOSIT_AMOUNTS[index];
-
   return (
-    <div className="fc-earn" aria-label="Depositing from Coinbase">
-      <div className="fc-earn-row" aria-hidden="true">
-        <span className="fc-earn-row-logo">
-          <CoinbaseLogo />
-        </span>
-        <span className="fc-earn-row-text">
-          <span className="fc-earn-row-name">Coinbase</span>
-          <span className="fc-earn-row-sub">Funding source</span>
-        </span>
-      </div>
-
-      <div className="fc-earn-pipe" aria-hidden="true">
-        <span className="fc-earn-pipe-line" />
-        <span className="fc-earn-pipe-coin">$</span>
-      </div>
-
-      <div className="fc-earn-row fc-earn-row--target" aria-hidden="true">
-        <span className="fc-earn-row-logo">
-          <FreighterMark />
-        </span>
-        <span className="fc-earn-row-text">
-          <span className="fc-earn-row-amount">
-            +$<SlidingNumber number={amount} />
-          </span>
-          <span className="fc-earn-row-sub">Deposited to Freighter</span>
-        </span>
-      </div>
+    <div className="fc-earn" aria-label="Deposit flow">
+      {DEPOSIT_STEPS.map((step, i) => {
+        const isDone = i < completed;
+        return (
+          <div
+            key={i}
+            className={`fc-earn-step${isDone ? " fc-earn-step--done" : ""}`}
+            aria-hidden="true"
+          >
+            <span className="fc-earn-step-check">
+              {isDone ? (
+                <CheckBold />
+              ) : (
+                <span className="fc-earn-step-spinner" />
+              )}
+            </span>
+            <span className="fc-earn-step-label">
+              {isDone ? step.done : step.loading}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

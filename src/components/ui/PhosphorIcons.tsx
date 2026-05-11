@@ -34,6 +34,8 @@ import {
   UsersThree,
   Wrench,
   ChartLineUp,
+  LinkSimple,
+  Check,
   type IconProps,
 } from "@phosphor-icons/react";
 
@@ -78,3 +80,5 @@ export const GameControllerBold = bold(GameController);
 export const UsersThreeBold = bold(UsersThree);
 export const WrenchBold = bold(Wrench);
 export const ChartLineUpBold = bold(ChartLineUp);
+export const LinkSimpleBold = bold(LinkSimple);
+export const CheckBold = bold(Check);
