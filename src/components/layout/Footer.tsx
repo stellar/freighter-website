@@ -5,11 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { EASE_OUT } from "@/lib/animations";
 import { SITE, LINKS } from "@/lib/constants";
-import { CaretDownBold } from "@/components/ui/PhosphorIcons";
+import { ArrowSquareOutBold, CaretDownBold } from "@/components/ui/PhosphorIcons";
 
-const footerLinks = [
-  { label: "GitHub", href: SITE.github, external: true },
+const footerLinksBefore = [
   { label: "Changelog", href: "/changelog" },
+  { label: "GitHub", href: SITE.github, external: true },
+];
+
+const footerLinksAfter = [
   { label: "Feedback", href: LINKS.feedback, external: true },
   { label: "Terms", href: "/terms" },
   { label: "Privacy", href: "/privacy" },
@@ -65,7 +68,7 @@ export function Footer() {
       <div className="max-w-[1024px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-8 sm:gap-3 text-sm font-normal text-text-secondary">
         <p>&copy; 2026 Stellar Development Foundation</p>
         <nav className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          {footerLinks.map((link) =>
+          {footerLinksBefore.map((link) =>
             link.external ? (
               <a
                 key={link.label}
@@ -121,9 +124,10 @@ export function Footer() {
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
+                        className="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
                       >
-                        {link.label}
+                        <span>{link.label}</span>
+                        <ArrowSquareOutBold size={14} className="shrink-0 opacity-70" />
                       </a>
                     ))}
                   </div>
@@ -131,6 +135,28 @@ export function Footer() {
               )}
             </AnimatePresence>
           </div>
+
+          {footerLinksAfter.map((link) =>
+            link.external ? (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-text-primary transition-colors"
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="hover:text-text-primary transition-colors"
+              >
+                {link.label}
+              </Link>
+            )
+          )}
         </nav>
       </div>
     </footer>

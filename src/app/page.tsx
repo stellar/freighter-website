@@ -5,8 +5,10 @@ import { DownloadCards } from "@/components/home/DownloadCards";
 import { FeaturesGrid } from "@/components/home/FeaturesGrid";
 import { FAQSection } from "@/components/home/FAQSection";
 import { CTASection } from "@/components/home/CTASection";
+import { getXlmUsdRate } from "@/lib/xlm-price";
 
-export default function Home() {
+export default async function Home() {
+  const xlmUsdRate = await getXlmUsdRate();
   return (
     <div
       className="overflow-x-clip flex flex-col"
@@ -17,16 +19,16 @@ export default function Home() {
           <HeroSection />
           <div data-uidotsh-pick="Card style" className="contents">
             <div data-uidotsh-option="Solid (current)" className="contents">
-              <FeatureCarousel cardStyle="solid" />
+              <FeatureCarousel cardStyle="solid" xlmUsdRate={xlmUsdRate} />
             </div>
             <div data-uidotsh-option="Glow ring" className="contents" hidden>
-              <FeatureCarousel cardStyle="glow" />
+              <FeatureCarousel cardStyle="glow" xlmUsdRate={xlmUsdRate} />
             </div>
             <div data-uidotsh-option="Glass" className="contents" hidden>
-              <FeatureCarousel cardStyle="glass" />
+              <FeatureCarousel cardStyle="glass" xlmUsdRate={xlmUsdRate} />
             </div>
             <div data-uidotsh-option="Editorial" className="contents" hidden>
-              <FeatureCarousel cardStyle="editorial" />
+              <FeatureCarousel cardStyle="editorial" xlmUsdRate={xlmUsdRate} />
             </div>
           </div>
           <DownloadCards />

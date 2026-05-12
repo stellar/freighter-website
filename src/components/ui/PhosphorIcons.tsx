@@ -18,10 +18,12 @@ import {
   ArrowDown,
   CheckCircle,
   ArrowSquareIn,
+  ArrowSquareOut,
   ShieldCheck,
   Lock,
   Fingerprint,
   CurrencyDollar,
+  Image as PhosphorImage,
   ImageSquare,
   Download,
   ArrowRight,
@@ -76,6 +78,7 @@ export const ArrowUpBold = bold(ArrowUp);
 export const ArrowDownBold = bold(ArrowDown);
 export const CheckCircleBold = bold(CheckCircle);
 export const ArrowSquareInBold = bold(ArrowSquareIn);
+export const ArrowSquareOutBold = bold(ArrowSquareOut);
 export const ShieldCheckBold = bold(ShieldCheck);
 export const LockBold = bold(Lock);
 export const FingerprintBold = bold(Fingerprint);
@@ -107,3 +110,16 @@ export const DiamondFill = fill(Diamond);
 export const DownloadSimpleFill = fill(DownloadSimple);
 export const WalletFill = fill(Wallet);
 export const TrendUpFill = fill(TrendUp);
+
+// Filled variants used by the Discover category pills
+export const CurrencyDollarFill = fill(CurrencyDollar);
+export const BridgeFill = fill(Bridge);
+export const ChartLineUpFill = fill(ChartLineUp);
+export const HandCoinsFill = fill(HandCoins);
+export const ChartBarFill = fill(ChartBar);
+export const CoinFill = fill(Coin);
+export const ImageSquareFill = fill(ImageSquare);
+export const ImageFill = fill(PhosphorImage);
+export const GameControllerFill = fill(GameController);
+export const UsersThreeFill = fill(UsersThree);
+export const CheckFill = fill(Check);

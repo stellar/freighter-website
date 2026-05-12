@@ -30,7 +30,10 @@ const GAP = 17;
 
 export type CardStyle = "solid" | "glow" | "glass" | "editorial";
 
-export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle } = {}) {
+export function FeatureCarousel({
+  cardStyle = "solid",
+  xlmUsdRate,
+}: { cardStyle?: CardStyle; xlmUsdRate?: number } = {}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardWidth, setCardWidth] = useState(320);
   const [visibleCount, setVisibleCount] = useState(3);
@@ -138,7 +141,7 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
                   className="shrink-0"
                   style={{ width: cardWidth }}
                 >
-                  {Animation ? <Animation /> : <div className="fc-card" />}
+                  {Animation ? <Animation xlmUsdRate={xlmUsdRate} /> : <div className="fc-card" />}
                   {isEditorial ? (
                     <div className="mt-5 flex items-baseline gap-3">
                       <span className="text-[11px] font-medium tracking-[0.2em] text-text-tertiary tabular-nums">

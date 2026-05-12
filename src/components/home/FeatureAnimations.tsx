@@ -11,17 +11,18 @@ import {
 import Image from "next/image";
 import {
   ArrowDownBold,
-  BridgeBold,
+  BridgeFill,
   CaretDownBold,
-  ChartBarBold,
-  ChartLineUpBold,
+  ChartBarFill,
+  ChartLineUpFill,
   CheckCircleBold,
-  CoinBold,
-  CurrencyDollarBold,
-  GameControllerBold,
-  HandCoinsBold,
-  ImageSquareBold,
-  UsersThreeBold,
+  CoinFill,
+  CurrencyDollarFill,
+  GameControllerFill,
+  HandCoinsFill,
+  ImageFill,
+  ImageSquareFill,
+  UsersThreeFill,
 } from "@/components/ui/PhosphorIcons";
 import { SlidingNumber } from "@/components/ui/sliding-number";
 
@@ -61,77 +62,74 @@ function XlmIcon({ className }: { className?: string }) {
 }
 
 /* ════════════════════════════════════════
-   1. SEND — gray frame with white panel, USDC
-       currency selector, cycling amount, and
-       a separate Send button below.
+   1. SEND — sliding amount rolls to $125.00,
+       presses Send, then fades to a CheckCircle
+       + "Sent" confirmation. Panel stays gray.
    ════════════════════════════════════════ */
 
-const SEND_AMOUNTS = [100, 250, 500, 750] as const;
-
 function SendStage() {
-  const [index, setIndex] = useState(0);
-  const [pressed, setPressed] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "pressing" | "sent">("idle");
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
+      setPhase("sent");
       return;
     }
-    // Slower than Swap's 1800ms and offset by an initial delay so the
-    // two cards never tick in lock-step.
-    let intervalId: number | undefined;
-    const startId = window.setTimeout(() => {
-      setIndex((i) => (i + 1) % SEND_AMOUNTS.length);
-      intervalId = window.setInterval(() => {
-        setIndex((i) => (i + 1) % SEND_AMOUNTS.length);
-      }, 2800);
-    }, 1100);
+    const timers: number[] = [];
+    const queue = (fn: () => void, ms: number) => {
+      timers.push(window.setTimeout(fn, ms));
+    };
+    const cycle = () => {
+      setPhase("idle");
+      // Press-and-hold begins after a brief reading beat.
+      queue(() => setPhase("pressing"), 1400);
+      // Hold the press long enough for the fill to sweep across.
+      queue(() => setPhase("sent"), 2200);
+      // Confirmation holds, then loop (gives ~3.8s on the Sent state).
+      queue(cycle, 6000);
+    };
+    cycle();
     return () => {
-      window.clearTimeout(startId);
-      if (intervalId !== undefined) window.clearInterval(intervalId);
+      timers.forEach((t) => window.clearTimeout(t));
     };
   }, []);
 
-  // After each amount transition lands, briefly compress the Send
-  // button so it reads as if the user just tapped it.
-  useEffect(() => {
-    if (index === 0) return;
-    const pressIn = window.setTimeout(() => setPressed(true), 650);
-    const pressOut = window.setTimeout(() => setPressed(false), 920);
-    return () => {
-      window.clearTimeout(pressIn);
-      window.clearTimeout(pressOut);
-    };
-  }, [index]);
-
-  const amount = SEND_AMOUNTS[index];
+  const isSent = phase === "sent";
+  const isPressed = phase === "pressing";
 
   return (
-    <div className="fc-send-screen" aria-label="Choosing send amount">
+    <div className="fc-send-screen" aria-label="Sending payment">
       <div className="fc-send-panel" aria-hidden="true">
-        <div className="fc-send-recipient">
-          <span className="fc-send-recipient-label">To:</span>
-          <span className="fc-send-recipient-address">G80FJ...8HPOD</span>
+        <div className={`fc-send-panel-content${isSent ? " is-hidden" : ""}`}>
+          <div className="fc-send-recipient">
+            <span className="fc-send-recipient-label">To:</span>
+            <span className="fc-send-recipient-address">G80FJ...8HPOD</span>
+          </div>
+
+          <div className="fc-send-amount">
+            <span className="fc-send-amount-symbol">$</span>
+            <span className="fc-send-amount-num">60.00</span>
+          </div>
+
+          <div className="fc-send-currency">
+            <UsdcIcon className="fc-send-currency-icon" />
+            <span className="fc-send-currency-code">USDC</span>
+            <CaretDownBold size={14} className="fc-send-currency-caret" />
+          </div>
         </div>
 
-        <div className="fc-send-amount">
-          <span className="fc-send-amount-symbol">$</span>
-          <SlidingNumber number={amount} className="fc-send-amount-num" />
-          <span className="fc-send-amount-decimals">.00</span>
+        <div
+          className={`fc-send-action${isPressed ? " fc-send-action--pressed" : ""}${isSent ? " fc-send-action--filled" : ""}`}
+          aria-hidden="true"
+        >
+          <span className="fc-send-action-label">Send</span>
         </div>
 
-        <div className="fc-send-currency">
-          <UsdcIcon className="fc-send-currency-icon" />
-          <span className="fc-send-currency-code">USDC</span>
-          <CaretDownBold size={14} className="fc-send-currency-caret" />
+        <div className={`fc-send-confirmed${isSent ? " is-visible" : ""}`}>
+          <CheckCircleBold className="fc-send-confirmed-icon" />
+          <span className="fc-send-confirmed-text">Sent</span>
         </div>
-      </div>
-
-      <div
-        className={`fc-send-action${pressed ? " fc-send-action--pressed" : ""}`}
-        aria-hidden="true"
-      >
-        Send
       </div>
     </div>
   );
@@ -143,30 +141,58 @@ function SendStage() {
        them. Cycles through preset USDC ↔ XLM pairs.
    ════════════════════════════════════════ */
 
-const XLM_TO_USD = 0.39;
+const SWAP_XLM_AMOUNTS = [100, 250, 500] as const;
+const SWAP_FALLBACK_RATE = 0.39;
+const SWAP_TYPE_INTERVAL = 120;
+const SWAP_ERASE_INTERVAL = 80;
+const SWAP_HOLD_DURATION = 1500;
+const SWAP_BETWEEN_DELAY = 220;
 
-const SWAP_PAIRS = [
-  { xlm: 10, usdc: 3.9 },
-  { xlm: 25, usdc: 9.75 },
-  { xlm: 50, usdc: 19.5 },
-  { xlm: 100, usdc: 39 },
-] as const;
-
-function SwapStage() {
-  const [index, setIndex] = useState(0);
+function SwapStage({ xlmUsdRate }: { xlmUsdRate?: number }) {
+  const [valueIndex, setValueIndex] = useState(0);
+  const [typedChars, setTypedChars] = useState(0);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
+      setTypedChars(String(SWAP_XLM_AMOUNTS[0]).length);
       return;
     }
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % SWAP_PAIRS.length);
-    }, 1800);
-    return () => window.clearInterval(id);
+    const timers: number[] = [];
+    const queue = (fn: () => void, ms: number) => {
+      timers.push(window.setTimeout(fn, ms));
+    };
+
+    const runCycle = (idx: number) => {
+      const fullStr = String(SWAP_XLM_AMOUNTS[idx]);
+      const len = fullStr.length;
+      setValueIndex(idx);
+      setTypedChars(0);
+
+      for (let i = 1; i <= len; i++) {
+        queue(() => setTypedChars(i), i * SWAP_TYPE_INTERVAL);
+      }
+      const eraseStart = len * SWAP_TYPE_INTERVAL + SWAP_HOLD_DURATION;
+      for (let i = 1; i <= len; i++) {
+        queue(() => setTypedChars(len - i), eraseStart + i * SWAP_ERASE_INTERVAL);
+      }
+
+      const cycleDone = eraseStart + len * SWAP_ERASE_INTERVAL + SWAP_BETWEEN_DELAY;
+      queue(() => runCycle((idx + 1) % SWAP_XLM_AMOUNTS.length), cycleDone);
+    };
+
+    runCycle(0);
+    return () => {
+      timers.forEach((t) => window.clearTimeout(t));
+    };
   }, []);
 
-  const pair = SWAP_PAIRS[index];
+  const rate = xlmUsdRate && xlmUsdRate > 0 ? xlmUsdRate : SWAP_FALLBACK_RATE;
+  const fullStr = String(SWAP_XLM_AMOUNTS[valueIndex]);
+  const xlmShown = fullStr.slice(0, typedChars);
+  const xlmValue = xlmShown ? Number(xlmShown) : 0;
+  const usdcValue = xlmValue * rate;
+  const pair = { xlm: xlmShown || "0", usdc: usdcValue };
 
   return (
     <div className="fc-swap-screen" aria-label="Swapping currencies">
@@ -174,7 +200,7 @@ function SwapStage() {
         <div className="fc-swap-panel-label">You sell</div>
         <div className="fc-swap-panel-main">
           <div className="fc-swap-amount">
-            <SlidingNumber number={pair.xlm} />
+            <span>{pair.xlm}</span>
           </div>
           <div className="fc-swap-currency">
             <XlmIcon className="fc-swap-currency-icon" />
@@ -183,9 +209,7 @@ function SwapStage() {
           </div>
         </div>
         <div className="fc-swap-panel-footer">
-          <span className="fc-swap-panel-usd">
-            $<SlidingNumber number={pair.xlm * XLM_TO_USD} decimalPlaces={2} />
-          </span>
+          <span className="fc-swap-panel-usd">${pair.usdc.toFixed(2)}</span>
         </div>
       </div>
 
@@ -199,7 +223,7 @@ function SwapStage() {
         <div className="fc-swap-panel-label">You receive</div>
         <div className="fc-swap-panel-main">
           <div className="fc-swap-amount">
-            <SlidingNumber number={pair.usdc} decimalPlaces={2} />
+            <span>{pair.usdc.toFixed(2)}</span>
           </div>
           <div className="fc-swap-currency">
             <UsdcIcon className="fc-swap-currency-icon" />
@@ -208,9 +232,7 @@ function SwapStage() {
           </div>
         </div>
         <div className="fc-swap-panel-footer">
-          <span className="fc-swap-panel-usd">
-            $<SlidingNumber number={pair.usdc} decimalPlaces={2} />
-          </span>
+          <span className="fc-swap-panel-usd">${pair.usdc.toFixed(2)}</span>
         </div>
       </div>
     </div>
@@ -249,15 +271,15 @@ function ArstCoinFace() {
    ════════════════════════════════════════ */
 
 const DISCOVER_CATEGORIES = [
-  { label: "Payments", Icon: CurrencyDollarBold, bg: "#3ecf8e", fg: "#0a3320" },
-  { label: "Bridge", Icon: BridgeBold, bg: "#4cb9ff", fg: "#04263f" },
-  { label: "Trading", Icon: ChartLineUpBold, bg: "#ffd24f", fg: "#3a2a14" },
-  { label: "Lending", Icon: HandCoinsBold, bg: "#b390ff", fg: "#1a0d3d" },
-  { label: "Derivatives", Icon: ChartBarBold, bg: "#7B68FF", fg: "#ffffff" },
-  { label: "Stablecoin", Icon: CoinBold, bg: "#4cd6c1", fg: "#04302a" },
-  { label: "Collectibles", Icon: ImageSquareBold, bg: "#ff5fa2", fg: "#ffffff" },
-  { label: "Gaming", Icon: GameControllerBold, bg: "#ff8a4c", fg: "#ffffff" },
-  { label: "Social", Icon: UsersThreeBold, bg: "#ff7474", fg: "#ffffff" },
+  { label: "Payments", Icon: CurrencyDollarFill, bg: "#3ecf8e", fg: "#0a3320" },
+  { label: "Bridges", Icon: BridgeFill, bg: "#4cb9ff", fg: "#04263f" },
+  { label: "Trading", Icon: ChartLineUpFill, bg: "#ffd24f", fg: "#3a2a14" },
+  { label: "Lending", Icon: HandCoinsFill, bg: "#b390ff", fg: "#1a0d3d" },
+  { label: "Derivatives", Icon: ChartBarFill, bg: "#7B68FF", fg: "#ffffff" },
+  { label: "Stablecoins", Icon: CoinFill, bg: "#4cd6c1", fg: "#04302a" },
+  { label: "Collectibles", Icon: ImageSquareFill, bg: "#ff5fa2", fg: "#ffffff" },
+  { label: "Gaming", Icon: GameControllerFill, bg: "#ff8a4c", fg: "#ffffff" },
+  { label: "Social", Icon: UsersThreeFill, bg: "#ff7474", fg: "#ffffff" },
 ] as const;
 
 function DiscoverStage() {
@@ -509,7 +531,7 @@ function HistoryRow({ item }: { item: HistoryItem }) {
       <span className="fc-feed-row-text flex-1 font-medium text-[var(--fc-ink)]">
         {item.action}
       </span>
-      <span className={`fc-feed-row-text font-semibold tabular-nums shrink-0 ${colorClass}`}>
+      <span className={`fc-feed-amount fc-feed-row-text font-semibold tabular-nums shrink-0 ${colorClass}`}>
         {item.primary}
       </span>
     </div>
@@ -539,45 +561,20 @@ function HistoryStage() {
    5. COLLECTIBLES — 2x2 gallery placeholders
    ════════════════════════════════════════ */
 
-type CollectibleShape = "circle" | "hexagon" | "square" | "triangle";
-
-const COLLECTIBLE_TILES: ReadonlyArray<{ variant: string; shape: CollectibleShape }> = [
-  { variant: "sky", shape: "circle" },
-  { variant: "plum", shape: "hexagon" },
-  { variant: "moss", shape: "square" },
-  { variant: "clay", shape: "triangle" },
+const COLLECTIBLE_TILES: ReadonlyArray<{ variant: string }> = [
+  { variant: "sky" },
+  { variant: "plum" },
+  { variant: "moss" },
+  { variant: "clay" },
 ];
-
-function CollectibleShapeIcon({
-  shape,
-  className,
-}: {
-  shape: CollectibleShape;
-  className?: string;
-}) {
-  return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
-      {shape === "circle" && <circle cx="50" cy="50" r="34" fill="currentColor" />}
-      {shape === "hexagon" && (
-        <path d="M50 16 L82 33 L82 67 L50 84 L18 67 L18 33 Z" fill="currentColor" />
-      )}
-      {shape === "square" && (
-        <rect x="20" y="20" width="60" height="60" rx="8" fill="currentColor" />
-      )}
-      {shape === "triangle" && (
-        <path d="M50 18 L84 76 L16 76 Z" fill="currentColor" strokeLinejoin="round" />
-      )}
-    </svg>
-  );
-}
 
 function CollectiblesStage() {
   return (
     <div className="fc-collectibles">
       <div className="fc-collectibles-grid">
-        {COLLECTIBLE_TILES.map(({ variant, shape }) => (
+        {COLLECTIBLE_TILES.map(({ variant }) => (
           <div key={variant} className={`fc-collectible-tile fc-collectible-tile--${variant}`}>
-            <CollectibleShapeIcon shape={shape} className="fc-collectible-icon" />
+            <ImageFill className="fc-collectible-icon" />
           </div>
         ))}
       </div>
@@ -723,11 +720,11 @@ function WalletsStage() {
             >
               <span className="fc-wallet-row-avatar">
                 <WalletIdenticon cells={w.cells} on={w.on} off={w.off} />
-                {isSelected && (
-                  <span className="fc-wallet-row-badge">
-                    <ThickCheck />
-                  </span>
-                )}
+                <span
+                  className={`fc-wallet-row-badge${isSelected ? " is-visible" : ""}`}
+                >
+                  <ThickCheck />
+                </span>
               </span>
               <span className="fc-wallet-row-text">
                 <span className="fc-wallet-row-name">{w.name}</span>
@@ -774,6 +771,7 @@ function ThickCheck() {
 
 function EarnStage() {
   const [stateIndex, setStateIndex] = useState(0);
+  const [ringsActive, setRingsActive] = useState(false);
   const pillRef = useRef<HTMLDivElement>(null);
   const [pillSize, setPillSize] = useState<{ width: number; height: number } | null>(null);
 
@@ -782,32 +780,45 @@ function EarnStage() {
     if (reduceMotion) {
       return;
     }
-    // Each non-final state holds for 1500ms; the final ("Deposited")
-    // state holds only as long as the outward ripple takes — once the
-    // outermost ring has turned white we jump straight back to the
-    // first state without a lingering all-white pause.
-    //
-    // Side effects (the recursive setTimeout) live outside the state
-    // updater so they only run once per tick — React strict mode runs
-    // updater functions twice in dev, which would otherwise duplicate
-    // timers and rapidly march the index past valid values.
+    // Each non-final state holds for DEFAULT_HOLD. The final ("Deposited")
+    // state has its own three-beat sequence: rings ripple in to white →
+    // rings ripple back out to invisible → a short hold on the white pill
+    // alone → cycle restarts.
     const DEFAULT_HOLD = 1500;
-    const RIPPLE_HOLD = DEPOSIT_RING_COUNT * 90 + 500;
+    const RIPPLE_STAGGER = 50;
+    const RIPPLE_TRANSITION = 300;
+    const RIPPLE_DURATION = DEPOSIT_RING_COUNT * RIPPLE_STAGGER + RIPPLE_TRANSITION;
+    const PILL_HOLD_AFTER_RINGS = 900;
+
     let cancelled = false;
-    let current = 0;
     let timer: number | undefined;
 
-    const scheduleNext = () => {
-      const hold = current === DEPOSIT_STATES.length - 1 ? RIPPLE_HOLD : DEFAULT_HOLD;
-      timer = window.setTimeout(() => {
-        if (cancelled) return;
-        current = (current + 1) % DEPOSIT_STATES.length;
-        setStateIndex(current);
-        scheduleNext();
-      }, hold);
+    const advanceTo = (idx: number) => {
+      if (cancelled) return;
+      setStateIndex(idx);
+
+      if (idx === DEPOSIT_STATES.length - 1) {
+        // Rings ripple in (turn white).
+        setRingsActive(true);
+        timer = window.setTimeout(() => {
+          if (cancelled) return;
+          // Rings ripple back out to invisible, pill stays "Deposited".
+          setRingsActive(false);
+          timer = window.setTimeout(() => {
+            if (cancelled) return;
+            // Pause done — restart from the first state.
+            advanceTo(0);
+          }, RIPPLE_DURATION + PILL_HOLD_AFTER_RINGS);
+        }, RIPPLE_DURATION);
+      } else {
+        setRingsActive(false);
+        timer = window.setTimeout(() => {
+          advanceTo(idx + 1);
+        }, DEFAULT_HOLD);
+      }
     };
 
-    scheduleNext();
+    advanceTo(0);
     return () => {
       cancelled = true;
       if (timer !== undefined) window.clearTimeout(timer);
@@ -838,7 +849,7 @@ function EarnStage() {
   return (
     <div className="fc-earn" aria-label="Deposit flow">
       <div
-        className={`fc-earn-rings${isDone ? " fc-earn-rings--done" : ""}`}
+        className={`fc-earn-rings${ringsActive ? " fc-earn-rings--done" : ""}`}
         aria-hidden="true"
       >
         {Array.from({ length: DEPOSIT_RING_COUNT }, (_, i) => {
@@ -853,11 +864,11 @@ function EarnStage() {
             ? {
                 width: `${pillSize.width + step * horizontalStep * 2}px`,
                 height: `${pillSize.height + step * verticalStep * 2}px`,
-                opacity: isDone ? 1 : Math.max(0, 0.55 - step * 0.07),
+                opacity: ringsActive ? 1 : Math.max(0, 0.55 - step * 0.07),
                 // Always staggered — so the rings ripple OUT immediately
                 // when the cycle restarts, mirroring the ripple-in instead
                 // of a holding all-white pause.
-                "--ring-state-delay": `${step * 90}ms`,
+                "--ring-state-delay": `${step * 50}ms`,
               } as CSSProperties
             : { opacity: 0 };
           return <span key={i} className="fc-earn-ring" style={style} />;
@@ -889,8 +900,10 @@ function EarnStage() {
    Wrappers — wrap each stage in the card frame
    ════════════════════════════════════════ */
 
+export type FeatureAnimationProps = { xlmUsdRate?: number };
+
 export function SendAnimation()         { return <FeatureCard><SendStage /></FeatureCard>; }
-export function SwapAnimation()         { return <FeatureCard><SwapStage /></FeatureCard>; }
+export function SwapAnimation({ xlmUsdRate }: FeatureAnimationProps = {}) { return <FeatureCard><SwapStage xlmUsdRate={xlmUsdRate} /></FeatureCard>; }
 export function DiscoverAnimation()     { return <FeatureCard><DiscoverStage /></FeatureCard>; }
 export function HistoryAnimation()      { return <FeatureCard><HistoryStage /></FeatureCard>; }
 export function CollectiblesAnimation() { return <FeatureCard><CollectiblesStage /></FeatureCard>; }
@@ -898,7 +911,7 @@ export function ReceiveAnimation()      { return <FeatureCard><ReceiveStage /></
 export function WalletsAnimation()      { return <FeatureCard><WalletsStage /></FeatureCard>; }
 export function EarnAnimation()         { return <FeatureCard className="fc-card--raised"><EarnStage /></FeatureCard>; }
 
-export const FEATURE_ANIMATIONS: Record<string, ComponentType> = {
+export const FEATURE_ANIMATIONS: Record<string, ComponentType<FeatureAnimationProps>> = {
   Send: SendAnimation,
   Swap: SwapAnimation,
   Discover: DiscoverAnimation,

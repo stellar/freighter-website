@@ -317,7 +317,6 @@ body {
 }
 .fc-card:hover {
   transform: translateY(-4px);
-  border-color: var(--fc-line-2);
   box-shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.55);
 }
 /* `will-change` is applied on the SECTION's hover so the browser
@@ -327,9 +326,8 @@ body {
 .feature-cards:hover .fc-card {
   will-change: transform;
 }
-.fc-wallet-list:hover .fc-wallet-row {
-  will-change: transform;
-}
+/* Wallet rows declare their own permanent `will-change` because the
+   selected row scales every ~1.8s — see `.fc-wallet-row` below. */
 
 /* ── Glow ring variant — animated purple→cyan border ring fades in on hover */
 .feature-cards--glow .fc-card::after {
@@ -450,28 +448,84 @@ body {
   display: flex;
   flex-direction: column;
   padding: 40px;
-  gap: clamp(8px, 2.8cqw, 12px);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 .fc-send-panel {
   flex: 1;
+  position: relative;
+  overflow: hidden;
   background: #333333; /* lighter than the Gray-4 outer */
   border: none;
   border-radius: clamp(20px, 7cqw, 32px);
   padding: 16px;
+  color: var(--color-text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.fc-send-panel-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: clamp(10px, 3cqw, 14px);
+  opacity: 1;
+  transition: opacity 0.28s var(--ease-out);
+}
+.fc-send-panel-content.is-hidden {
+  opacity: 0;
+  /* Brief pause after the Send button fills before content begins to fade. */
+  transition: opacity 0.28s var(--ease-out) 0.18s;
+}
+.fc-send-confirmed {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2.4cqw, 12px);
+  opacity: 0;
+  transform: scale(0.94);
+  transition:
+    opacity 0.28s var(--ease-out),
+    transform 0.28s var(--ease-out);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.fc-send-confirmed.is-visible {
+  opacity: 1;
+  transform: scale(1);
+  /* Wait for content fade-out (~180+280ms) plus a small gap before fading in. */
+  transition:
+    opacity 0.32s var(--ease-out) 0.58s,
+    transform 0.32s var(--ease-out) 0.58s;
+}
+.fc-send-confirmed-icon {
+  width: clamp(28px, 8cqw, 36px);
+  height: clamp(28px, 8cqw, 36px);
+  color: #3ecf8e; /* Stellar mint — success accent on gray */
+  flex-shrink: 0;
+}
+.fc-send-confirmed-text {
+  font-size: clamp(22px, 6.4cqw, 30px);
+  font-weight: 600;
   color: var(--color-text-primary);
+  letter-spacing: -0.025em;
+  line-height: 1;
 }
 
 .fc-send-recipient {
-  display: flex;
-  align-items: baseline;
+  align-self: flex-start;
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
   gap: clamp(4px, 1.4cqw, 6px);
-  font-size: clamp(16px, 5.2cqw, 22px);
+  background: transparent;
+  border: 1.5px solid var(--color-border-hover); /* Gray 7 — matches Discover pill */
+  border-radius: 999px;
+  padding: clamp(6px, 2cqw, 9px) clamp(10px, 3cqw, 14px);
+  font-size: clamp(14px, 4.4cqw, 18px);
   font-weight: 500;
   letter-spacing: -0.025em;
   line-height: 1;
@@ -487,10 +541,12 @@ body {
 
 .fc-send-currency {
   align-self: flex-start;
+  width: fit-content;
   display: inline-flex;
   align-items: center;
   gap: clamp(6px, 2cqw, 8px);
-  background: var(--color-bg-hover); /* Gray 4 — pill on Gray 1 panel */
+  background: transparent;
+  border: 1.5px solid var(--color-border-hover); /* Gray 7 — matches Discover pill */
   border-radius: 999px;
   padding: clamp(3px, 1cqw, 4px) clamp(10px, 3cqw, 14px) clamp(3px, 1cqw, 4px) clamp(3px, 1cqw, 4px);
 }
@@ -526,12 +582,10 @@ body {
 .fc-send-amount-num {
   color: var(--color-text-primary);
 }
-.fc-send-amount-decimals {
-  color: var(--color-text-tertiary);
-  font-weight: 500;
-}
 
 .fc-send-action {
+  position: relative;
+  overflow: hidden;
   background: var(--color-accent); /* brand purple */
   color: #ffffff;
   border: none;
@@ -543,12 +597,49 @@ body {
   font-size: clamp(14px, 4.6cqw, 18px);
   font-weight: 600;
   letter-spacing: -0.025em;
-  transition: transform 0.22s var(--ease-out);
+  transition:
+    transform 0.22s var(--ease-out),
+    opacity 0.28s var(--ease-out);
   transform-origin: center;
   will-change: transform;
 }
+.fc-send-action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.24);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  transition: opacity 0.28s var(--ease-out);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
 .fc-send-action--pressed {
-  transform: scale(0.92);
+  transform: scale(0.96);
+}
+.fc-send-action--pressed::before {
+  transform: scaleX(1);
+  opacity: 1;
+  transition:
+    transform 0.78s linear,
+    opacity 0s;
+}
+.fc-send-action--filled {
+  /* Fade the whole button out with the rest of the panel content. */
+  opacity: 0;
+  transition: opacity 0.28s var(--ease-out) 0.18s;
+}
+.fc-send-action--filled::before {
+  /* Hold the full-width fill briefly so the filled state reads, then fade
+     it out to reveal the purple bg underneath. */
+  transform: scaleX(1);
+  opacity: 0;
+  transition: opacity 0.32s var(--ease-out) 0.22s;
+}
+.fc-send-action-label {
+  position: relative;
+  z-index: 1;
 }
 
 /* ───── Swap card ─────
@@ -609,13 +700,15 @@ body {
   color: var(--color-text-tertiary);
   display: inline-flex;
   align-items: baseline;
+  font-size: 14px;
 }
 .fc-swap-currency {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: clamp(6px, 2cqw, 8px);
-  background: var(--color-bg-hover); /* Gray 4 — pill on #333333 panel */
+  background: transparent;
+  border: 1.5px solid var(--color-border-hover); /* Gray 7 — matches Send pill */
   border-radius: 999px;
   padding: clamp(3px, 1cqw, 4px) clamp(10px, 3cqw, 14px) clamp(3px, 1cqw, 4px) clamp(3px, 1cqw, 4px);
 }
@@ -734,9 +827,12 @@ body {
     color 0.6s var(--ease-out);
 }
 .fc-discover-pill[data-active] {
-  background: var(--fc-pill-bg, var(--color-accent));
-  border-color: var(--fc-pill-bg, var(--color-accent));
-  color: var(--fc-pill-fg, #ffffff);
+  background: #4F4F4F; /* Gray 8 — brighter than Gray-7 inactive border */
+  border-color: #4F4F4F;
+  color: var(--color-text-primary);
+}
+.fc-discover-pill[data-active] .fc-discover-pill-icon {
+  color: var(--fc-pill-bg, var(--color-accent));
 }
 .fc-discover-pill-icon {
   width: clamp(16px, 5.2cqw, 22px);
@@ -760,6 +856,7 @@ body {
   /* Ease-out-back (spring overshoot) — mirrors the History feed row's
      scale-pop entrance so the row drops in with a tiny bounce. */
   animation: fc-discover-row-enter 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  will-change: transform, opacity;
 }
 .fc-discover-row:nth-child(1) { animation-delay: 0.05s; }
 .fc-discover-row:nth-child(2) { animation-delay: 0.2s; }
@@ -807,6 +904,15 @@ body {
 }
 .fc-feed-row-text {
   font-size: clamp(16px, 4.6cqw, 22px);
+}
+.fc-feed-amount {
+  display: inline-flex;
+  align-items: center;
+  background: #333333; /* one step above the Gray-4 card surface */
+  border-radius: 999px;
+  padding: 9px clamp(10px, 3cqw, 14px);
+  font-size: 14px;
+  line-height: 1;
 }
 /* Bottom fade — sits above the rotating rows and blends them into
    the card background so the exiting row never hard-cuts. */
@@ -984,16 +1090,16 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  border: 1.5px dashed var(--color-text-tertiary);
+  border: 1.5px dashed var(--color-bg-hover); /* default matches card bg → invisible */
   /* Width / height are set inline based on the pill's measured size so
      each ring echoes the pill's aspect ratio. The state-bound props
      (opacity and border-color) carry a per-ring delay so the white
      ripple radiates outward when the flow reaches "Deposited". */
   transition:
-    width 0.5s var(--ease-out),
-    height 0.5s var(--ease-out),
-    opacity 0.5s var(--ease-out) var(--ring-state-delay, 0ms),
-    border-color 0.5s var(--ease-out) var(--ring-state-delay, 0ms);
+    width 0.3s var(--ease-out),
+    height 0.3s var(--ease-out),
+    opacity 0.3s var(--ease-out) var(--ring-state-delay, 0ms),
+    border-color 0.3s var(--ease-out) var(--ring-state-delay, 0ms);
 }
 .fc-earn-rings--done .fc-earn-ring {
   border-color: #ffffff;
@@ -1034,6 +1140,7 @@ body {
   border: 2.5px solid var(--color-text-primary);
   border-top-color: transparent;
   animation: fc-earn-spin 0.8s linear infinite;
+  will-change: transform;
 }
 .fc-earn-pill-check {
   width: 100%;
@@ -1056,6 +1163,7 @@ body {
 .fc-earn-pill-text {
   display: inline-block;
   animation: fc-earn-pill-text-in 0.45s var(--ease-out) forwards;
+  will-change: opacity, filter;
 }
 @keyframes fc-earn-pill-text-in {
   0%   { opacity: 0; filter: blur(8px); }
@@ -1105,7 +1213,10 @@ body {
   align-items: center;
   justify-content: center;
   transform-origin: top left;
-  will-change: transform, border-radius;
+  /* No `will-change: transform` — that caches the layer bitmap at the
+     unscaled tile size and then stretches it during focus, pixelating
+     the SVG icon. Letting the browser re-rasterize on each frame keeps
+     the icon crisp at every scale. */
 }
 /* Each tile gets its corner placement as a default transform so the
    grid still reads correctly even when animations are paused (off-screen)
@@ -1189,13 +1300,13 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 2.6cqw, 12px);
+  gap: 12px;
 }
 .fc-wallet-row {
   display: flex;
   align-items: center;
   gap: clamp(10px, 3.4cqw, 14px);
-  background: var(--color-bg-elevated);
+  background: #333333; /* matches Collectibles tile — one step above Gray-4 card */
   border: 1px solid var(--color-border);
   border-radius: clamp(12px, 4cqw, 18px);
   padding: clamp(10px, 3.4cqw, 14px) clamp(12px, 4cqw, 16px);
@@ -1204,6 +1315,7 @@ body {
   transition:
     opacity 0.4s var(--ease-out),
     transform 0.4s var(--ease-out);
+  will-change: transform, opacity;
 }
 .fc-wallet-row--selected {
   opacity: 1;
@@ -1233,7 +1345,22 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--color-bg-elevated);
+  border: 2px solid #333333; /* matches row bg */
+  /* Default (unselected) — pre-scaled-in state. Reset instantly so the
+     deselected row doesn't visibly fade out. */
+  opacity: 0;
+  transform: scale(0.4);
+  transform-origin: center;
+  transition: none;
+  pointer-events: none;
+}
+.fc-wallet-row-badge.is-visible {
+  /* Scale in AFTER the row scale settles (~0.4s row transition). */
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.22s var(--ease-out) 0.32s,
+    transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) 0.32s;
 }
 .fc-wallet-row-badge svg {
   width: 70%;
@@ -1296,6 +1423,9 @@ body {
   filter: blur(20px);
   opacity: 0.55;
   animation: fc-receive-incoming-glow 6s ease-in-out infinite;
+  /* Blur is expensive to re-rasterize; promoting to its own layer lets the
+     browser cache the blurred bitmap and only animate the opacity. */
+  will-change: opacity;
 }
 @keyframes fc-receive-incoming-glow {
   0%, 23%, 56%, 89%, 100% { opacity: 0.42 }
@@ -1387,6 +1517,7 @@ body {
   opacity: 1;
   transform: scale(1);
   animation: fc-receive-incoming-check 6s ease-out infinite;
+  will-change: transform, opacity;
 }
 @keyframes fc-receive-incoming-check {
   0%, 21%, 33%, 54%, 66%, 87%, 100% { opacity: 1; transform: scale(1) }
