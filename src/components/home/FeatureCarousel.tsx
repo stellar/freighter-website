@@ -8,7 +8,7 @@ import {
   SwapBold,
   CompassBold,
   ClockCounterClockwiseBold,
-  DiamondBold,
+  ImagesBold,
   WalletBold,
   TrendUpBold,
   CaretLeftBold,
@@ -22,7 +22,7 @@ const ITEMS = [
   { label: "Deposit", icon: TrendUpBold },
   { label: "Discover", icon: CompassBold },
   { label: "History", icon: ClockCounterClockwiseBold },
-  { label: "Collectibles", icon: DiamondBold },
+  { label: "Collectibles", icon: ImagesBold },
   { label: "Wallets", icon: WalletBold },
 ];
 

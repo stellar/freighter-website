@@ -6,7 +6,7 @@ import { staggerContainer, fadeSlideUp } from "@/lib/animations";
 import { clsx } from "clsx";
 import {
   SwapBold,
-  DiamondBold,
+  ImagesBold,
   FingerprintBold,
   CurrencyDollarBold,
   ShieldCheckBold,
@@ -28,7 +28,7 @@ const features: { title: string; description: string; icon: ComponentType<{ size
   {
     title: "Collectibles.",
     description: "View, store, and manage your Stellar NFTs natively.",
-    icon: DiamondBold,
+    icon: ImagesBold,
   },
   {
     title: "Biometric Login.",

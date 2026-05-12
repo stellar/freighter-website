@@ -21,7 +21,7 @@ import {
   GameControllerFill,
   HandCoinsFill,
   ImageFill,
-  ImageSquareFill,
+  ImagesFill,
   UsersThreeFill,
 } from "@/components/ui/PhosphorIcons";
 import { SlidingNumber } from "@/components/ui/sliding-number";
@@ -277,7 +277,7 @@ const DISCOVER_CATEGORIES = [
   { label: "Lending", Icon: HandCoinsFill, bg: "#b390ff", fg: "#1a0d3d" },
   { label: "Derivatives", Icon: ChartBarFill, bg: "#7B68FF", fg: "#ffffff" },
   { label: "Stablecoins", Icon: CoinFill, bg: "#4cd6c1", fg: "#04302a" },
-  { label: "Collectibles", Icon: ImageSquareFill, bg: "#ff5fa2", fg: "#ffffff" },
+  { label: "Collectibles", Icon: ImagesFill, bg: "#ff5fa2", fg: "#ffffff" },
   { label: "Gaming", Icon: GameControllerFill, bg: "#ff8a4c", fg: "#ffffff" },
   { label: "Social", Icon: UsersThreeFill, bg: "#ff7474", fg: "#ffffff" },
 ] as const;
@@ -856,14 +856,16 @@ function EarnStage() {
           const step = i + 1;
           // Each ring grows by a fixed pixel offset per step so the
           // overall shape echoes the pill's aspect ratio. The ripple
-          // delay staggers the border-color / opacity transition so
-          // the white state radiates outward from ring 1 to ring N.
+          // delay staggers the stroke / opacity transition so the
+          // white state radiates outward from ring 1 to ring N.
           const horizontalStep = 28;
           const verticalStep = 22;
+          const w = pillSize ? pillSize.width + step * horizontalStep * 2 : 0;
+          const h = pillSize ? pillSize.height + step * verticalStep * 2 : 0;
           const style: CSSProperties = pillSize
             ? {
-                width: `${pillSize.width + step * horizontalStep * 2}px`,
-                height: `${pillSize.height + step * verticalStep * 2}px`,
+                width: `${w}px`,
+                height: `${h}px`,
                 opacity: ringsActive ? 1 : Math.max(0, 0.55 - step * 0.07),
                 // Always staggered — so the rings ripple OUT immediately
                 // when the cycle restarts, mirroring the ripple-in instead
@@ -871,7 +873,27 @@ function EarnStage() {
                 "--ring-state-delay": `${step * 50}ms`,
               } as CSSProperties
             : { opacity: 0 };
-          return <span key={i} className="fc-earn-ring" style={style} />;
+          // viewBox matches pixel dimensions so rx/ry render as true
+          // half-height pill corners regardless of ring size.
+          return (
+            <svg
+              key={i}
+              className="fc-earn-ring"
+              viewBox={`0 0 ${Math.max(1, w)} ${Math.max(1, h)}`}
+              style={style}
+              aria-hidden="true"
+            >
+              <rect
+                x="0"
+                y="0"
+                width={w}
+                height={h}
+                rx={h / 2}
+                ry={h / 2}
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+          );
         })}
       </div>
       <div

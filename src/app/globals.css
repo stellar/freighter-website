@@ -447,7 +447,10 @@ body {
   background: var(--color-bg-hover); /* Gray 4 — brighter outer */
   display: flex;
   flex-direction: column;
-  padding: 40px;
+  /* Tighter top/bottom so the inner panel matches the visible height of
+     the two-panel Swap card (which has a 4px gap eating into its
+     vertical space). */
+  padding: 36px 40px;
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -1089,20 +1092,28 @@ body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border-radius: 999px;
-  border: 1.5px dashed var(--color-bg-hover); /* default matches card bg → invisible */
+  overflow: visible;
+  pointer-events: none;
   /* Width / height are set inline based on the pill's measured size so
      each ring echoes the pill's aspect ratio. The state-bound props
-     (opacity and border-color) carry a per-ring delay so the white
-     ripple radiates outward when the flow reaches "Deposited". */
+     (opacity and stroke) carry a per-ring delay so the white ripple
+     radiates outward when the flow reaches "Deposited". */
   transition:
     width 0.3s var(--ease-out),
     height 0.3s var(--ease-out),
-    opacity 0.3s var(--ease-out) var(--ring-state-delay, 0ms),
-    border-color 0.3s var(--ease-out) var(--ring-state-delay, 0ms);
+    opacity 0.3s var(--ease-out) var(--ring-state-delay, 0ms);
 }
-.fc-earn-rings--done .fc-earn-ring {
-  border-color: #ffffff;
+.fc-earn-ring rect {
+  fill: none;
+  stroke: var(--color-bg-hover); /* matches card bg → invisible */
+  stroke-width: 1;
+  /* 1px dash + 2px gap → reads as dotted rather than dashed. */
+  stroke-dasharray: 1 2;
+  stroke-linecap: round;
+  transition: stroke 0.3s var(--ease-out) var(--ring-state-delay, 0ms);
+}
+.fc-earn-rings--done .fc-earn-ring rect {
+  stroke: #ffffff;
 }
 .fc-earn-pill {
   position: relative;
@@ -1112,8 +1123,8 @@ body {
   gap: clamp(8px, 2.6cqw, 12px);
   padding: clamp(10px, 3.4cqw, 14px) clamp(20px, 6.4cqw, 28px) clamp(10px, 3.4cqw, 14px) clamp(10px, 3.4cqw, 14px);
   border-radius: 999px;
-  border: 2.5px dashed var(--color-text-primary);
-  background: var(--color-bg-hover);
+  border: 2.5px solid transparent;
+  background: #333333; /* matches row bg used across other cards */
   color: var(--color-text-primary);
   font-size: clamp(16px, 5.2cqw, 22px);
   font-weight: 600;
@@ -1122,8 +1133,7 @@ body {
   transition:
     background-color 0.4s var(--ease-out),
     color 0.4s var(--ease-out),
-    border-color 0.4s var(--ease-out),
-    border-style 0s 0.4s;
+    border-color 0.4s var(--ease-out);
 }
 .fc-earn-pill-leader {
   width: clamp(20px, 7cqw, 28px);
@@ -1172,7 +1182,6 @@ body {
 .fc-earn-pill--done {
   background: #ffffff;
   border-color: #ffffff;
-  border-style: solid;
   color: #161616;
 }
 

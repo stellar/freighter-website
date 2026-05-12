@@ -25,6 +25,7 @@ import {
   CurrencyDollar,
   Image as PhosphorImage,
   ImageSquare,
+  Images,
   Download,
   ArrowRight,
   Plus,
@@ -84,6 +85,7 @@ export const LockBold = bold(Lock);
 export const FingerprintBold = bold(Fingerprint);
 export const CurrencyDollarBold = bold(CurrencyDollar);
 export const ImageSquareBold = bold(ImageSquare);
+export const ImagesBold = bold(Images);
 export const DownloadBold = bold(Download);
 export const ArrowRightBold = bold(ArrowRight);
 export const PlusBold = bold(Plus);
@@ -120,6 +122,7 @@ export const ChartBarFill = fill(ChartBar);
 export const CoinFill = fill(Coin);
 export const ImageSquareFill = fill(ImageSquare);
 export const ImageFill = fill(PhosphorImage);
+export const ImagesFill = fill(Images);
 export const GameControllerFill = fill(GameController);
 export const UsersThreeFill = fill(UsersThree);
 export const CheckFill = fill(Check);
