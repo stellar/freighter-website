@@ -47,7 +47,7 @@ function PhoneMockups() {
           transition={
             entered
               ? springTransition
-              : { delay: 0.55 + i * 0.1, duration: 0.7, ease: EASE_OUT }
+              : { delay: 0.55 + i * 0.1, duration: 0.5, ease: EASE_OUT }
           }
           onMouseEnter={() => setHovered(phone.id)}
           onMouseLeave={() => setHovered(null)}

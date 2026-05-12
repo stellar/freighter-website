@@ -129,39 +129,64 @@ export function ChangelogContent({ entries }: { entries: ChangelogEntry[] }) {
               animate="visible"
               className="space-y-8"
             >
-              {filtered.map((entry, index) => (
-                <motion.div
-                  key={`${entry.platform}-${entry.version}-${index}`}
-                  variants={fadeSlideUp}
-                  className="relative pl-8"
-                >
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 top-2 w-[15px] h-[15px] rounded-full border-2 border-accent bg-bg-primary" />
-
-                  <div className="bg-bg-elevated rounded-xl border border-border p-6">
-                    <div className="mb-3 flex flex-wrap items-center gap-3">
+              {filtered.length === 0 ? (
+                <motion.div variants={fadeSlideUp} className="relative pl-8">
+                  <div className="absolute left-0 top-2 h-[15px] w-[15px] rounded-full border-2 border-border bg-bg-primary" />
+                  <div className="rounded-xl border border-border bg-bg-elevated p-6">
+                    <h3 className="text-lg font-semibold text-text-primary">
+                      No releases to show
+                    </h3>
+                    <p className="mt-2 text-sm text-text-secondary">
+                      {filter === "all"
+                        ? "We couldn't load releases right now. View the full release history on "
+                        : `No ${filter} releases match yet. See all releases on `}
                       <a
-                        href={entry.url}
+                        href="https://github.com/stellar/freighter/releases"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-mono bg-accent/10 text-accent px-2 py-1 rounded-full hover:bg-accent/20 transition-colors"
+                        className="text-accent hover:underline"
                       >
-                        v{entry.version}
+                        GitHub
                       </a>
-                      <span className="text-xs font-medium uppercase tracking-wider bg-bg-hover text-text-tertiary px-2 py-1 rounded-full">
-                        {entry.platform}
-                      </span>
-                      <span className="ml-auto text-sm text-text-tertiary">
-                        {entry.date}
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-text-primary">
-                      {entry.title}
-                    </h3>
-                    {entry.body && <ReleaseBody body={entry.body} />}
+                      .
+                    </p>
                   </div>
                 </motion.div>
-              ))}
+              ) : (
+                filtered.map((entry, index) => (
+                  <motion.div
+                    key={`${entry.platform}-${entry.version}-${index}`}
+                    variants={fadeSlideUp}
+                    className="relative pl-8"
+                  >
+                    {/* Timeline dot */}
+                    <div className="absolute left-0 top-2 w-[15px] h-[15px] rounded-full border-2 border-accent bg-bg-primary" />
+
+                    <div className="bg-bg-elevated rounded-xl border border-border p-6">
+                      <div className="mb-3 flex flex-wrap items-center gap-3">
+                        <a
+                          href={entry.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-mono bg-accent/10 text-accent px-2 py-1 rounded-full hover:bg-accent/20 transition-colors"
+                        >
+                          v{entry.version}
+                        </a>
+                        <span className="text-xs font-medium uppercase tracking-wider bg-bg-hover text-text-tertiary px-2 py-1 rounded-full">
+                          {entry.platform}
+                        </span>
+                        <span className="ml-auto text-sm text-text-tertiary">
+                          {entry.date}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-text-primary">
+                        {entry.title}
+                      </h3>
+                      {entry.body && <ReleaseBody body={entry.body} />}
+                    </div>
+                  </motion.div>
+                ))
+              )}
             </motion.div>
           </motion.div>
         </AnimatePresence>

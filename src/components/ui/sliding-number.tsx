@@ -146,6 +146,11 @@ function SlidingNumber({
   const [newIntStrRaw, newDecStrRaw = ""] = numberStr.split(".");
   const newIntStr = padStart && newIntStrRaw?.length === 1 ? `0${newIntStrRaw}` : newIntStrRaw;
 
+  // Intentional: the previous number is tracked in a ref so the digit
+  // rollers can animate from the prior frame's value. The ref is mutated
+  // in the effect below after each commit; reading it during render here
+  // gives us the previous render's value, which is exactly what we want.
+  // eslint-disable-next-line react-hooks/refs
   const prevFormatted = formatNumber(prevNumberRef.current);
   const [prevIntStrRaw = "", prevDecStrRaw = ""] = prevFormatted.split(".");
   const prevIntStr = padStart && prevIntStrRaw.length === 1 ? `0${prevIntStrRaw}` : prevIntStrRaw;

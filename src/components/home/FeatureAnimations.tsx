@@ -24,7 +24,6 @@ import {
   ImagesFill,
   UsersThreeFill,
 } from "@/components/ui/PhosphorIcons";
-import { SlidingNumber } from "@/components/ui/sliding-number";
 
 /* ───────────────────────────────────────────────────
    Shared frame — clean card with stage; title lives
@@ -68,12 +67,18 @@ function XlmIcon({ className }: { className?: string }) {
    ════════════════════════════════════════ */
 
 function SendStage() {
-  const [phase, setPhase] = useState<"idle" | "pressing" | "sent">("idle");
+  // Derive the initial phase from the user's motion preference so we never
+  // call setState synchronously inside the effect on first render.
+  const [phase, setPhase] = useState<"idle" | "pressing" | "sent">(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "sent"
+      : "idle",
+  );
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduceMotion) {
-      setPhase("sent");
       return;
     }
     const timers: number[] = [];
