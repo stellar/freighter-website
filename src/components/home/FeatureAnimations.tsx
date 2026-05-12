@@ -1,18 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState, type ComponentType, type CSSProperties, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentType,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import Image from "next/image";
 import {
   ArrowDownBold,
   BridgeBold,
   CaretDownBold,
+  ChartBarBold,
   ChartLineUpBold,
   CheckCircleBold,
+  CoinBold,
   CurrencyDollarBold,
   GameControllerBold,
+  HandCoinsBold,
   ImageSquareBold,
   UsersThreeBold,
-  WrenchBold,
 } from "@/components/ui/PhosphorIcons";
 import { SlidingNumber } from "@/components/ui/sliding-number";
 
@@ -61,6 +70,7 @@ const SEND_AMOUNTS = [100, 250, 500, 750] as const;
 
 function SendStage() {
   const [index, setIndex] = useState(0);
+  const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -81,6 +91,18 @@ function SendStage() {
       if (intervalId !== undefined) window.clearInterval(intervalId);
     };
   }, []);
+
+  // After each amount transition lands, briefly compress the Send
+  // button so it reads as if the user just tapped it.
+  useEffect(() => {
+    if (index === 0) return;
+    const pressIn = window.setTimeout(() => setPressed(true), 650);
+    const pressOut = window.setTimeout(() => setPressed(false), 920);
+    return () => {
+      window.clearTimeout(pressIn);
+      window.clearTimeout(pressOut);
+    };
+  }, [index]);
 
   const amount = SEND_AMOUNTS[index];
 
@@ -105,7 +127,12 @@ function SendStage() {
         </div>
       </div>
 
-      <div className="fc-send-action" aria-hidden="true">Send</div>
+      <div
+        className={`fc-send-action${pressed ? " fc-send-action--pressed" : ""}`}
+        aria-hidden="true"
+      >
+        Send
+      </div>
     </div>
   );
 }
@@ -222,13 +249,15 @@ function ArstCoinFace() {
    ════════════════════════════════════════ */
 
 const DISCOVER_CATEGORIES = [
-  { label: "DeFi", Icon: CurrencyDollarBold, bg: "#3ecf8e", fg: "#0a3320" },
-  { label: "NFTs", Icon: ImageSquareBold, bg: "#ff5fa2", fg: "#ffffff" },
-  { label: "Gaming", Icon: GameControllerBold, bg: "#ff8a4c", fg: "#ffffff" },
+  { label: "Payments", Icon: CurrencyDollarBold, bg: "#3ecf8e", fg: "#0a3320" },
   { label: "Bridge", Icon: BridgeBold, bg: "#4cb9ff", fg: "#04263f" },
-  { label: "Yield", Icon: ChartLineUpBold, bg: "#ffd24f", fg: "#3a2a14" },
+  { label: "Trading", Icon: ChartLineUpBold, bg: "#ffd24f", fg: "#3a2a14" },
+  { label: "Lending", Icon: HandCoinsBold, bg: "#b390ff", fg: "#1a0d3d" },
+  { label: "Derivatives", Icon: ChartBarBold, bg: "#7B68FF", fg: "#ffffff" },
+  { label: "Stablecoin", Icon: CoinBold, bg: "#4cd6c1", fg: "#04302a" },
+  { label: "Collectibles", Icon: ImageSquareBold, bg: "#ff5fa2", fg: "#ffffff" },
+  { label: "Gaming", Icon: GameControllerBold, bg: "#ff8a4c", fg: "#ffffff" },
   { label: "Social", Icon: UsersThreeBold, bg: "#ff7474", fg: "#ffffff" },
-  { label: "Tools", Icon: WrenchBold, bg: "#7B68FF", fg: "#ffffff" },
 ] as const;
 
 function DiscoverStage() {
@@ -434,37 +463,37 @@ const HISTORY_ITEMS: HistoryItem[] = [
   {
     tile: <SwapTile />,
     action: "Swapped",
-    primary: "+40.40 USDC",
+    primary: "+$40.40",
     primaryColor: "green",
   },
   {
     tile: <TokenTile variant="xlm" />,
     action: "Sent",
-    primary: "−50.00 XLM",
+    primary: "$19.50",
     primaryColor: "white",
   },
   {
     tile: <TokenTile variant="xlm" />,
     action: "Received",
-    primary: "+25.00 XLM",
+    primary: "+$9.75",
     primaryColor: "green",
   },
   {
     tile: <TokenTile variant="usdc" />,
     action: "Sent",
-    primary: "−15.00 USDC",
+    primary: "$15.00",
     primaryColor: "white",
   },
   {
     tile: <TokenTile variant="usdc" />,
     action: "Interacted",
-    primary: "−20.00 USDC",
+    primary: "$20.00",
     primaryColor: "white",
   },
   {
     tile: <TokenTile variant="arst" />,
     action: "Received",
-    primary: "+50.00 ARST",
+    primary: "+$13.20",
     primaryColor: "green",
   },
 ];
@@ -477,10 +506,10 @@ function HistoryRow({ item }: { item: HistoryItem }) {
   return (
     <div className="flex items-center gap-3.5">
       {item.tile}
-      <span className="flex-1 text-[15px] font-medium text-[var(--fc-ink)]">
+      <span className="flex-1 text-[16px] font-medium text-[var(--fc-ink)]">
         {item.action}
       </span>
-      <span className={`text-[15px] font-semibold tabular-nums shrink-0 ${colorClass}`}>
+      <span className={`text-[16px] font-semibold tabular-nums shrink-0 ${colorClass}`}>
         {item.primary}
       </span>
     </div>
@@ -510,15 +539,45 @@ function HistoryStage() {
    5. COLLECTIBLES — 2x2 gallery placeholders
    ════════════════════════════════════════ */
 
-const COLLECTIBLE_TILES = ["sky", "plum", "moss", "clay"] as const;
+type CollectibleShape = "circle" | "hexagon" | "square" | "triangle";
+
+const COLLECTIBLE_TILES: ReadonlyArray<{ variant: string; shape: CollectibleShape }> = [
+  { variant: "sky", shape: "circle" },
+  { variant: "plum", shape: "hexagon" },
+  { variant: "moss", shape: "square" },
+  { variant: "clay", shape: "triangle" },
+];
+
+function CollectibleShapeIcon({
+  shape,
+  className,
+}: {
+  shape: CollectibleShape;
+  className?: string;
+}) {
+  return (
+    <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
+      {shape === "circle" && <circle cx="50" cy="50" r="34" fill="currentColor" />}
+      {shape === "hexagon" && (
+        <path d="M50 16 L82 33 L82 67 L50 84 L18 67 L18 33 Z" fill="currentColor" />
+      )}
+      {shape === "square" && (
+        <rect x="20" y="20" width="60" height="60" rx="8" fill="currentColor" />
+      )}
+      {shape === "triangle" && (
+        <path d="M50 18 L84 76 L16 76 Z" fill="currentColor" strokeLinejoin="round" />
+      )}
+    </svg>
+  );
+}
 
 function CollectiblesStage() {
   return (
     <div className="fc-collectibles">
       <div className="fc-collectibles-grid">
-        {COLLECTIBLE_TILES.map((tone) => (
-          <div key={tone} className={`fc-collectible-tile fc-collectible-tile--${tone}`}>
-            <ImageSquareBold className="fc-collectible-icon" />
+        {COLLECTIBLE_TILES.map(({ variant, shape }) => (
+          <div key={variant} className={`fc-collectible-tile fc-collectible-tile--${variant}`}>
+            <CollectibleShapeIcon shape={shape} className="fc-collectible-icon" />
           </div>
         ))}
       </div>
@@ -723,10 +782,36 @@ function EarnStage() {
     if (reduceMotion) {
       return;
     }
-    const id = window.setInterval(() => {
-      setStateIndex((i) => (i + 1) % DEPOSIT_STATES.length);
-    }, 1500);
-    return () => window.clearInterval(id);
+    // Each non-final state holds for 1500ms; the final ("Deposited")
+    // state holds only as long as the outward ripple takes — once the
+    // outermost ring has turned white we jump straight back to the
+    // first state without a lingering all-white pause.
+    //
+    // Side effects (the recursive setTimeout) live outside the state
+    // updater so they only run once per tick — React strict mode runs
+    // updater functions twice in dev, which would otherwise duplicate
+    // timers and rapidly march the index past valid values.
+    const DEFAULT_HOLD = 1500;
+    const RIPPLE_HOLD = DEPOSIT_RING_COUNT * 90 + 500;
+    let cancelled = false;
+    let current = 0;
+    let timer: number | undefined;
+
+    const scheduleNext = () => {
+      const hold = current === DEPOSIT_STATES.length - 1 ? RIPPLE_HOLD : DEFAULT_HOLD;
+      timer = window.setTimeout(() => {
+        if (cancelled) return;
+        current = (current + 1) % DEPOSIT_STATES.length;
+        setStateIndex(current);
+        scheduleNext();
+      }, hold);
+    };
+
+    scheduleNext();
+    return () => {
+      cancelled = true;
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
   }, []);
 
   // Track the pill's actual rendered size so the surrounding rings can
@@ -752,21 +837,28 @@ function EarnStage() {
 
   return (
     <div className="fc-earn" aria-label="Deposit flow">
-      <div className="fc-earn-rings" aria-hidden="true">
+      <div
+        className={`fc-earn-rings${isDone ? " fc-earn-rings--done" : ""}`}
+        aria-hidden="true"
+      >
         {Array.from({ length: DEPOSIT_RING_COUNT }, (_, i) => {
-          // Skip the inner-most ring slot so the closest ring already
-          // sits two gap-widths out from the pill.
-          const step = i + 2;
+          const step = i + 1;
           // Each ring grows by a fixed pixel offset per step so the
-          // overall shape echoes the pill's aspect ratio.
+          // overall shape echoes the pill's aspect ratio. The ripple
+          // delay staggers the border-color / opacity transition so
+          // the white state radiates outward from ring 1 to ring N.
           const horizontalStep = 28;
           const verticalStep = 22;
           const style: CSSProperties = pillSize
             ? {
                 width: `${pillSize.width + step * horizontalStep * 2}px`,
                 height: `${pillSize.height + step * verticalStep * 2}px`,
-                opacity: Math.max(0, 0.55 - step * 0.07),
-              }
+                opacity: isDone ? 1 : Math.max(0, 0.55 - step * 0.07),
+                // Always staggered — so the rings ripple OUT immediately
+                // when the cycle restarts, mirroring the ripple-in instead
+                // of a holding all-white pause.
+                "--ring-state-delay": `${step * 90}ms`,
+              } as CSSProperties
             : { opacity: 0 };
           return <span key={i} className="fc-earn-ring" style={style} />;
         })}

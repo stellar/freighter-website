@@ -34,6 +34,9 @@ import {
   UsersThree,
   Wrench,
   ChartLineUp,
+  ChartBar,
+  HandCoins,
+  Coin,
   LinkSimple,
   Check,
   type IconProps,
@@ -89,6 +92,9 @@ export const GameControllerBold = bold(GameController);
 export const UsersThreeBold = bold(UsersThree);
 export const WrenchBold = bold(Wrench);
 export const ChartLineUpBold = bold(ChartLineUp);
+export const ChartBarBold = bold(ChartBar);
+export const HandCoinsBold = bold(HandCoins);
+export const CoinBold = bold(Coin);
 export const LinkSimpleBold = bold(LinkSimple);
 export const CheckBold = bold(Check);
 

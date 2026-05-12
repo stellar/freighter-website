@@ -9,7 +9,6 @@ import {
   CompassBold,
   ClockCounterClockwiseBold,
   DiamondBold,
-  DownloadSimpleBold,
   WalletBold,
   TrendUpBold,
   CaretLeftBold,
@@ -24,7 +23,6 @@ const ITEMS = [
   { label: "Discover", icon: CompassBold },
   { label: "History", icon: ClockCounterClockwiseBold },
   { label: "Collectibles", icon: DiamondBold },
-  { label: "Receive", icon: DownloadSimpleBold },
   { label: "Wallets", icon: WalletBold },
 ];
 
@@ -152,7 +150,7 @@ export function FeatureCarousel({ cardStyle = "solid" }: { cardStyle?: CardStyle
                     </div>
                   ) : (
                     <div className="flex items-center gap-3 mt-4">
-                      <div className="size-[35px] rounded-full bg-accent shrink-0 flex items-center justify-center text-white">
+                      <div className="size-[35px] rounded-full bg-bg-hover shrink-0 flex items-center justify-center text-accent-light">
                         <Icon size={18} />
                       </div>
                       <span className="text-base sm:text-lg font-medium text-white tracking-[-0.96px]">
