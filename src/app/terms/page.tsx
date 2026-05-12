@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { BackToTopButton } from "@/components/ui/BackToTopButton";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
@@ -1252,6 +1253,7 @@ export default function TermsPage() {
         </div>
       </main>
       <Footer />
+      <BackToTopButton />
     </>
   );
 }

@@ -5,7 +5,7 @@ import { fadeSlideUp } from "@/lib/animations";
 import { RoundedQR } from "@/components/ui/RoundedQR";
 import { LINKS } from "@/lib/constants";
 import Image from "next/image";
-import { AppleLogoBold, AndroidLogoBold } from "@/components/ui/PhosphorIcons";
+import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
 import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
 
 export function DownloadCards() {
@@ -31,14 +31,14 @@ export function DownloadCards() {
                 href={LINKS.iosApp}
                 className="inline-flex items-center gap-1 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition duration-300 ease-out"
               >
-                <AppleLogoBold size={14} className="opacity-70" />
+                <AppleLogoFill size={14} className="opacity-70" />
                 Get iOS
               </a>
               <a
                 href={LINKS.androidApp}
                 className="inline-flex items-center gap-1 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition duration-300 ease-out"
               >
-                <AndroidLogoBold size={14} className="opacity-70" />
+                <AndroidLogoFill size={14} className="opacity-70" />
                 Get Android
               </a>
             </div>

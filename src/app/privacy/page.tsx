@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { BackToTopButton } from "@/components/ui/BackToTopButton";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -544,6 +545,7 @@ export default function PrivacyPage() {
         </div>
       </main>
       <Footer />
+      <BackToTopButton />
     </>
   );
 }

@@ -898,6 +898,16 @@ body {
   overflow: visible;
   padding: 40px;
 }
+/* On mobile the card is much taller relative to the feed content; vertically
+   center the heading + rows group so empty space sits above and below rather
+   than below only. */
+@media (max-width: 639px) {
+  .fc-feed-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
 /* Row internals scale with the card. Targets the Tailwind-generated
    width/height utilities on the History row's token tile so the
    icons grow on mobile where the card is much wider. */

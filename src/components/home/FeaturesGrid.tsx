@@ -87,7 +87,8 @@ export function FeaturesGrid() {
                 className={clsx(
                   "feature-cell flex gap-4 items-start p-8",
                   i % 3 !== 2 && "md:border-r md:border-border",
-                  i < 6 && "border-b border-border"
+                  i < 8 && "border-b border-border",
+                  i >= 6 && "md:border-b-0"
                 )}
               >
                 <div className="feature-icon shrink-0 mt-0.5 text-accent-light">

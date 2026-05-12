@@ -67,7 +67,7 @@ export function Footer() {
     <footer className="mt-8 pb-[72px]">
       <div className="max-w-[1024px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-8 sm:gap-3 text-sm font-normal text-text-secondary">
         <p>&copy; 2026 Stellar Development Foundation</p>
-        <nav className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <nav className="grid grid-cols-2 grid-rows-3 grid-flow-col gap-x-6 gap-y-3 items-start w-full sm:w-auto sm:flex sm:flex-row sm:items-center sm:gap-3">
           {footerLinksBefore.map((link) =>
             link.external ? (
               <a
