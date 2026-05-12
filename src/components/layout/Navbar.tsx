@@ -22,8 +22,8 @@ export function Navbar() {
       className="relative z-50 px-6 pt-5"
       aria-label="Primary navigation"
     >
-      <div className="relative mx-auto flex w-full max-w-[1024px] items-center justify-between p-3">
-        <Link href="/" className="logo-glow relative ml-3 size-10 shrink-0 overflow-hidden rounded-[9px] bg-[#5842c3]">
+      <div className="relative mx-auto flex w-full max-w-[1024px] items-center justify-between py-3">
+        <Link href="/" className="logo-glow relative size-10 shrink-0 overflow-hidden rounded-[9px] bg-[#5842c3]">
           <Image
             src="/images/freighter-icon.png"
             alt="Freighter"
