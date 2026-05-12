@@ -506,10 +506,10 @@ function HistoryRow({ item }: { item: HistoryItem }) {
   return (
     <div className="flex items-center gap-3.5">
       {item.tile}
-      <span className="flex-1 text-[16px] font-medium text-[var(--fc-ink)]">
+      <span className="fc-feed-row-text flex-1 font-medium text-[var(--fc-ink)]">
         {item.action}
       </span>
-      <span className={`text-[16px] font-semibold tabular-nums shrink-0 ${colorClass}`}>
+      <span className={`fc-feed-row-text font-semibold tabular-nums shrink-0 ${colorClass}`}>
         {item.primary}
       </span>
     </div>

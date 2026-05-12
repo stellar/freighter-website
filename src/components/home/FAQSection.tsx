@@ -84,9 +84,7 @@ export function FAQSection() {
           {/* Left column — heading */}
           <div>
             <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-white tracking-[-1.6px] leading-[1.2]">
-              Frequently asked
-              <br />
-              questions
+              Frequently asked<br className="hidden md:inline" /> questions
             </h2>
           </div>
 

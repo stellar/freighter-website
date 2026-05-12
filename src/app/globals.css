@@ -786,7 +786,8 @@ body {
    That sequencing is achieved by scheduling each row's shift-to-next-slot
    keyframes BEFORE the next row's entry keyframes in wall-clock time. */
 .fc-feed-wrap {
-  --fc-slot: 58px;     /* vertical offset between adjacent slots */
+  --fc-slot: clamp(58px, 16cqw, 80px);     /* vertical offset between adjacent slots */
+  --fc-feed-tile: clamp(40px, 11cqw, 56px); /* token chip size scales with the card */
   container-type: inline-size;
   position: relative;
   width: 100%;
@@ -796,6 +797,16 @@ body {
      scale-overshoot without being clipped. */
   overflow: visible;
   padding: 40px;
+}
+/* Row internals scale with the card. Targets the Tailwind-generated
+   width/height utilities on the History row's token tile so the
+   icons grow on mobile where the card is much wider. */
+.fc-feed-row .w-\[40px\].h-\[40px\] {
+  width: var(--fc-feed-tile);
+  height: var(--fc-feed-tile);
+}
+.fc-feed-row-text {
+  font-size: clamp(16px, 4.6cqw, 22px);
 }
 /* Bottom fade — sits above the rotating rows and blends them into
    the card background so the exiting row never hard-cuts. */

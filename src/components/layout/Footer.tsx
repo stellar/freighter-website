@@ -62,7 +62,7 @@ export function Footer() {
 
   return (
     <footer className="mt-8 pb-[72px]">
-      <div className="max-w-[1024px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-3 text-sm font-normal text-text-secondary">
+      <div className="max-w-[1024px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-8 sm:gap-3 text-sm font-normal text-text-secondary">
         <p>&copy; 2026 Stellar Development Foundation</p>
         <nav className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           {footerLinks.map((link) =>
@@ -112,7 +112,7 @@ export function Footer() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 4 }}
                   transition={{ duration: 0.15, ease: EASE_OUT }}
-                  className="absolute bottom-full right-0 z-50 min-w-[180px] pb-2"
+                  className="absolute bottom-full left-0 sm:left-auto sm:right-0 z-50 min-w-[180px] pb-2"
                 >
                   <div className="rounded-lg border border-white/10 bg-[#1b1b1b] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
                     {discordLinks.map((link) => (
