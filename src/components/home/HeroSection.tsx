@@ -38,7 +38,7 @@ function PhoneMockups() {
   const yFor = (id: PhoneId) => (hovered === id ? -18 : 0);
 
   return (
-    <div className="absolute left-1/2 top-[340px] sm:top-[520px] lg:top-[540px] z-10 flex -translate-x-1/2 items-start justify-center gap-4 sm:gap-6 lg:gap-8 pointer-events-none">
+    <div className="absolute left-1/2 top-[340px] sm:top-[440px] lg:top-[540px] z-10 flex -translate-x-1/2 items-start justify-center gap-4 sm:gap-6 lg:gap-8 pointer-events-none">
       {PHONES.map((phone, i) => (
         <motion.div
           key={phone.id}
@@ -121,7 +121,7 @@ export function HeroSection() {
         variants={fadeSlideUp}
         initial="hidden"
         animate="visible"
-        className="relative mx-auto h-[100vh] min-h-[600px] max-h-[700px] w-full overflow-hidden rounded-[24px] bg-[#7B68FF] sm:min-h-[960px] sm:max-h-[1000px]"
+        className="relative mx-auto h-[100vh] min-h-[600px] max-h-[700px] w-full overflow-hidden rounded-[24px] bg-[#7B68FF] sm:min-h-[680px] sm:max-h-[760px] lg:min-h-[960px] lg:max-h-[1000px]"
       >
         <IridescenceBackground />
         <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(180deg,rgba(9,9,11,0.04),rgba(9,9,11,0.2))]" />
