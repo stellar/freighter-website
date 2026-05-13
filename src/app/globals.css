@@ -1002,7 +1002,7 @@ body {
   26.67% {
     opacity: 1;
     transform: translateY(0) scale(1);
-    animation-timing-function: var(--ease-in-out); /* ease-in-out for shift */
+    animation-timing-function: var(--ease-out); /* snap, not glide */
   }
   /* push down to slot 1 — completes by phase 30%, which in wall-clock is
      ~0.4s before the next row reaches its entry phase 13.33% */
@@ -1012,7 +1012,7 @@ body {
   }
   43.33% {
     transform: translateY(var(--fc-slot)) scale(1);
-    animation-timing-function: var(--ease-in-out);
+    animation-timing-function: var(--ease-out);
   }
   /* slot 2 */
   46.67% {
@@ -1021,7 +1021,7 @@ body {
   }
   60% {
     transform: translateY(calc(var(--fc-slot) * 2)) scale(1);
-    animation-timing-function: var(--ease-in-out);
+    animation-timing-function: var(--ease-out);
   }
   /* slot 3 (bottom of the visible queue). The exit runs SIMULTANEOUSLY
      with the next row's slot 2→3 shift (both anchored to the same
