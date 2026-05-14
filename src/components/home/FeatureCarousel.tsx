@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, useInView, type PanInfo } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
+import { useXlmUsdRate } from "@/lib/xlm-price";
 import {
   PaperPlaneTiltBold,
   SwapBold,
@@ -32,8 +33,8 @@ export type CardStyle = "solid" | "glow" | "glass" | "editorial";
 
 export function FeatureCarousel({
   cardStyle = "solid",
-  xlmUsdRate,
-}: { cardStyle?: CardStyle; xlmUsdRate?: number } = {}) {
+}: { cardStyle?: CardStyle } = {}) {
+  const xlmUsdRate = useXlmUsdRate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardWidth, setCardWidth] = useState(320);
   const [visibleCount, setVisibleCount] = useState(3);

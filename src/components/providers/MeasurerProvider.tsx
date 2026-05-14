@@ -2,6 +2,6 @@
 
 import { Measurer } from "mesurer";
 
-export function MesurerProvider() {
+export function MeasurerProvider() {
   return <Measurer persistOnReload />;
 }

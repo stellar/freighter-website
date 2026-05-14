@@ -1,7 +1,10 @@
-// Server-side fetch for the current XLM/USD spot price. The site is
-// statically exported (`output: "export"`), so this runs at build time
-// only — the rate refreshes whenever the site is redeployed, not at
-// runtime. Falls back to a sensible default if CoinGecko is unreachable.
+// Client-side hook for fetching the current XLM/USD spot price.
+// The site is statically exported, so we fetch on the client with
+// a sensible fallback if CoinGecko is unreachable.
+
+"use client";
+
+import { useState, useEffect } from "react";
 
 const FALLBACK_USD_PRICE = 0.39;
 const COINGECKO_URL =
@@ -11,16 +14,34 @@ type CoinGeckoResponse = {
   stellar?: { usd?: number };
 };
 
-export async function getXlmUsdRate(): Promise<number> {
-  try {
-    const res = await fetch(COINGECKO_URL);
-    if (!res.ok) {
-      return FALLBACK_USD_PRICE;
+export function useXlmUsdRate(): number {
+  const [rate, setRate] = useState(FALLBACK_USD_PRICE);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function fetchRate() {
+      try {
+        const res = await fetch(COINGECKO_URL);
+        if (!res.ok) {
+          return;
+        }
+        const data: CoinGeckoResponse = await res.json();
+        const price = data?.stellar?.usd;
+        if (mounted && typeof price === "number" && price > 0) {
+          setRate(price);
+        }
+      } catch {
+        // Keep fallback rate
+      }
     }
-    const data: CoinGeckoResponse = await res.json();
-    const price = data?.stellar?.usd;
-    return typeof price === "number" && price > 0 ? price : FALLBACK_USD_PRICE;
-  } catch {
-    return FALLBACK_USD_PRICE;
-  }
+
+    fetchRate();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  return rate;
 }
