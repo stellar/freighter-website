@@ -48,7 +48,7 @@ export function DownloadCards() {
               <Image src="/images/for-mobile.png" alt="Freighter mobile app" fill className="object-cover object-top" />
             </div>
             <div className="qr-glow absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-10 size-[96px] rounded-[8px] bg-white p-2 shadow-lg">
-              <RoundedQR value="https://apps.apple.com/us/app/freihter/id6743947720" size={80} />
+              <RoundedQR value={LINKS.iosApp} size={80} />
             </div>
           </div>
 

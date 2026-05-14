@@ -20,6 +20,9 @@ interface GitHubRelease {
 
 interface ChangelogEntry {
   version: string;
+  /** Raw ISO 8601 timestamp from GitHub — used for sorting. */
+  publishedAt: string;
+  /** Locale-formatted date — used for display. */
   date: string;
   platform: "extension" | "mobile";
   title: string;
@@ -50,6 +53,7 @@ function parseRelease(
 
   return {
     version,
+    publishedAt: release.published_at,
     date,
     platform,
     title,
@@ -62,13 +66,14 @@ async function fetchReleases(
   repo: string,
   platform: "extension" | "mobile"
 ): Promise<ChangelogEntry[]> {
+  // Site is statically exported, so this runs at build time only.
+  // Releases refresh whenever the site is redeployed.
   const res = await fetch(
     `https://api.github.com/repos/stellar/${repo}/releases?per_page=30`,
     {
       headers: {
         Accept: "application/vnd.github+json",
       },
-      next: { revalidate: 3600 },
     }
   );
 
@@ -87,9 +92,9 @@ export default async function ChangelogPage() {
     fetchReleases("freighter-mobile", "mobile"),
   ]);
 
-  // Merge and sort by date descending
+  // Merge and sort by raw publish timestamp descending.
   const entries = [...extensionReleases, ...mobileReleases].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
   return (

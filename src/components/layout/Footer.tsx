@@ -97,9 +97,18 @@ export function Footer() {
             onMouseEnter={openDiscordMenu}
             onMouseLeave={scheduleDiscordMenuClose}
             onFocus={openDiscordMenu}
+            onBlur={(e) => {
+              // Close when focus leaves the wrapper entirely (keyboard users)
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                setDiscordOpen(false);
+              }
+            }}
           >
             <button
               onClick={() => setDiscordOpen(!discordOpen)}
+              aria-haspopup="menu"
+              aria-expanded={discordOpen}
+              aria-controls="footer-discord-menu"
               className="inline-flex items-center gap-1 hover:text-text-primary transition-colors cursor-pointer"
             >
               <span>Discord</span>
@@ -111,6 +120,8 @@ export function Footer() {
             <AnimatePresence>
               {discordOpen && (
                 <motion.div
+                  id="footer-discord-menu"
+                  role="menu"
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 4 }}

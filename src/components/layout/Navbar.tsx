@@ -8,7 +8,7 @@ import { LINKS } from "@/lib/constants";
 
 const NAV_LINKS = [
   { label: "Docs", href: LINKS.docs, external: true },
-  { label: "Github", href: "https://github.com/stellar/freighter", external: true },
+  { label: "GitHub", href: "https://github.com/stellar/freighter", external: true },
   { label: "Changelog", href: "/changelog", external: false },
   { label: "Feedback", href: LINKS.feedback, external: true },
 ] as const;

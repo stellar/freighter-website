@@ -1,6 +1,7 @@
-// Server-side fetch for the current XLM/USD spot price. Cached for 15
-// minutes via Next.js fetch revalidation so we don't hit CoinGecko on
-// every request. Falls back to a sensible default if the API fails.
+// Server-side fetch for the current XLM/USD spot price. The site is
+// statically exported (`output: "export"`), so this runs at build time
+// only — the rate refreshes whenever the site is redeployed, not at
+// runtime. Falls back to a sensible default if CoinGecko is unreachable.
 
 const FALLBACK_USD_PRICE = 0.39;
 const COINGECKO_URL =
@@ -12,9 +13,7 @@ type CoinGeckoResponse = {
 
 export async function getXlmUsdRate(): Promise<number> {
   try {
-    const res = await fetch(COINGECKO_URL, {
-      next: { revalidate: 900 },
-    });
+    const res = await fetch(COINGECKO_URL);
     if (!res.ok) {
       return FALLBACK_USD_PRICE;
     }

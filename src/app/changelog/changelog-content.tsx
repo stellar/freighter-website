@@ -6,6 +6,7 @@ import { staggerContainer, fadeSlideUp, EASE_OUT } from "@/lib/animations";
 
 interface ChangelogEntry {
   version: string;
+  publishedAt: string;
   date: string;
   platform: "extension" | "mobile";
   title: string;
@@ -58,14 +59,32 @@ function ReleaseBody({ body }: { body: string }) {
   );
 }
 
+// Release bodies come from arbitrary GitHub markdown. Escape HTML
+// special characters first so the output can't break out of the markup,
+// then apply our minimal markdown transformations on the escaped text.
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Only allow http(s) and relative URLs through; block javascript:/data:/etc.
+function isSafeUrl(url: string): boolean {
+  return /^(https?:\/\/|\/|#)/i.test(url);
+}
+
 // Minimal inline markdown: bold, links, code
 function inlineMarkdown(text: string): string {
-  return text
+  return escapeHtml(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong class="text-text-primary font-medium">$1</strong>')
     .replace(/`(.+?)`/g, '<code class="text-xs bg-bg-hover px-1 py-0.5 rounded">$1</code>')
-    .replace(
-      /\[([^\]]+)\]\(([^)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">$1</a>'
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label: string, url: string) =>
+      isSafeUrl(url)
+        ? `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-accent hover:underline">${label}</a>`
+        : label
     );
 }
 
