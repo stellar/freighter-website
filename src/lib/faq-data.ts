@@ -44,7 +44,7 @@ export const faqData: FAQItem[] = [
   {
     question: "What is Stellar Expert's top 50 assets list?",
     answer:
-      "Stellar Expert maintains a curated list of the top 50 most popular and trusted assets on the Stellar network. Freighter uses this list to help you quickly add trustlines to well-known tokens. Assets on this list have been verified for legitimacy, making it safer to interact with them.",
+      "Freighter lets you see whether an asset appears on Stellar Expert's top 50 assets list, which is operated by Orbit Lens, an independent third party. Freighter provides access to this list to help users identify commonly used assets and add trustlines more easily, but inclusion on the list does not mean SDF endorses the asset or guarantees its legitimacy, value, or safety. Users should review assets carefully before adding trustlines or transacting.",
   },
   {
     question: "How can I see my wallet address?",
@@ -63,8 +63,8 @@ export const faqData: FAQItem[] = [
   },
   {
     question:
-      "How does the address and home domain verification by stellar.expert option work?",
+      "How does the address and home domain verification by Stellar Expert work?",
     answer:
-      "When enabled, Freighter checks the home domain associated with a Stellar account through Stellar Expert's verification system. This helps you verify that an address belongs to a known entity (like an anchor or exchange) by confirming the domain associated with the account. It adds an extra layer of trust when interacting with unfamiliar addresses.",
+      "When enabled, Freighter uses Stellar Expert's directory to check information associated with Stellar accounts and home domains, including whether an account or domain has been flagged as unsafe or malicious. Stellar Expert is operated by Orbit Lens, an independent third party, and SDF does not control or guarantee the accuracy, completeness, or availability of its directory. Users should independently review the accounts, domains, and assets they interact with.",
   },
 ];

@@ -788,15 +788,15 @@ body {
     to right,
     transparent 0,
     #000 12%,
-    #000 88%,
-    transparent 100%
+    #000 85%,
+    transparent 98%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
     #000 12%,
-    #000 88%,
-    transparent 100%
+    #000 85%,
+    transparent 98%
   );
 }
 .fc-discover-pills-track {
@@ -833,6 +833,12 @@ body {
   background: #4F4F4F; /* Gray 8 — brighter than Gray-7 inactive border */
   border-color: #4F4F4F;
   color: var(--color-text-primary);
+}
+/* During the silent loop-back, disable pill color transitions too so the
+   destination active pill snaps into place instead of fading in over
+   600ms (which read as a "flash" on the Payments tab). */
+.fc-discover-pills-track--no-transition .fc-discover-pill {
+  transition: none;
 }
 .fc-discover-pill[data-active] .fc-discover-pill-icon {
   color: var(--fc-pill-bg, var(--color-accent));

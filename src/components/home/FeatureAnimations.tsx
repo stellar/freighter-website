@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ComponentType,
@@ -13,7 +14,6 @@ import {
   ArrowDownBold,
   BridgeFill,
   CaretDownBold,
-  ChartBarFill,
   ChartLineUpFill,
   CheckCircleBold,
   CoinFill,
@@ -280,7 +280,6 @@ const DISCOVER_CATEGORIES = [
   { label: "Bridges", Icon: BridgeFill, bg: "#4cb9ff", fg: "#04263f" },
   { label: "Trading", Icon: ChartLineUpFill, bg: "#ffd24f", fg: "#3a2a14" },
   { label: "Lending", Icon: HandCoinsFill, bg: "#b390ff", fg: "#1a0d3d" },
-  { label: "Derivatives", Icon: ChartBarFill, bg: "#7B68FF", fg: "#ffffff" },
   { label: "Stablecoins", Icon: CoinFill, bg: "#4cd6c1", fg: "#04302a" },
   { label: "Collectibles", Icon: ImagesFill, bg: "#ff5fa2", fg: "#ffffff" },
   { label: "Gaming", Icon: GameControllerFill, bg: "#ff8a4c", fg: "#ffffff" },
@@ -313,8 +312,11 @@ function DiscoverStage() {
   }, []);
 
   // Anchor the active pill to the left of the visible track each time
-  // the selection advances. Measured after layout so pill widths are real.
-  useEffect(() => {
+  // the selection advances. Use useLayoutEffect so the offset is
+  // committed before paint — otherwise the silent loop-back leaves a
+  // single frame where the new active pill is set but the track still
+  // points at the old position, which reads as a "flash" on Payments.
+  useLayoutEffect(() => {
     const track = trackRef.current;
     const activePill = pillRefs.current[activeIndex];
     if (!track || !activePill) {
@@ -350,7 +352,7 @@ function DiscoverStage() {
       <div className="fc-discover-pills" aria-hidden="true">
         <div
           ref={trackRef}
-          className="fc-discover-pills-track"
+          className={`fc-discover-pills-track${transitionOn ? "" : " fc-discover-pills-track--no-transition"}`}
           style={{
             transform: `translateX(${trackOffset}px)`,
             transition: transitionOn ? undefined : "none",

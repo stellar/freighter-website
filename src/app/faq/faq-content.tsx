@@ -48,7 +48,7 @@ export function FAQContent() {
       variants={fadeSlideUp}
       initial="hidden"
       animate="visible"
-      className="w-full max-w-[720px]"
+      className="w-full lg:max-w-[720px]"
     >
       {faqData.map((item, i) => (
         <div key={i}>

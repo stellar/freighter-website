@@ -111,7 +111,7 @@ export function ChangelogContent({ entries }: { entries: ChangelogEntry[] }) {
       </div>
 
       {/* Timeline */}
-      <div className="relative w-full max-w-[720px]">
+      <div className="relative w-full lg:max-w-[720px]">
         {/* Vertical line */}
         <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
 

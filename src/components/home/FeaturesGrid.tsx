@@ -52,7 +52,7 @@ const features: { title: string; description: string; icon: ComponentType<{ size
   },
   {
     title: "Blockaid Protection.",
-    description: "Blocks scams and malicious transactions automatically.",
+    description: "Helps block scams and malicious transactions automatically.",
     icon: ShieldBold,
   },
   {
