@@ -15,7 +15,7 @@
     "framer-motion": "^12.38.0",
     "mesurer": "^0.0.8",
     "motion": "^12.38.0",
-    "next": "16.2.3",
+    "next": "16.2.6",
     "ogl": "^1.0.11",
     "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
