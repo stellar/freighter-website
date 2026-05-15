@@ -23,7 +23,7 @@ const sizeClasses: Record<ButtonSize, string> = {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    "bg-gradient-to-r from-accent to-accent-secondary text-white shadow-[0_0_20px_rgba(101,76,216,0.25)] hover:shadow-[0_0_30px_rgba(101,76,216,0.35)] hover:brightness-110 rounded-lg",
+    "bg-gradient-to-r from-accent to-accent-secondary text-white shadow-[0_0_20px_rgba(110,86,207,0.25)] hover:shadow-[0_0_30px_rgba(110,86,207,0.35)] hover:brightness-110 rounded-lg",
   secondary:
     "text-text-primary hover:bg-bg-hover rounded-lg",
   ghost: "text-text-secondary hover:text-text-primary rounded-lg",
@@ -45,7 +45,7 @@ export function Button({
 }: ButtonProps) {
   const isPill = variant === "pill" || variant === "pill-dark";
   const classes = clsx(
-    "inline-flex items-center justify-center gap-1 font-medium transition-all duration-200 cursor-pointer",
+    "inline-flex items-center justify-center gap-1 font-medium transition duration-200 cursor-pointer",
     isPill ? "" : sizeClasses[size],
     variantClasses[variant],
     className

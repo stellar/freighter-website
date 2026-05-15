@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { BackToTopButton } from "@/components/ui/BackToTopButton";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -12,7 +13,7 @@ export default function PrivacyPage() {
     <>
       <Navbar />
       <main className="pt-32 pb-24">
-        <div className="max-w-3xl mx-auto px-6">
+        <div className="max-w-[1024px] mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-semibold text-text-primary tracking-tight">
             Freighter Privacy Policy
           </h1>
@@ -544,6 +545,7 @@ export default function PrivacyPage() {
         </div>
       </main>
       <Footer />
+      <BackToTopButton />
     </>
   );
 }

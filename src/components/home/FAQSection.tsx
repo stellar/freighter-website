@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { fadeSlideUp } from "@/lib/animations";
+import { fadeSlideUp, EASE_OUT } from "@/lib/animations";
 import Link from "next/link";
 import { PlusBold, ArrowRightBold } from "@/components/ui/PhosphorIcons";
 
@@ -37,11 +37,14 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
       onClick={() => setOpen(!open)}
       className="flex gap-4 items-start text-left w-full cursor-pointer"
     >
-      {/* Plus/minus icon */}
-      <PlusBold
-        size={18}
-        className={`shrink-0 mt-1 text-[#B3A8FF] transition-transform duration-200 ${open ? "rotate-45" : ""}`}
-      />
+      {/* Plus/minus icon — spring rotation */}
+      <motion.div
+        animate={{ rotate: open ? 45 : 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className="shrink-0 mt-1 text-accent-light"
+      >
+        <PlusBold size={18} />
+      </motion.div>
       {/* Question + Answer */}
       <div className="flex-1 min-w-0">
         <h3 className="text-xl font-normal text-text-primary leading-7">
@@ -53,7 +56,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
+              transition={{ duration: 0.3, ease: EASE_OUT }}
               className="overflow-hidden"
             >
               <p className="text-base text-text-secondary leading-6 mt-4">
@@ -81,9 +84,7 @@ export function FAQSection() {
           {/* Left column — heading */}
           <div>
             <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-white tracking-[-1.6px] leading-[1.2]">
-              Frequently asked
-              <br />
-              questions
+              Frequently asked<br className="hidden md:inline" /> questions
             </h2>
           </div>
 

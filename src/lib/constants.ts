@@ -13,12 +13,13 @@ export const LINKS = {
   chromeExtension:
     "https://chromewebstore.google.com/detail/freighter/bcacfldlkkdogcmkkibnjlakofdplcbk",
   firefoxExtension: "#",
-  iosApp: "#",
-  androidApp: "#",
+  iosApp: "https://apps.apple.com/us/app/freighter/id6743947720",
+  androidApp: "https://play.google.com/store/apps/details?id=org.stellar.freighterwallet",
   stellarExpert: "https://stellar.expert",
-  feedback: "https://docs.google.com/forms/d/e/freighter-feedback/viewform",
+  feedback: "https://docs.google.com/forms/d/e/1FAIpQLSesb7QzQElout02Q4AG8334vCe1m5QlC4jIhZMzWTYVHrCyHw/viewform",
   docs: "https://docs.freighter.app",
   help: "https://docs.freighter.app/support",
+  support: "https://help.freighter.app",
 };
 
 export const NAV_LINKS: readonly {

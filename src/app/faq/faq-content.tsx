@@ -16,7 +16,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
     >
       <PlusBold
         size={20}
-        className={`shrink-0 mt-1 text-[#B3A8FF] transition-transform duration-200 ${open ? "rotate-45" : ""}`}
+        className={`shrink-0 mt-1 text-accent-light transition-transform duration-200 ${open ? "rotate-45" : ""}`}
       />
       <div className="flex-1 min-w-0">
         <h3 className="text-lg md:text-xl font-medium text-text-primary leading-7">
@@ -48,7 +48,7 @@ export function FAQContent() {
       variants={fadeSlideUp}
       initial="hidden"
       animate="visible"
-      className="mt-16"
+      className="w-full lg:max-w-[720px]"
     >
       {faqData.map((item, i) => (
         <div key={i}>

@@ -1,16 +1,17 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, type PanInfo } from "framer-motion";
+import { motion, useInView, type PanInfo } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
+import { useXlmUsdRate } from "@/lib/xlm-price";
 import {
   PaperPlaneTiltBold,
   SwapBold,
   CompassBold,
   ClockCounterClockwiseBold,
-  DiamondBold,
-  DownloadSimpleBold,
+  ImagesBold,
   WalletBold,
+  TrendUpBold,
   CaretLeftBold,
   CaretRightBold,
 } from "@/components/ui/PhosphorIcons";
@@ -19,23 +20,30 @@ import { FEATURE_ANIMATIONS } from "./FeatureAnimations";
 const ITEMS = [
   { label: "Send", icon: PaperPlaneTiltBold },
   { label: "Swap", icon: SwapBold },
+  { label: "Deposit", icon: TrendUpBold },
   { label: "Discover", icon: CompassBold },
   { label: "History", icon: ClockCounterClockwiseBold },
-  { label: "Collectibles", icon: DiamondBold },
-  { label: "Receive", icon: DownloadSimpleBold },
+  { label: "Collectibles", icon: ImagesBold },
   { label: "Wallets", icon: WalletBold },
 ];
 
 const GAP = 17;
-const AUTO_INTERVAL = 2000;
 
-export function FeatureCarousel() {
+export type CardStyle = "solid" | "glow" | "glass" | "editorial";
+
+export function FeatureCarousel({
+  cardStyle = "solid",
+}: { cardStyle?: CardStyle } = {}) {
+  const xlmUsdRate = useXlmUsdRate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   const [cardWidth, setCardWidth] = useState(320);
   const [visibleCount, setVisibleCount] = useState(3);
   const containerRef = useRef<HTMLDivElement>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  // Pause the dozens of CSS keyframe loops inside each card when the
+  // section is off-screen — saves a meaningful amount of GPU/CPU on
+  // long pages where the carousel is one of many sections.
+  const inView = useInView(sectionRef, { margin: "200px 0px" });
 
   const maxIndex = Math.max(0, ITEMS.length - visibleCount);
 
@@ -50,6 +58,7 @@ export function FeatureCarousel() {
         const count = w < 640 ? 1 : w < 900 ? 2 : 3;
         setVisibleCount(count);
         setCardWidth((w - (count - 1) * GAP) / count);
+        setCurrentIndex((prev) => Math.min(prev, Math.max(0, ITEMS.length - count)));
       }
     });
     observer.observe(container);
@@ -64,33 +73,10 @@ export function FeatureCarousel() {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   }, [maxIndex]);
 
-  // Reset index if it exceeds new maxIndex after resize
-  useEffect(() => {
-    setCurrentIndex((prev) => Math.min(prev, maxIndex));
-  }, [maxIndex]);
-
-  // Auto-advance
-  useEffect(() => {
-    if (isHovered) return;
-    intervalRef.current = setInterval(goNext, AUTO_INTERVAL);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [isHovered, goNext]);
-
-  // Reset timer on manual navigation
-  const handlePrev = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    goPrev();
-  };
-
-  const handleNext = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    goNext();
-  };
+  const handlePrev = () => goPrev();
+  const handleNext = () => goNext();
 
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
     const threshold = cardWidth / 4;
     if (info.offset.x < -threshold) {
       setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
@@ -101,8 +87,10 @@ export function FeatureCarousel() {
 
   const translateX = -(currentIndex * (cardWidth + GAP));
 
+  const isEditorial = cardStyle === "editorial";
+
   return (
-    <section>
+    <section ref={sectionRef} className={`feature-cards feature-cards--${cardStyle}${inView ? "" : " feature-cards--paused"}`}>
       <div className="max-w-[1024px] mx-auto px-6">
         {/* Header row */}
         <motion.div
@@ -118,14 +106,14 @@ export function FeatureCarousel() {
           <div className="flex gap-2 shrink-0 ml-4">
             <button
               onClick={handlePrev}
-              className="size-11 rounded-full bg-bg-elevated flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors cursor-pointer"
+              className="size-11 rounded-full bg-bg-hover flex items-center justify-center text-text-primary hover:bg-[#303036] transition-colors cursor-pointer"
               aria-label="Previous"
             >
               <CaretLeftBold size={16} />
             </button>
             <button
               onClick={handleNext}
-              className="size-11 rounded-full bg-bg-elevated flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors cursor-pointer"
+              className="size-11 rounded-full bg-bg-hover flex items-center justify-center text-text-primary hover:bg-[#303036] transition-colors cursor-pointer"
               aria-label="Next"
             >
               <CaretRightBold size={16} />
@@ -134,12 +122,7 @@ export function FeatureCarousel() {
         </motion.div>
 
         {/* Carousel viewport — overflow visible so cards bleed off-page */}
-        <div
-          ref={containerRef}
-          className="overflow-visible"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <div ref={containerRef} className="overflow-visible">
           <motion.div
             animate={{ x: translateX }}
             transition={{ type: "tween", duration: 0.4, ease: "easeInOut" }}
@@ -150,28 +133,36 @@ export function FeatureCarousel() {
             className="flex cursor-grab active:cursor-grabbing"
             style={{ gap: GAP }}
           >
-            {ITEMS.map((item) => {
+            {ITEMS.map((item, i) => {
               const Icon = item.icon;
               const Animation = FEATURE_ANIMATIONS[item.label];
               return (
-                <div
+                <motion.div
                   key={item.label}
                   className="shrink-0"
                   style={{ width: cardWidth }}
                 >
-                  <div className="aspect-square rounded-[32px] overflow-hidden transition-all duration-300 ease-out hover:scale-[1.04] hover:shadow-[0_8px_30px_rgba(101,76,216,0.15)]">
-                    {Animation ? <Animation /> : <div className="w-full h-full bg-bg-elevated" />}
-                  </div>
-                  {/* Icon + label */}
-                  <div className="flex items-center gap-3 mt-4">
-                    <div className="size-[35px] rounded-full bg-bg-elevated shrink-0 flex items-center justify-center text-accent-light">
-                      <Icon size={18} />
+                  {Animation ? <Animation xlmUsdRate={xlmUsdRate} /> : <div className="fc-card" />}
+                  {isEditorial ? (
+                    <div className="mt-5 flex items-baseline gap-3">
+                      <span className="text-[11px] font-medium tracking-[0.2em] text-text-tertiary tabular-nums">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span className="text-[22px] font-semibold text-white tracking-[-0.6px] leading-none">
+                        {item.label}
+                      </span>
                     </div>
-                    <span className="text-base sm:text-lg font-medium text-white tracking-[-0.96px]">
-                      {item.label}
-                    </span>
-                  </div>
-                </div>
+                  ) : (
+                    <div className="flex items-center gap-3 mt-4">
+                      <div className="size-[35px] rounded-full bg-bg-hover shrink-0 flex items-center justify-center text-accent-light">
+                        <Icon size={18} />
+                      </div>
+                      <span className="text-base sm:text-lg font-medium text-white tracking-[-0.96px]">
+                        {item.label}
+                      </span>
+                    </div>
+                  )}
+                </motion.div>
               );
             })}
           </motion.div>

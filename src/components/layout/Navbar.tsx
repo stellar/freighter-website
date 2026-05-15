@@ -1,112 +1,62 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { NAV_LINKS, LINKS } from "@/lib/constants";
+import { motion } from "framer-motion";
+import { EASE_OUT } from "@/lib/animations";
+import { LINKS } from "@/lib/constants";
+
+const NAV_LINKS = [
+  { label: "Docs", href: LINKS.docs, external: true },
+  { label: "GitHub", href: "https://github.com/stellar/freighter", external: true },
+  { label: "Changelog", href: "/changelog", external: false },
+  { label: "Support", href: LINKS.support, external: true },
+] as const;
 
 export function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
-
   return (
-    <>
-      <nav className="relative z-50 h-16">
-        <div className="max-w-[1024px] mx-auto px-6 h-full flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="shrink-0">
-            <div className="logo-glow relative size-10 rounded-[9px] overflow-hidden bg-[#5842c3]">
-              <Image
-                src="/images/freighter-icon.png"
-                alt="Freighter"
-                width={245}
-                height={100}
-                priority
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-none pointer-events-none"
-              />
-            </div>
-          </Link>
+    <motion.nav
+      initial={{ opacity: 0, y: -16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, delay: 0.1, ease: EASE_OUT }}
+      className="relative z-50 px-6 pt-5"
+      aria-label="Primary navigation"
+    >
+      <div className="relative mx-auto flex w-full max-w-[1024px] items-center justify-between py-3">
+        <Link href="/" className="logo-glow relative size-10 shrink-0 overflow-hidden rounded-[9px] bg-[#5842c3]">
+          <Image
+            src="/images/freighter-icon.png"
+            alt="Freighter"
+            width={245}
+            height={100}
+            priority
+            className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          />
+        </Link>
 
-          {/* Spacer to keep logo left and download right */}
-          <div className="hidden lg:block" />
-
-          {/* Desktop Download button */}
-          <div className="hidden lg:block">
-            <a
-              href={LINKS.chromeExtension}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition-all duration-200"
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-4 sm:flex">
+          {NAV_LINKS.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+              className="text-sm font-medium leading-5 text-[#ededed] transition-colors duration-200 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70"
             >
-              Download
-            </a>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden p-2 text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-            aria-label="Toggle menu"
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
-              {mobileOpen ? (
-                <>
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </>
-              ) : (
-                <>
-                  <line x1="4" y1="8" x2="20" y2="8" />
-                  <line x1="4" y1="16" x2="20" y2="16" />
-                </>
-              )}
-            </svg>
-          </button>
+              {item.label}
+            </Link>
+          ))}
         </div>
-      </nav>
 
-      {/* Mobile overlay */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-0 z-40 bg-bg-primary pt-20 px-6 lg:hidden"
-          >
-            <div className="mt-8">
-              <a
-                href={LINKS.chromeExtension}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-full px-8 py-4 text-base font-medium text-text-primary bg-bg-hover rounded-full hover:bg-zinc-700 transition-all duration-200"
-              >
-                Download Freighter
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+        <a
+          href={LINKS.chromeExtension}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#e8e8e8] px-4 py-2 text-base font-semibold text-[#171717] transition-colors duration-200 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70"
+        >
+          Download
+        </a>
+      </div>
+    </motion.nav>
   );
 }

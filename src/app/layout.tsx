@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { Agentation } from "agentation";
+import { MeasurerProvider } from "@/components/providers/MeasurerProvider";
+import { MotionProvider } from "@/components/providers/MotionProvider";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -59,15 +68,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} antialiased`}>
-      <body className="min-h-screen text-text-primary font-sans" style={{ background: "linear-gradient(198deg, #141419 0%, #09090b 100%)" }}>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
+      <body className="min-h-screen bg-bg-page text-text-primary font-sans">
         <script
           dangerouslySetInnerHTML={{
-            __html: `console.log("%c⚡ Freighter","font-size:24px;font-weight:bold;color:#654cd8");console.log("%cYour everyday Stellar wallet — https://github.com/stellar/freighter","font-size:12px;color:#a1a1aa");`,
+            __html: `console.log("%c⚡ Freighter","font-size:24px;font-weight:bold;color:#7B68FF");console.log("%cYour everyday Stellar wallet — https://github.com/stellar/freighter","font-size:12px;color:#A0A0A0");`,
           }}
         />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         {process.env.NODE_ENV === "development" && <Agentation />}
+        {process.env.NODE_ENV === "development" && <MeasurerProvider />}
       </body>
     </html>
   );

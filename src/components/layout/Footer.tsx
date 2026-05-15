@@ -3,24 +3,57 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { EASE_OUT } from "@/lib/animations";
 import { SITE, LINKS } from "@/lib/constants";
+import { ArrowSquareOutBold, CaretDownBold } from "@/components/ui/PhosphorIcons";
 
-const footerLinks = [
-  { label: "GitHub", href: SITE.github, external: true },
+const footerLinksBefore: {
+  label: string;
+  href: string;
+  external?: boolean;
+  hideOnLg?: boolean;
+}[] = [
   { label: "Changelog", href: "/changelog" },
+  { label: "GitHub", href: SITE.github, external: true },
+  // Mirrors the Navbar Support link so mobile/tablet users still have
+  // a path to help when the top nav is collapsed. Hidden at lg+ where
+  // the Navbar's Support link is always visible.
+  { label: "Support", href: LINKS.support, external: true, hideOnLg: true },
+];
+
+const footerLinksAfter = [
   { label: "Feedback", href: LINKS.feedback, external: true },
   { label: "Terms", href: "/terms" },
   { label: "Privacy", href: "/privacy" },
 ];
 
 const discordLinks = [
-  { label: "Stellar Global", href: "https://discord.gg/stellarglobal" },
   { label: "Stellar Developers", href: "https://discord.gg/stellardev" },
+  { label: "Stellar Global", href: "https://discord.gg/stellarglobal" },
 ];
 
 export function Footer() {
   const [discordOpen, setDiscordOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openDiscordMenu = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setDiscordOpen(true);
+  };
+
+  const scheduleDiscordMenuClose = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+    }
+    closeTimerRef.current = setTimeout(() => {
+      setDiscordOpen(false);
+      closeTimerRef.current = null;
+    }, 180);
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -31,15 +64,101 @@ export function Footer() {
     if (discordOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
   }, [discordOpen]);
 
   return (
-    <footer>
-      <div className="max-w-[1024px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-4 text-sm font-normal text-text-secondary">
+    <footer className="mt-8 pb-[72px]">
+      <div className="max-w-[1024px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-8 sm:gap-3 text-sm font-normal text-text-secondary">
         <p>&copy; 2026 Stellar Development Foundation</p>
-        <nav className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          {footerLinks.map((link) =>
+        <nav className="grid grid-cols-2 grid-rows-4 grid-flow-col gap-x-6 gap-y-3 items-start w-full sm:w-auto sm:flex sm:flex-row sm:items-center sm:gap-3">
+          {footerLinksBefore.map((link) => {
+            const className = `hover:text-text-primary transition-colors${link.hideOnLg ? " lg:hidden" : ""}`;
+            return link.external ? (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={className}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.label}
+                href={link.href}
+                className={className}
+              >
+                {link.label}
+              </Link>
+            );
+          }
+          )}
+
+          {/* Discord with dropdown */}
+          <div
+            ref={menuRef}
+            className="relative"
+            onMouseEnter={openDiscordMenu}
+            onMouseLeave={scheduleDiscordMenuClose}
+            onFocus={openDiscordMenu}
+            onBlur={(e) => {
+              // Close when focus leaves the wrapper entirely (keyboard users)
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                setDiscordOpen(false);
+              }
+            }}
+          >
+            <button
+              onClick={() => setDiscordOpen(!discordOpen)}
+              aria-haspopup="menu"
+              aria-expanded={discordOpen}
+              aria-controls="footer-discord-menu"
+              className="inline-flex items-center gap-1 hover:text-text-primary transition-colors cursor-pointer"
+            >
+              <span>Discord</span>
+              <CaretDownBold
+                size={12}
+                className={`transition-transform duration-150 ${discordOpen ? "rotate-180" : ""}`}
+              />
+            </button>
+            <AnimatePresence>
+              {discordOpen && (
+                <motion.div
+                  id="footer-discord-menu"
+                  role="menu"
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 4 }}
+                  transition={{ duration: 0.15, ease: EASE_OUT }}
+                  className="absolute bottom-full left-0 sm:left-auto sm:right-0 z-50 min-w-[180px] pb-2"
+                >
+                  <div className="rounded-lg border border-white/10 bg-[#1b1b1b] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
+                    {discordLinks.map((link) => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
+                      >
+                        <span>{link.label}</span>
+                        <ArrowSquareOutBold size={14} className="shrink-0 opacity-70" />
+                      </a>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {footerLinksAfter.map((link) =>
             link.external ? (
               <a
                 key={link.label}
@@ -60,39 +179,6 @@ export function Footer() {
               </Link>
             )
           )}
-
-          {/* Discord with dropdown */}
-          <div ref={menuRef} className="relative">
-            <button
-              onClick={() => setDiscordOpen(!discordOpen)}
-              className="hover:text-text-primary transition-colors cursor-pointer"
-            >
-              Discord
-            </button>
-            <AnimatePresence>
-              {discordOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 4 }}
-                  transition={{ duration: 0.15, ease: [0.25, 1, 0.5, 1] }}
-                  className="absolute bottom-full mb-2 right-0 bg-bg-elevated border border-border rounded-lg py-1 min-w-[180px] shadow-lg"
-                >
-                  {discordLinks.map((link) => (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-white/5 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
         </nav>
       </div>
     </footer>

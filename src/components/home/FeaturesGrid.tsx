@@ -6,7 +6,7 @@ import { staggerContainer, fadeSlideUp } from "@/lib/animations";
 import { clsx } from "clsx";
 import {
   SwapBold,
-  DiamondBold,
+  ImagesBold,
   FingerprintBold,
   CurrencyDollarBold,
   ShieldCheckBold,
@@ -28,7 +28,7 @@ const features: { title: string; description: string; icon: ComponentType<{ size
   {
     title: "Collectibles.",
     description: "View, store, and manage your Stellar NFTs natively.",
-    icon: DiamondBold,
+    icon: ImagesBold,
   },
   {
     title: "Biometric Login.",
@@ -52,7 +52,7 @@ const features: { title: string; description: string; icon: ComponentType<{ size
   },
   {
     title: "Blockaid Protection.",
-    description: "Blocks scams and malicious transactions automatically.",
+    description: "Helps block scams and malicious transactions automatically.",
     icon: ShieldBold,
   },
   {
@@ -87,7 +87,8 @@ export function FeaturesGrid() {
                 className={clsx(
                   "feature-cell flex gap-4 items-start p-8",
                   i % 3 !== 2 && "md:border-r md:border-border",
-                  i < 6 && "border-b border-border"
+                  i < 8 && "border-b border-border",
+                  i >= 6 && "md:border-b-0"
                 )}
               >
                 <div className="feature-icon shrink-0 mt-0.5 text-accent-light">
