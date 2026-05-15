@@ -15,7 +15,7 @@ const HERO_NAV_LINKS = [
   { label: "Docs", href: LINKS.docs, external: true },
   { label: "GitHub", href: "https://github.com/stellar/freighter", external: true },
   { label: "Changelog", href: "/changelog", external: false },
-  { label: "Feedback", href: LINKS.feedback, external: true },
+  { label: "Support", href: LINKS.support, external: true },
 ] as const;
 
 type PhoneId = "left" | "middle" | "right";
