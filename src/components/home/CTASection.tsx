@@ -4,10 +4,13 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeSlideUp, EASE_OUT } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
+import { useExtensionLink } from "@/lib/use-extension-link";
 import { DownloadBold } from "@/components/ui/PhosphorIcons";
 import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
 
 export function CTASection() {
+  const extensionLink = useExtensionLink();
+
   return (
     <section>
       <div className="max-w-[1024px] mx-auto px-6">
@@ -88,7 +91,7 @@ export function CTASection() {
                   </a>
                 </div>
                 <a
-                  href={LINKS.chromeExtension}
+                  href={extensionLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex w-[calc((100%-0.75rem)/2)] items-center justify-center gap-1 self-center whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"

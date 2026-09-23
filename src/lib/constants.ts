@@ -12,7 +12,7 @@ export const SITE = {
 export const LINKS = {
   chromeExtension:
     "https://chromewebstore.google.com/detail/freighter/bcacfldlkkdogcmkkibnjlakofdplcbk",
-  firefoxExtension: "#",
+  firefoxExtension: "https://addons.mozilla.org/firefox/addon/freighter/",
   iosApp: "https://apps.apple.com/us/app/freighter/id6743947720",
   androidApp: "https://play.google.com/store/apps/details?id=org.stellar.freighterwallet",
   stellarExpert: "https://stellar.expert",
