@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { EASE_OUT } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
+import { useExtensionLink } from "@/lib/use-extension-link";
 
 const NAV_LINKS = [
   { label: "Docs", href: LINKS.docs, external: true },
@@ -14,6 +15,8 @@ const NAV_LINKS = [
 ] as const;
 
 export function Navbar() {
+  const extensionLink = useExtensionLink();
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: -16 }}
@@ -49,7 +52,7 @@ export function Navbar() {
         </div>
 
         <a
-          href={LINKS.chromeExtension}
+          href={extensionLink}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#e8e8e8] px-4 py-2 text-base font-semibold text-[#171717] transition-colors duration-200 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70"

@@ -4,11 +4,14 @@ import { motion } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
 import { RoundedQR } from "@/components/ui/RoundedQR";
 import { LINKS } from "@/lib/constants";
+import { useExtensionLink } from "@/lib/use-extension-link";
 import Image from "next/image";
 import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
 import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
 
 export function DownloadCards() {
+  const extensionLink = useExtensionLink();
+
   return (
     <section id="download" className="scroll-mt-[72px]">
       <div className="max-w-[1024px] mx-auto px-6">
@@ -60,7 +63,7 @@ export function DownloadCards() {
               For browser
             </h3>
             <a
-              href={LINKS.chromeExtension}
+              href={extensionLink}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition duration-300 ease-out mt-auto self-start relative z-10"
