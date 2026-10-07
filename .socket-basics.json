@@ -1,0 +1,10 @@
+{
+  "workspace": ".",
+  "javascript_sast_enabled": true,
+  "sast_ignore_overrides": "js-react-dangerous-html:src/app/layout.tsx,js-react-dangerous-html:src/app/changelog/changelog-content.tsx,js-express-async-no-error-handler:src/components/home/FeatureAnimations.tsx,js-unhandled-promise-rejection:src/app/changelog/page.tsx",
+  "secret_scanning_enabled": true,
+  "console_tabular_enabled": true,
+  "socket_tier_1_enabled": false,
+  "trivy_vuln_enabled": false,
+  "trufflehog_exclude_dir": "node_modules,dist,build,.git,background.json"
+}
