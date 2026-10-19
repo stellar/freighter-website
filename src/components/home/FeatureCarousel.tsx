@@ -6,12 +6,12 @@ import { fadeSlideUp } from "@/lib/animations";
 import { useXlmUsdRate } from "@/lib/xlm-price";
 import {
   PaperPlaneTiltBold,
-  SwapBold,
+  ArrowsLeftRightBold,
   CompassBold,
   ClockCounterClockwiseBold,
   ImagesBold,
   WalletBold,
-  TrendUpBold,
+  ArrowDownBold,
   CaretLeftBold,
   CaretRightBold,
 } from "@/components/ui/PhosphorIcons";
@@ -19,8 +19,8 @@ import { FEATURE_ANIMATIONS } from "./FeatureAnimations";
 
 const ITEMS = [
   { label: "Send", icon: PaperPlaneTiltBold },
-  { label: "Swap", icon: SwapBold },
-  { label: "Deposit", icon: TrendUpBold },
+  { label: "Swap", icon: ArrowsLeftRightBold },
+  { label: "Deposit", icon: ArrowDownBold },
   { label: "Discover", icon: CompassBold },
   { label: "History", icon: ClockCounterClockwiseBold },
   { label: "Collectibles", icon: ImagesBold },
@@ -73,6 +73,41 @@ export function FeatureCarousel({
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   }, [maxIndex]);
 
+  // Trackpad / horizontal wheel: swipe left/right over the carousel to step
+  // one card at a time. Native listener (non-passive) so we can block the
+  // browser's back/forward swipe while the gesture is over the cards;
+  // vertical scrolling is left untouched.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    let acc = 0;
+    let locked = false;
+    let resetTimer: ReturnType<typeof setTimeout> | undefined;
+    let unlockTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      if (locked) return;
+      acc += e.deltaX;
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(() => (acc = 0), 150);
+      if (Math.abs(acc) < 40) return;
+      const dir = acc > 0 ? 1 : -1;
+      acc = 0;
+      locked = true;
+      unlockTimer = setTimeout(() => (locked = false), 450);
+      setCurrentIndex((prev) => Math.min(Math.max(prev + dir, 0), maxIndex));
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      clearTimeout(resetTimer);
+      clearTimeout(unlockTimer);
+    };
+  }, [maxIndex]);
+
   const handlePrev = () => goPrev();
   const handleNext = () => goNext();
 
@@ -100,20 +135,20 @@ export function FeatureCarousel({
           viewport={{ once: true, margin: "-100px" }}
           className="flex items-center justify-between mb-8"
         >
-          <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-white tracking-[-1.6px] leading-[1.2]">
+          <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-text-primary tracking-[-1.6px] leading-[1.2]">
             Your everyday stellar wallet
           </h2>
           <div className="flex gap-2 shrink-0 ml-4">
             <button
               onClick={handlePrev}
-              className="size-11 rounded-full bg-bg-hover flex items-center justify-center text-text-primary hover:bg-[#303036] transition-colors cursor-pointer"
+              className="size-11 rounded-full bg-[#171717] flex items-center justify-center text-white hover:bg-[#2a2a2a] transition-colors cursor-pointer"
               aria-label="Previous"
             >
               <CaretLeftBold size={16} />
             </button>
             <button
               onClick={handleNext}
-              className="size-11 rounded-full bg-bg-hover flex items-center justify-center text-text-primary hover:bg-[#303036] transition-colors cursor-pointer"
+              className="size-11 rounded-full bg-[#171717] flex items-center justify-center text-white hover:bg-[#2a2a2a] transition-colors cursor-pointer"
               aria-label="Next"
             >
               <CaretRightBold size={16} />
@@ -148,16 +183,16 @@ export function FeatureCarousel({
                       <span className="text-[11px] font-medium tracking-[0.2em] text-text-tertiary tabular-nums">
                         {String(i + 1).padStart(2, "0")}
                       </span>
-                      <span className="text-[22px] font-semibold text-white tracking-[-0.6px] leading-none">
+                      <span className="text-[22px] font-semibold text-text-primary tracking-[-0.6px] leading-none">
                         {item.label}
                       </span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-3 mt-4">
-                      <div className="size-[35px] rounded-full bg-bg-hover shrink-0 flex items-center justify-center text-accent-light">
+                      <div className="size-[35px] rounded-full bg-[#EEF4FF] shrink-0 flex items-center justify-center text-accent">
                         <Icon size={18} />
                       </div>
-                      <span className="text-base sm:text-lg font-medium text-white tracking-[-0.96px]">
+                      <span className="text-base sm:text-lg font-medium text-text-primary tracking-[-0.96px]">
                         {item.label}
                       </span>
                     </div>

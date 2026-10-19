@@ -1,5 +1,8 @@
+// TODO(varial): domains, store listings and GitHub org still point at
+// Freighter until the Varial ones exist. Swap the values here — the rest of
+// the site reads from this file.
 export const SITE = {
-  name: "Freighter",
+  name: "Varial",
   tagline: "Your Everyday Stellar Wallet",
   description:
     "Browse, connect, and use Stellar apps — all in one place",

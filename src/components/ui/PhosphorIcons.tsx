@@ -4,6 +4,7 @@
 import {
   PaperPlaneTilt,
   Swap,
+  ArrowsLeftRight,
   Compass,
   ClockCounterClockwise,
   Diamond,
@@ -65,6 +66,7 @@ function fill(Icon: React.ComponentType<IconProps>) {
 
 export const PaperPlaneTiltBold = bold(PaperPlaneTilt);
 export const SwapBold = bold(Swap);
+export const ArrowsLeftRightBold = bold(ArrowsLeftRight);
 export const CompassBold = bold(Compass);
 export const ClockCounterClockwiseBold = bold(ClockCounterClockwise);
 export const DiamondBold = bold(Diamond);

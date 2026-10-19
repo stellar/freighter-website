@@ -1,3 +1,4 @@
+// TODO(varial): domain — still freighter.app until the Varial domain is live
 import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";

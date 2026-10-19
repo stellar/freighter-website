@@ -8,22 +8,22 @@ import { PlusBold, ArrowRightBold } from "@/components/ui/PhosphorIcons";
 
 const FAQ_ITEMS = [
   {
-    question: "Is Freighter safe to use?",
+    question: "Is Varial safe to use?",
     answer:
-      "Freighter is non-custodial, which means your keys are encrypted and stored only on your device — never on a server. It's fully open source and auditable on GitHub, and includes advanced transaction protection powered by Blockaid to help block scams and malicious sites.",
+      "Varial is non-custodial, which means your keys are encrypted and stored only on your device — never on a server. It's fully open source and auditable on GitHub, and includes advanced transaction protection powered by Blockaid to help block scams and malicious sites.",
   },
   {
-    question: "Does Freighter charge fees?",
+    question: "Does Varial charge fees?",
     answer:
-      "No. Freighter doesn't add any wallet fees on top of transactions. You only pay Stellar's network fees, which typically cost a fraction of a cent.",
+      "No. Varial doesn't add any wallet fees on top of transactions. You only pay Stellar's network fees, which typically cost a fraction of a cent.",
   },
   {
     question: "What happens if I lose my device?",
     answer:
-      "Your account can always be restored on a new device using your recovery phrase — a unique set of words generated when you first set up Freighter. Freighter never stores your phrase, so keep it somewhere safe; it's the only way to recover your account.",
+      "Your account can always be restored on a new device using your recovery phrase — a unique set of words generated when you first set up Varial. Varial never stores your phrase, so keep it somewhere safe; it's the only way to recover your account.",
   },
   {
-    question: "What can I do with Freighter?",
+    question: "What can I do with Varial?",
     answer:
       "Hold XLM and other Stellar assets, swap tokens directly in the wallet, manage multiple accounts, and connect to any Stellar or Soroban app that supports WalletConnect or the Stellar Wallets Kit.",
   },
@@ -83,7 +83,7 @@ export function FAQSection() {
         >
           {/* Left column — heading */}
           <div>
-            <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-white tracking-[-1.6px] leading-[1.2]">
+            <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-text-primary tracking-[-1.6px] leading-[1.2]">
               Frequently asked<br className="hidden md:inline" /> questions
             </h2>
           </div>
@@ -104,7 +104,7 @@ export function FAQSection() {
             {/* See more FAQs */}
             <Link
               href="/faq"
-              className="inline-flex items-center gap-1 self-start px-6 py-3 text-sm font-medium text-text-primary bg-bg-hover rounded-full hover:bg-zinc-700 transition-colors"
+              className="inline-flex items-center gap-1 self-start px-6 py-3 text-sm font-medium text-white bg-[#171717] rounded-full hover:bg-[#2a2a2a] transition-colors"
             >
               See more FAQs
               <ArrowRightBold size={16} />

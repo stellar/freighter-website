@@ -6,7 +6,7 @@ import { ChangelogContent } from "./changelog-content";
 
 export const metadata: Metadata = {
   title: "Changelog",
-  description: "Keep up with the latest Freighter updates and releases.",
+  description: "Keep up with the latest Varial updates and releases.",
 };
 
 interface GitHubRelease {

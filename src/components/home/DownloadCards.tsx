@@ -44,8 +44,8 @@ export function DownloadCards() {
             </div>
 
             {/* Phone screenshot */}
-            <div className="absolute bottom-[120px] right-0 h-[360px] w-[166px] sm:-right-4 sm:h-[420px] sm:w-[194px] md:-right-8 md:h-[500px] md:w-[231px] rounded-[24px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] overflow-hidden transition-transform duration-300 ease-out group-hover:-translate-x-3 group-hover:translate-y-3">
-              <Image src="/images/for-mobile.png" alt="Freighter mobile app" fill className="object-cover object-top" />
+            <div className="absolute top-0 right-0 bottom-[120px] w-[168px] md:w-[216px] overflow-hidden rounded-l-[24px] rounded-tr-[32px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] transition-transform duration-300 ease-out group-hover:-translate-x-3 group-hover:translate-y-3">
+              <Image src="/images/varial-for-mobile-sheet.png" alt="Varial mobile app" fill className="object-cover object-top" />
             </div>
             <div className="qr-glow absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-10 size-[96px] rounded-[8px] bg-white p-2 shadow-lg">
               <RoundedQR value={LINKS.iosApp} size={80} />
@@ -73,9 +73,9 @@ export function DownloadCards() {
               Get extension
             </a>
 
-            {/* Browser extension screenshot — 360×600 aspect ratio */}
-            <div className="absolute bottom-[120px] -right-16 aspect-[360/600] h-[420px] overflow-hidden rounded-[24px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] sm:-right-20 sm:h-[500px] md:-right-24 md:h-[580px] transition-transform duration-300 ease-out group-hover:-translate-x-3 group-hover:translate-y-3">
-              <Image src="/images/for-extension.png" alt="Freighter browser extension" fill className="object-cover object-top" />
+            {/* Browser extension screenshot — same box as the mobile sheet */}
+            <div className="absolute top-0 right-0 bottom-[120px] w-[168px] md:w-[216px] overflow-hidden rounded-l-[24px] rounded-tr-[32px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] transition-transform duration-300 ease-out group-hover:-translate-x-3 group-hover:translate-y-3">
+              <Image src="/images/varial-for-extension.png" alt="Varial browser extension" fill className="object-cover object-top" />
             </div>
           </div>
         </motion.div>

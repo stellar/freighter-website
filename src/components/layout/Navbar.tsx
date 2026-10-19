@@ -23,25 +23,25 @@ export function Navbar() {
       aria-label="Primary navigation"
     >
       <div className="relative mx-auto flex w-full max-w-[1024px] items-center justify-between py-3">
-        <Link href="/" className="logo-glow relative size-10 shrink-0 overflow-hidden rounded-[9px] bg-[#5842c3]">
+        <Link href="/" className="relative flex h-8 shrink-0 items-center">
           <Image
-            src="/images/freighter-icon.png"
-            alt="Freighter"
-            width={245}
-            height={100}
+            src="/images/varial-logo.svg"
+            alt="Varial"
+            width={117}
+            height={32}
             priority
-            className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+            className="h-8 w-auto pointer-events-none"
           />
         </Link>
 
-        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-4 sm:flex">
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full bg-white p-1 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_0_0_1px_#F3F3F3] sm:flex">
           {NAV_LINKS.map((item) => (
             <Link
               key={item.label}
               href={item.href}
               target={item.external ? "_blank" : undefined}
               rel={item.external ? "noopener noreferrer" : undefined}
-              className="text-sm font-medium leading-5 text-[#ededed] transition-colors duration-200 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70"
+              className="rounded-full px-4 py-2 text-sm font-medium leading-5 text-text-primary transition-colors duration-200 hover:bg-[#F3F3F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent/70"
             >
               {item.label}
             </Link>
@@ -52,7 +52,7 @@ export function Navbar() {
           href={LINKS.chromeExtension}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#e8e8e8] px-4 py-2 text-base font-semibold text-[#171717] transition-colors duration-200 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70"
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#171717] px-5 py-2 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
         >
           Download
         </a>

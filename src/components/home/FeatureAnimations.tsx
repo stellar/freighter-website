@@ -633,26 +633,11 @@ function ReceiveStage() {
        the card reads as a real wallet switcher.
    ════════════════════════════════════════ */
 
-type IdenticonCells = ReadonlyArray<ReadonlyArray<0 | 1>>;
-
-function WalletIdenticon({
-  cells,
-  on,
-  off,
-}: {
-  cells: IdenticonCells;
-  on: string;
-  off: string;
-}) {
+/** Varial gradient avatar (Figma: Varial › Account) */
+function WalletAvatar({ src }: { src: string }) {
   return (
-    <svg viewBox="0 0 5 5" shapeRendering="crispEdges" aria-hidden="true">
-      <rect width="5" height="5" fill={off} />
-      {cells.flatMap((row, y) =>
-        row.map((cell, x) =>
-          cell ? <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill={on} /> : null,
-        ),
-      )}
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt="" className="fc-wallet-row-avatar-img" draggable={false} />
   );
 }
 
@@ -661,43 +646,19 @@ const WALLETS = [
     name: "Personal",
     address: "GC6N...K4P9",
     balance: "$1,420.18",
-    cells: [
-      [1, 0, 1, 0, 1],
-      [0, 1, 1, 1, 0],
-      [1, 1, 0, 1, 1],
-      [0, 1, 0, 1, 0],
-      [1, 0, 1, 0, 1],
-    ] as IdenticonCells,
-    on: "#9E8CFC",
-    off: "#3A2F6E",
+    avatar: "/images/varial-avatar-1.png",
   },
   {
     name: "Trading",
     address: "GBQH...28HF",
     balance: "$483.62",
-    cells: [
-      [0, 1, 1, 1, 0],
-      [1, 1, 0, 1, 1],
-      [0, 1, 1, 1, 0],
-      [1, 0, 1, 0, 1],
-      [0, 1, 1, 1, 0],
-    ] as IdenticonCells,
-    on: "#5fffaf",
-    off: "#163b2c",
+    avatar: "/images/varial-avatar-2.png",
   },
   {
     name: "Savings",
     address: "GAZX...8L2J",
     balance: "$94.10",
-    cells: [
-      [1, 1, 0, 1, 1],
-      [1, 0, 1, 0, 1],
-      [0, 1, 1, 1, 0],
-      [1, 0, 1, 0, 1],
-      [1, 1, 0, 1, 1],
-    ] as IdenticonCells,
-    on: "#f4b860",
-    off: "#3a2a14",
+    avatar: "/images/varial-avatar-3.png",
   },
 ] as const;
 
@@ -726,7 +687,7 @@ function WalletsStage() {
               className={`fc-wallet-row${isSelected ? " fc-wallet-row--selected" : ""}`}
             >
               <span className="fc-wallet-row-avatar">
-                <WalletIdenticon cells={w.cells} on={w.on} off={w.off} />
+                <WalletAvatar src={w.avatar} />
                 <span
                   className={`fc-wallet-row-badge${isSelected ? " is-visible" : ""}`}
                 >

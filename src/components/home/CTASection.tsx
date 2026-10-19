@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeSlideUp, EASE_OUT } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
-import { DownloadBold } from "@/components/ui/PhosphorIcons";
+import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
 import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
 
 export function CTASection() {
@@ -32,11 +32,11 @@ export function CTASection() {
                 transition={{ duration: 0.5, ease: EASE_OUT }}
               >
                 <Image
-                  src="/images/logo.svg"
-                  alt="Freighter"
+                  src="/images/varial-icon.svg"
+                  alt="Varial"
                   width={64}
                   height={64}
-                  className="size-16"
+                  className="size-16 rounded-[14px]"
                 />
               </motion.div>
 
@@ -49,7 +49,7 @@ export function CTASection() {
                   transition={{ delay: 0.1, duration: 0.5, ease: EASE_OUT }}
                   className="text-3xl sm:text-4xl lg:text-[48px] font-medium text-white tracking-[-1.92px] text-center leading-[1.17]"
                 >
-                  Try Freighter today
+                  Try Varial today
                 </motion.h2>
 
                 <motion.p
@@ -76,15 +76,15 @@ export function CTASection() {
                     href={LINKS.iosApp}
                     className="inline-flex min-w-0 flex-1 basis-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
                   >
-                    <DownloadBold size={16} className="shrink-0 opacity-50" />
-                    iOS
+                    <AppleLogoFill size={14} className="shrink-0 opacity-70" />
+                    Get iOS
                   </a>
                   <a
                     href={LINKS.androidApp}
                     className="inline-flex min-w-0 flex-1 basis-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
                   >
-                    <DownloadBold size={16} className="shrink-0 opacity-50" />
-                    Android
+                    <AndroidLogoFill size={14} className="shrink-0 opacity-70" />
+                    Get Android
                   </a>
                 </div>
                 <a
@@ -93,8 +93,12 @@ export function CTASection() {
                   rel="noopener noreferrer"
                   className="inline-flex w-[calc((100%-0.75rem)/2)] items-center justify-center gap-1 self-center whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
                 >
-                  <DownloadBold size={16} className="shrink-0 opacity-50" />
-                  Browser
+                  <span className="flex items-center -space-x-0.5">
+                    <Image src="/images/browser-chrome.png" alt="Chrome" width={18} height={18} className="size-[18px] rounded-full ring-1 ring-white/50" />
+                    <Image src="/images/browser-firefox.png" alt="Firefox" width={18} height={18} className="size-[18px] rounded-full ring-1 ring-white/50" />
+                    <Image src="/images/browser-brave.png" alt="Brave" width={18} height={18} className="size-[18px] rounded-full ring-1 ring-white/50" />
+                  </span>
+                  Get extension
                 </a>
               </motion.div>
             </div>

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { staggerContainer, fadeSlideUp } from "@/lib/animations";
 import { clsx } from "clsx";
 import {
-  SwapBold,
+  ArrowsLeftRightBold,
   ImagesBold,
   FingerprintBold,
   CurrencyDollarBold,
@@ -23,7 +23,7 @@ const features: { title: string; description: string; icon: ComponentType<{ size
   {
     title: "Instant DEX Swaps.",
     description: "Trade Stellar assets instantly without leaving your wallet.",
-    icon: SwapBold,
+    icon: ArrowsLeftRightBold,
   },
   {
     title: "Collectibles.",
@@ -85,14 +85,14 @@ export function FeaturesGrid() {
                 key={feature.title}
                 variants={fadeSlideUp}
                 className={clsx(
-                  "feature-cell flex gap-4 items-start p-8",
+                  "feature-cell flex gap-3 items-start p-8",
                   i % 3 !== 2 && "md:border-r md:border-border",
                   i < 8 && "border-b border-border",
                   i >= 6 && "md:border-b-0"
                 )}
               >
-                <div className="feature-icon shrink-0 mt-0.5 text-accent-light">
-                  <Icon size={20} />
+                <div className="feature-icon flex size-[35px] shrink-0 items-center justify-center rounded-full bg-[#EEF4FF] text-accent">
+                  <Icon size={18} />
                 </div>
                 <p className="text-base leading-6 md:min-h-[72px]">
                   <span className="font-medium text-text-primary">

@@ -139,14 +139,14 @@ export function Footer() {
                   transition={{ duration: 0.15, ease: EASE_OUT }}
                   className="absolute bottom-full left-0 sm:left-auto sm:right-0 z-50 min-w-[180px] pb-2"
                 >
-                  <div className="rounded-lg border border-white/10 bg-[#1b1b1b] p-1 shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
+                  <div className="rounded-lg border border-black/10 bg-white p-1 shadow-[0_16px_40px_rgba(0,0,0,0.12)]">
                     {discordLinks.map((link) => (
                       <a
                         key={link.label}
                         href={link.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-white/10 hover:text-text-primary"
+                        className="flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-black/5 hover:text-text-primary"
                       >
                         <span>{link.label}</span>
                         <ArrowSquareOutBold size={14} className="shrink-0 opacity-70" />
