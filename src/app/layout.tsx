@@ -19,8 +19,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  // TODO(varial): domain
-  metadataBase: new URL("https://www.freighter.app"),
+  // TODO(varial): domain — set NEXT_PUBLIC_SITE_URL (or replace the fallback) once the Varial domain is live
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://freighter-website.vercel.app"),
   title: {
     default: "Varial | Your Everyday Stellar Wallet",
     template: "%s | Varial",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://www.freighter.app",
+    url: "/",
     siteName: "Varial",
     title: "Varial | Your Everyday Stellar Wallet",
     description: "Browse, connect, and use Stellar apps — all in one place.",
