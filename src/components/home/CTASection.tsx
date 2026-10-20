@@ -16,7 +16,7 @@ const EDGE_WORDS = [
   "Send",
   "Swap",
   "Discover",
-  "Zero fees",
+  "No wallet fees",
   "Non-custodial",
   "Open source",
   "Stablecoins",
@@ -109,7 +109,7 @@ export function CTASection() {
                   transition={{ delay: 0.1, duration: 0.5, ease: EASE_OUT }}
                   className="text-3xl sm:text-4xl lg:text-[48px] font-medium text-[#171717] tracking-[-1.92px] text-center leading-[1.17]"
                 >
-                  Try Varial today
+                  Get Varial
                 </motion.h2>
 
                 <motion.p
@@ -119,7 +119,7 @@ export function CTASection() {
                   transition={{ delay: 0.15, duration: 0.5, ease: EASE_OUT }}
                   className="text-base sm:text-lg text-[#6F6F6F] text-center text-pretty max-w-[40ch]"
                 >
-                  Open source and free to use
+                  On your phone or in your browser.
                 </motion.p>
               </div>
 

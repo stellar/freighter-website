@@ -54,11 +54,11 @@ export function FeaturesGrid() {
             </div>
             <div>
               <h3 className="text-xl font-medium tracking-[-0.02em] text-[#171717]">
-                Zero fees, always
+                No wallet fees
               </h3>
               <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
-                No wallet fees, ever — just Stellar&apos;s network cost, a
-                fraction of a cent.
+                Varial doesn&apos;t charge wallet fees. Stellar network fees
+                still apply.
               </p>
             </div>
           </motion.div>
@@ -83,11 +83,11 @@ export function FeaturesGrid() {
             </div>
             <div>
               <h3 className="text-xl font-medium tracking-[-0.02em] text-[#171717]">
-                Cross-chain deposits
+                From other chains to Stellar
               </h3>
               <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
-                Bring assets from other chains straight into your Stellar
-                wallet.
+                Deposit supported assets from other networks into your
+                Stellar wallet.
               </p>
             </div>
           </motion.div>
@@ -111,11 +111,11 @@ export function FeaturesGrid() {
             </div>
             <div>
               <h3 className="text-xl font-medium tracking-[-0.02em] text-[#171717]">
-                Built by the Stellar Foundation
+                Built by the Stellar Development Foundation
               </h3>
               <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
-                Open source, non-custodial, and maintained by the team behind
-                Stellar.
+                Open source and non-custodial. You control your wallet and
+                private keys.
               </p>
             </div>
           </motion.div>

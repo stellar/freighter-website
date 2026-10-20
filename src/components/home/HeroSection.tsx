@@ -33,7 +33,6 @@ const HEADLINE_TAILS = [
   "Stellar apps",
   "stablecoins",
   "swapping",
-  "saving",
 ] as const;
 const HEADLINE_INTERVAL_MS = 3400;
 /** Per-character stagger of the wipe, like Zoah's hero. */
@@ -181,7 +180,7 @@ type Stage = {
 const STAGES: Stage[] = [
   {
     id: "wallet",
-    sub: "Send, swap, and discover apps on Stellar — from one wallet.",
+    sub: "Send, swap, and connect to apps on Stellar.",
     mode: "fan",
     screens: [
       { src: "/images/varial-wallet.png", alt: "Varial wallet home" },
@@ -192,8 +191,8 @@ const STAGES: Stage[] = [
   {
     id: "swap",
     eyebrow: "Swap",
-    title: "Swap at the best rate",
-    sub: "Trade XLM, USDC, and any Stellar asset in a couple of taps.",
+    title: "See your swap route",
+    sub: "See the route and rate before you confirm your swap.",
     mode: "single",
     demo: "swap",
     screens: [
@@ -205,8 +204,8 @@ const STAGES: Stage[] = [
   {
     id: "discover",
     eyebrow: "Discover",
-    title: "Discover what's built on Stellar",
-    sub: "Browse DeFi, stablecoins, and apps — without leaving your wallet.",
+    title: "Explore Stellar apps",
+    sub: "Browse Stellar apps and connect with Varial.",
     mode: "single",
     demo: "discover",
     screens: [

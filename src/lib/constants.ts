@@ -5,7 +5,7 @@ export const SITE = {
   name: "Varial",
   tagline: "Your Everyday Stellar Wallet",
   description:
-    "Browse, connect, and use Stellar apps — all in one place",
+    "Send, swap, and connect to apps on Stellar.",
   url: "https://www.freighter.app",
   supportEmail: "help@freighter.app",
   github: "https://github.com/stellar/freighter",

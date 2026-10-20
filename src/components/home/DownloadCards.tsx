@@ -42,10 +42,10 @@ export function DownloadCards() {
 
             <div className="relative z-10 max-w-[320px]">
               <h3 className="text-2xl font-medium tracking-[-0.04em] text-[#171717] sm:text-[28px]">
-                For mobile
+                Take Varial with you
               </h3>
               <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
-                The full wallet in your pocket, on iOS and Android.
+                Available on iOS and Android.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 <a href={LINKS.iosApp} className={PRIMARY_BTN}>
@@ -86,10 +86,10 @@ export function DownloadCards() {
 
             <div className="relative z-10 max-w-[320px]">
               <h3 className="text-2xl font-medium tracking-[-0.04em] text-[#171717] sm:text-[28px]">
-                For browser
+                Varial in your browser
               </h3>
               <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
-                Connect to Stellar apps from Chrome, Firefox, or Brave.
+                Connect to Stellar apps with the browser extension.
               </p>
               <div className="mt-5">
                 <a

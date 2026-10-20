@@ -120,7 +120,7 @@ export function FeatureCarousel({
           className="flex items-center justify-between mb-8"
         >
           <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-text-primary tracking-[-1.6px] leading-[1.2]">
-            Your everyday stellar wallet
+            See what you can do with Varial
           </h2>
           <button
             type="button"

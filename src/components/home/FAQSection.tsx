@@ -10,22 +10,22 @@ const FAQ_ITEMS = [
   {
     question: "Is Varial safe to use?",
     answer:
-      "Varial is non-custodial, which means your keys are encrypted and stored only on your device — never on a server. It's fully open source and auditable on GitHub, and includes advanced transaction protection powered by Blockaid to help block scams and malicious sites.",
+      "Varial is non-custodial: your keys are encrypted and stored only on your device, never on a server. The code is open source on GitHub. Transaction protection powered by Blockaid helps flag scams and malicious sites.",
   },
   {
     question: "Does Varial charge fees?",
     answer:
-      "No. Varial doesn't add any wallet fees on top of transactions. You only pay Stellar's network fees, which typically cost a fraction of a cent.",
+      "No. Varial doesn't charge wallet fees. You pay Stellar's network fees, which are typically a fraction of a cent.",
   },
   {
     question: "What happens if I lose my device?",
     answer:
-      "Your account can always be restored on a new device using your recovery phrase — a unique set of words generated when you first set up Varial. Varial never stores your phrase, so keep it somewhere safe; it's the only way to recover your account.",
+      "You can restore your account on a new device with your recovery phrase, the set of words generated when you set up Varial. Varial never stores your phrase, so keep it somewhere safe. It's the only way to recover your account.",
   },
   {
     question: "What can I do with Varial?",
     answer:
-      "Hold XLM and other Stellar assets, swap tokens directly in the wallet, manage multiple accounts, and connect to any Stellar or Soroban app that supports WalletConnect or the Stellar Wallets Kit.",
+      "Hold XLM and other Stellar assets, swap tokens in the wallet, manage multiple accounts, and connect to Stellar and Soroban apps that support WalletConnect or the Stellar Wallets Kit.",
   },
 ];
 
@@ -91,7 +91,7 @@ export function FAQSection() {
               href="/faq"
               className="inline-flex items-center gap-1 rounded-full bg-[#171717] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a]"
             >
-              See more FAQs
+              More FAQs
               <ArrowRightBold size={16} />
             </Link>
           </div>
