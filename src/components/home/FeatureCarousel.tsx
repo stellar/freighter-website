@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import { motion, useInView, type PanInfo } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView, useMotionValue } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
 import { useXlmUsdRate } from "@/lib/xlm-price";
 import {
@@ -12,8 +12,8 @@ import {
   ImagesBold,
   WalletBold,
   ArrowDownBold,
-  CaretLeftBold,
-  CaretRightBold,
+  PlayFill,
+  PauseFill,
 } from "@/components/ui/PhosphorIcons";
 import { FEATURE_ANIMATIONS } from "./FeatureAnimations";
 
@@ -27,6 +27,8 @@ const ITEMS = [
   { label: "Wallets", icon: WalletBold },
 ];
 
+/** Marquee speed, px per second */
+const FLOW_SPEED = 28;
 const GAP = 17;
 
 export type CardStyle = "solid" | "glow" | "glass" | "editorial";
@@ -35,9 +37,7 @@ export function FeatureCarousel({
   cardStyle = "solid",
 }: { cardStyle?: CardStyle } = {}) {
   const xlmUsdRate = useXlmUsdRate();
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [cardWidth, setCardWidth] = useState(320);
-  const [visibleCount, setVisibleCount] = useState(3);
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   // Pause the dozens of CSS keyframe loops inside each card when the
@@ -45,87 +45,71 @@ export function FeatureCarousel({
   // long pages where the carousel is one of many sections.
   const inView = useInView(sectionRef, { margin: "200px 0px" });
 
-  const maxIndex = Math.max(0, ITEMS.length - visibleCount);
-
   // Measure container and compute card width
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const w = entry.contentRect.width;
         const count = w < 640 ? 1 : w < 900 ? 2 : 3;
-        setVisibleCount(count);
         setCardWidth((w - (count - 1) * GAP) / count);
-        setCurrentIndex((prev) => Math.min(prev, Math.max(0, ITEMS.length - count)));
       }
     });
     observer.observe(container);
     return () => observer.disconnect();
   }, []);
 
-  const goNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  }, [maxIndex]);
+  // Continuous flow: the track holds the items twice and `x` drifts left,
+  // wrapping by one set's width so the loop is seamless.
+  const x = useMotionValue(0);
+  const loopWidth = ITEMS.length * (cardWidth + GAP);
+  const wrap = (v: number) => {
+    let n = v % loopWidth;
+    if (n > 0) n -= loopWidth;
+    return n;
+  };
+  const [playing, setPlaying] = useState(true);
+  const dragging = useRef(false);
 
-  const goPrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  }, [maxIndex]);
+  useEffect(() => {
+    if (!playing || !inView) return;
+    let raf = 0;
+    let last = performance.now();
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      if (!dragging.current) x.set(wrap(x.get() - FLOW_SPEED * dt));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- wrap depends only on loopWidth
+  }, [playing, inView, loopWidth, x]);
 
-  // Trackpad / horizontal wheel: swipe left/right over the carousel to step
-  // one card at a time. Native listener (non-passive) so we can block the
-  // browser's back/forward swipe while the gesture is over the cards;
-  // vertical scrolling is left untouched.
+  // Trackpad / horizontal wheel nudges the flow. Native non-passive listener
+  // so the browser's back/forward swipe is blocked over the cards; vertical
+  // scrolling is left untouched.
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    let acc = 0;
-    let locked = false;
-    let resetTimer: ReturnType<typeof setTimeout> | undefined;
-    let unlockTimer: ReturnType<typeof setTimeout> | undefined;
-
     const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
-      if (locked) return;
-      acc += e.deltaX;
-      clearTimeout(resetTimer);
-      resetTimer = setTimeout(() => (acc = 0), 150);
-      if (Math.abs(acc) < 40) return;
-      const dir = acc > 0 ? 1 : -1;
-      acc = 0;
-      locked = true;
-      unlockTimer = setTimeout(() => (locked = false), 450);
-      setCurrentIndex((prev) => Math.min(Math.max(prev + dir, 0), maxIndex));
+      x.set(wrap(x.get() - e.deltaX));
     };
-
     el.addEventListener("wheel", onWheel, { passive: false });
-    return () => {
-      el.removeEventListener("wheel", onWheel);
-      clearTimeout(resetTimer);
-      clearTimeout(unlockTimer);
-    };
-  }, [maxIndex]);
-
-  const handlePrev = () => goPrev();
-  const handleNext = () => goNext();
-
-  const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const threshold = cardWidth / 4;
-    if (info.offset.x < -threshold) {
-      setCurrentIndex((prev) => Math.min(prev + 1, maxIndex));
-    } else if (info.offset.x > threshold) {
-      setCurrentIndex((prev) => Math.max(prev - 1, 0));
-    }
-  };
-
-  const translateX = -(currentIndex * (cardWidth + GAP));
+    return () => el.removeEventListener("wheel", onWheel);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- wrap depends only on loopWidth
+  }, [loopWidth, x]);
 
   const isEditorial = cardStyle === "editorial";
 
   return (
-    <section ref={sectionRef} className={`feature-cards feature-cards--${cardStyle}${inView ? "" : " feature-cards--paused"}`}>
+    <section
+      ref={sectionRef}
+      className={`feature-cards feature-cards--${cardStyle}${inView ? "" : " feature-cards--paused"}`}
+    >
       <div className="max-w-[1280px] mx-auto px-6">
         {/* Header row */}
         <motion.div
@@ -138,50 +122,48 @@ export function FeatureCarousel({
           <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-text-primary tracking-[-1.6px] leading-[1.2]">
             Your everyday stellar wallet
           </h2>
-          <div className="flex gap-2 shrink-0 ml-4">
-            <button
-              onClick={handlePrev}
-              className="size-11 rounded-full bg-[#171717] flex items-center justify-center text-white hover:bg-[#2a2a2a] transition-colors cursor-pointer"
-              aria-label="Previous"
-            >
-              <CaretLeftBold size={16} />
-            </button>
-            <button
-              onClick={handleNext}
-              className="size-11 rounded-full bg-[#171717] flex items-center justify-center text-white hover:bg-[#2a2a2a] transition-colors cursor-pointer"
-              aria-label="Next"
-            >
-              <CaretRightBold size={16} />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setPlaying((p) => !p)}
+            className="ml-4 flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#171717] text-white transition-colors hover:bg-[#2a2a2a]"
+            aria-label={playing ? "Pause" : "Play"}
+            aria-pressed={playing}
+          >
+            {playing ? <PauseFill size={16} /> : <PlayFill size={16} />}
+          </button>
         </motion.div>
 
         {/* Carousel viewport — overflow visible so cards bleed off-page */}
         <div ref={containerRef} className="overflow-visible">
           <motion.div
-            animate={{ x: translateX }}
-            transition={{ type: "tween", duration: 0.4, ease: "easeInOut" }}
+            style={{ x, gap: GAP }}
             drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.15}
-            onDragEnd={handleDragEnd}
+            dragMomentum={false}
+            onDragStart={() => (dragging.current = true)}
+            onDragEnd={() => {
+              dragging.current = false;
+              x.set(wrap(x.get()));
+            }}
             className="flex cursor-grab active:cursor-grabbing"
-            style={{ gap: GAP }}
           >
-            {ITEMS.map((item, i) => {
+            {[...ITEMS, ...ITEMS].map((item, i) => {
               const Icon = item.icon;
               const Animation = FEATURE_ANIMATIONS[item.label];
               return (
                 <motion.div
-                  key={item.label}
+                  key={`${item.label}-${i}`}
                   className="shrink-0"
                   style={{ width: cardWidth }}
                 >
-                  {Animation ? <Animation xlmUsdRate={xlmUsdRate} /> : <div className="fc-card" />}
+                  {Animation ? (
+                    <Animation xlmUsdRate={xlmUsdRate} />
+                  ) : (
+                    <div className="fc-card" />
+                  )}
                   {isEditorial ? (
                     <div className="mt-5 flex items-baseline gap-3">
                       <span className="text-[11px] font-medium tracking-[0.2em] text-text-tertiary tabular-nums">
-                        {String(i + 1).padStart(2, "0")}
+                        {String((i % ITEMS.length) + 1).padStart(2, "0")}
                       </span>
                       <span className="text-[22px] font-semibold text-text-primary tracking-[-0.6px] leading-none">
                         {item.label}

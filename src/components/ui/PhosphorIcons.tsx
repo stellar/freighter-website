@@ -12,6 +12,8 @@ import {
   Wallet,
   CaretLeft,
   CaretRight,
+  Play,
+  Pause,
   CaretDown,
   ArrowsDownUp,
   ArrowsClockwise,
@@ -129,6 +131,8 @@ export const ImagesFill = fill(Images);
 export const AppleLogoFill = fill(AppleLogo);
 export const AndroidLogoFill = fill(AndroidLogo);
 export const GooglePlayLogoFill = fill(GooglePlayLogo);
+export const PlayFill = fill(Play);
+export const PauseFill = fill(Pause);
 export const GameControllerFill = fill(GameController);
 export const UsersThreeFill = fill(UsersThree);
 export const CheckFill = fill(Check);
