@@ -4,6 +4,11 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeSlideUp, EASE_OUT } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
+import {
+  BrowserBadge,
+  useBrowser,
+  extensionHref,
+} from "@/components/ui/BrowserBadge";
 import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
 
 const EDGE_WORDS = [
@@ -61,6 +66,7 @@ function EdgeRain({ side }: { side: "left" | "right" }) {
 }
 
 export function CTASection() {
+  const browser = useBrowser();
   return (
     <section>
       <div className="max-w-[1280px] mx-auto px-6">
@@ -140,34 +146,12 @@ export function CTASection() {
                   Get Android
                 </a>
                 <a
-                  href={LINKS.chromeExtension}
+                  href={extensionHref(browser)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
                 >
-                  <span className="flex shrink-0 items-center -space-x-1">
-                    <Image
-                      src="/images/browser-chrome.png"
-                      alt="Chrome"
-                      width={18}
-                      height={18}
-                      className="size-[18px] rounded-full ring-1 ring-black/40"
-                    />
-                    <Image
-                      src="/images/browser-firefox.png"
-                      alt="Firefox"
-                      width={18}
-                      height={18}
-                      className="size-[18px] rounded-full ring-1 ring-black/40"
-                    />
-                    <Image
-                      src="/images/browser-brave.png"
-                      alt="Brave"
-                      width={18}
-                      height={18}
-                      className="size-[18px] rounded-full ring-1 ring-black/40"
-                    />
-                  </span>
+                  <BrowserBadge browser={browser} />
                   Get extension
                 </a>
               </motion.div>

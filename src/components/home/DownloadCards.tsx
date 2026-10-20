@@ -2,8 +2,12 @@
 
 import { motion } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
-import { RoundedQR } from "@/components/ui/RoundedQR";
 import { LINKS } from "@/lib/constants";
+import {
+  BrowserBadge,
+  useBrowser,
+  extensionHref,
+} from "@/components/ui/BrowserBadge";
 import Image from "next/image";
 import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
 
@@ -21,6 +25,7 @@ function Glow() {
 }
 
 export function DownloadCards() {
+  const browser = useBrowser();
   return (
     <section id="download" className="scroll-mt-[72px]">
       <div className="mx-auto max-w-[1280px] px-6">
@@ -54,19 +59,24 @@ export function DownloadCards() {
               </div>
             </div>
 
-            {/* Phone — bleeds off the bottom-right */}
-            <div className="absolute right-8 top-[46%] z-[1] aspect-[804/1630] w-[220px] overflow-hidden rounded-[24px] bg-white shadow-[0px_24px_48px_rgba(0,0,0,0.2)] transition-transform duration-500 ease-out group-hover:-translate-y-3 md:right-10 md:top-[42%] md:w-[250px]">
-              <Image
-                src="/images/varial-wallet.png"
-                alt="Varial mobile app"
-                width={804}
-                height={1630}
-                className="h-full w-full object-cover"
-              />
-            </div>
-
-            <div className="qr-glow absolute bottom-8 left-8 z-10 size-[96px] rounded-[8px] bg-white p-2 shadow-[0_8px_24px_rgba(0,0,0,0.12)] md:left-10">
-              <RoundedQR value={LINKS.iosApp} size={80} />
+            {/* Phone — monotone device frame, bleeds off the bottom-right */}
+            <div className="absolute right-8 top-[50%] z-[1] w-[236px] rounded-[36px] bg-[#171717] p-[10px] shadow-[0px_24px_48px_rgba(0,0,0,0.2)] transition-transform duration-500 ease-out group-hover:-translate-y-3 md:right-10 md:top-[49%] md:w-[270px]">
+              <div className="relative overflow-hidden rounded-[28px] bg-white pt-7">
+                {/* Dynamic island */}
+                <span
+                  className="absolute left-1/2 top-2 z-10 h-[18px] w-[64px] -translate-x-1/2 rounded-full bg-[#171717]"
+                  aria-hidden
+                />
+                <div className="aspect-[804/1630] w-full">
+                  <Image
+                    src="/images/varial-wallet.png"
+                    alt="Varial mobile app"
+                    width={804}
+                    height={1630}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -83,48 +93,55 @@ export function DownloadCards() {
               </p>
               <div className="mt-5">
                 <a
-                  href={LINKS.chromeExtension}
+                  href={extensionHref(browser)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={PRIMARY_BTN}
                 >
-                  <span className="flex items-center -space-x-1">
-                    <Image
-                      src="/images/browser-chrome.png"
-                      alt="Chrome"
-                      width={18}
-                      height={18}
-                      className="size-[18px] rounded-full ring-1 ring-black/40"
-                    />
-                    <Image
-                      src="/images/browser-firefox.png"
-                      alt="Firefox"
-                      width={18}
-                      height={18}
-                      className="size-[18px] rounded-full ring-1 ring-black/40"
-                    />
-                    <Image
-                      src="/images/browser-brave.png"
-                      alt="Brave"
-                      width={18}
-                      height={18}
-                      className="size-[18px] rounded-full ring-1 ring-black/40"
-                    />
-                  </span>
+                  <BrowserBadge browser={browser} />
                   Get extension
                 </a>
               </div>
             </div>
 
-            {/* Extension popup — bleeds off the bottom-right */}
-            <div className="absolute right-8 top-[46%] z-[1] aspect-[720/1200] w-[250px] overflow-hidden rounded-[20px] bg-white shadow-[0px_24px_48px_rgba(0,0,0,0.2)] transition-transform duration-500 ease-out group-hover:-translate-y-3 md:right-10 md:top-[42%] md:w-[290px]">
-              <Image
-                src="/images/varial-for-extension.png"
-                alt="Varial browser extension"
-                width={720}
-                height={1200}
-                className="h-full w-full object-cover object-top"
-              />
+            {/* Browser window: toolbar, and the extension popup hanging under its icon */}
+            <div className="absolute right-8 top-[50%] z-[1] w-[300px] overflow-hidden rounded-[16px] bg-[#F3F3F3] shadow-[0px_24px_48px_rgba(0,0,0,0.2)] ring-1 ring-[#EDEDED] transition-transform duration-500 ease-out group-hover:-translate-y-3 md:right-10 md:top-[48%] md:w-[340px]">
+              {/* Toolbar */}
+              <div
+                className="flex items-center gap-3 bg-[#F8F8F8] px-3 py-2.5"
+                aria-hidden
+              >
+                <span className="flex gap-1.5">
+                  <span className="size-2.5 rounded-full bg-[#DBDBDB]" />
+                  <span className="size-2.5 rounded-full bg-[#DBDBDB]" />
+                  <span className="size-2.5 rounded-full bg-[#DBDBDB]" />
+                </span>
+                <span className="h-6 flex-1 rounded-full bg-white shadow-[inset_0_0_0_1px_#EDEDED]" />
+                {/* Extension icon, pressed */}
+                <span className="flex size-7 items-center justify-center rounded-[8px] bg-[#EDEDED]">
+                  <Image
+                    src="/images/varial-icon.svg"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="size-4 rounded-[4px]"
+                  />
+                </span>
+              </div>
+              {/* Page + popup */}
+              <div className="relative h-[520px]">
+                <div className="absolute right-2 top-0 w-[76%] overflow-hidden rounded-b-[14px] bg-white shadow-[0px_16px_40px_rgba(0,0,0,0.18)] ring-1 ring-[#EDEDED]">
+                  <div className="aspect-[720/1200] w-full">
+                    <Image
+                      src="/images/varial-for-extension.png"
+                      alt="Varial browser extension"
+                      width={720}
+                      height={1200}
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

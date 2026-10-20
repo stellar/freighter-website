@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { EASE_OUT } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
+import { DownloadPill } from "@/components/ui/DownloadPill";
 
 const NAV_LINKS = [
   { label: "Docs", href: LINKS.docs, external: true },
@@ -52,14 +53,7 @@ export function Navbar() {
           ))}
         </div>
 
-        <a
-          href={LINKS.chromeExtension}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="fixed right-[max(1.5rem,calc((100vw-1280px)/2))] top-5 z-50 inline-flex min-h-11 items-center justify-center rounded-full bg-[#171717] px-5 py-2 text-base font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
-        >
-          Download
-        </a>
+        <DownloadPill />
       </div>
     </motion.nav>
   );

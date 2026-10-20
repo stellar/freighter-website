@@ -35,19 +35,19 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   return (
     <button
       onClick={() => setOpen(!open)}
-      className="flex gap-4 items-start text-left w-full cursor-pointer"
+      className="flex w-full cursor-pointer items-start gap-4 rounded-[24px] bg-white p-6 text-left transition-colors duration-200 hover:bg-[#FCFCFC]"
     >
       {/* Plus/minus icon — spring rotation */}
       <motion.div
         animate={{ rotate: open ? 45 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className="shrink-0 mt-1 text-accent-light"
+        className="mt-1 shrink-0 text-[#171717]"
       >
         <PlusBold size={18} />
       </motion.div>
       {/* Question + Answer */}
       <div className="flex-1 min-w-0">
-        <h3 className="text-xl font-normal text-text-primary leading-7">
+        <h3 className="text-lg font-medium leading-7 text-text-primary">
           {question}
         </h3>
         <AnimatePresence>
@@ -81,34 +81,30 @@ export function FAQSection() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
         >
-          {/* Left column — heading */}
-          <div>
+          {/* Left column — heading + link */}
+          <div className="flex flex-col items-start gap-6">
             <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-text-primary tracking-[-1.6px] leading-[1.2]">
-              Frequently asked<br className="hidden md:inline" /> questions
+              Frequently asked
+              <br className="hidden md:inline" /> questions
             </h2>
-          </div>
-
-          {/* Right column — FAQ items */}
-          <div className="flex flex-col gap-8">
-            {FAQ_ITEMS.map((item, i) => (
-              <div key={item.question}>
-                <FAQItem question={item.question} answer={item.answer} />
-                {i < FAQ_ITEMS.length - 1 && (
-                  <div className="h-px bg-border mt-8" />
-                )}
-              </div>
-            ))}
-
-            <div className="h-px bg-border" />
-
-            {/* See more FAQs */}
             <Link
               href="/faq"
-              className="inline-flex items-center gap-1 self-start px-6 py-3 text-sm font-medium text-white bg-[#171717] rounded-full hover:bg-[#2a2a2a] transition-colors"
+              className="inline-flex items-center gap-1 rounded-full bg-[#171717] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a]"
             >
               See more FAQs
               <ArrowRightBold size={16} />
             </Link>
+          </div>
+
+          {/* Right column — FAQ cards */}
+          <div className="flex flex-col gap-3">
+            {FAQ_ITEMS.map((item) => (
+              <FAQItem
+                key={item.question}
+                question={item.question}
+                answer={item.answer}
+              />
+            ))}
           </div>
         </motion.div>
       </div>
