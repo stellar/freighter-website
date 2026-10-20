@@ -126,7 +126,7 @@ export function FeatureCarousel({
 
   return (
     <section ref={sectionRef} className={`feature-cards feature-cards--${cardStyle}${inView ? "" : " feature-cards--paused"}`}>
-      <div className="max-w-[1024px] mx-auto px-6">
+      <div className="max-w-[1280px] mx-auto px-6">
         {/* Header row */}
         <motion.div
           variants={fadeSlideUp}

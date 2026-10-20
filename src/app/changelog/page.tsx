@@ -101,7 +101,7 @@ export default async function ChangelogPage() {
     <>
       <Navbar />
       <main className="pt-32 pb-24">
-        <div className="mx-auto w-full max-w-[1024px] px-6">
+        <div className="mx-auto w-full max-w-[1280px] px-6">
           <ChangelogContent entries={entries} />
         </div>
       </main>

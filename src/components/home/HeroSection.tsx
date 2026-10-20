@@ -1,18 +1,28 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useMotionValue,
+  useTransform,
+  animate,
+  type MotionValue,
+} from "framer-motion";
 import { EASE_OUT } from "@/lib/animations";
+import { FlowDemo, SWAP_DEMO, DISCOVER_DEMO } from "@/components/home/FlowDemo";
 import { LINKS } from "@/lib/constants";
 import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
 
-const springTransition = { type: "spring" as const, stiffness: 300, damping: 20 };
-
 const HERO_NAV_LINKS = [
   { label: "Docs", href: LINKS.docs, external: true },
-  { label: "GitHub", href: "https://github.com/stellar/freighter", external: true },
+  {
+    label: "GitHub",
+    href: "https://github.com/stellar/freighter",
+    external: true,
+  },
   { label: "Changelog", href: "/changelog", external: false },
   { label: "Support", href: LINKS.support, external: true },
 ] as const;
@@ -21,13 +31,13 @@ const HEADLINE_LEAD = "Your everyday wallet for";
 const HEADLINE_TAILS = [
   "Stellar apps",
   "stablecoins",
-  "swaps and earning",
-  "everything on Stellar",
+  "swapping",
+  "saving",
 ] as const;
 const HEADLINE_INTERVAL_MS = 3400;
 /** Per-character stagger of the wipe, like Zoah's hero. */
 const WIPE_STEP_MS = 18;
-const WIPE_FADE_MS = 260;
+const WIPE_FADE_MS = 160;
 
 /**
  * Hero headline: a fixed lead and a trailing phrase that swaps out one
@@ -72,85 +82,39 @@ function RotatingHeadline({ delay }: { delay: number }) {
       initial={{ opacity: 0, y: 12, filter: "blur(12px)" }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 0.7, ease: EASE_OUT, delay: delay + 0.1 }}
-      className="flex min-h-[2.2em] max-w-[900px] flex-wrap items-center justify-center gap-x-[0.26em] text-center text-4xl font-medium leading-[1.1] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:min-h-[2.2em] lg:text-[64px]"
+      className="flex max-w-[560px] flex-col items-center text-center text-4xl font-medium leading-[1.08] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:items-start lg:text-left lg:text-[60px]"
     >
-      <motion.span layout="position" transition={{ duration: 0.3, ease: EASE_OUT }} className="inline-block">
-        {HEADLINE_LEAD}
-      </motion.span>
-      <span aria-label={tail} className="inline-block whitespace-nowrap">
-        {Array.from(tail).map((ch, i) => {
-          if (ch === " ") return <span key={`sp-${index}-${i}`}> </span>;
-          const d = charIndex++ * WIPE_STEP_MS;
-          return (
-            <span
-              key={`${index}-${i}`}
-              aria-hidden
-              className="inline-block"
-              style={{
-                opacity: wiping ? 0 : 1,
-                color: wiping ? "#0050FF" : "#171717",
-                transition: `opacity ${WIPE_FADE_MS}ms, color 600ms`,
-                transitionDelay: `${d}ms`,
-              }}
-            >
-              {ch}
-            </span>
-          );
-        })}
+      <span className="block">{HEADLINE_LEAD}</span>
+      <span className="flex min-h-[1.1em] flex-wrap justify-center gap-x-[0.26em] lg:justify-start">
+        {/* Words wrap normally; characters inside a word never break apart */}
+        {tail.split(" ").map((word, wi) => (
+          <span
+            key={`${index}-${wi}`}
+            aria-label={wi === 0 ? tail : undefined}
+            className="inline-block whitespace-nowrap"
+          >
+            {Array.from(word).map((ch, ci) => {
+              const d = charIndex++ * WIPE_STEP_MS;
+              return (
+                <span
+                  key={ci}
+                  aria-hidden
+                  className="inline-block"
+                  style={{
+                    opacity: wiping ? 0 : 1,
+                    color: wiping ? "#0050FF" : "#171717",
+                    transition: `opacity ${WIPE_FADE_MS}ms, color 400ms`,
+                    transitionDelay: `${d}ms`,
+                  }}
+                >
+                  {ch}
+                </span>
+              );
+            })}
+          </span>
+        ))}
       </span>
     </motion.h1>
-  );
-}
-
-type PhoneId = "left" | "middle" | "right";
-
-const PHONES: { id: PhoneId; src: string; alt: string }[] = [
-  { id: "left", src: "/images/varial-swap-screen.png", alt: "Varial swap" },
-  { id: "middle", src: "/images/varial-wallet.png", alt: "Varial wallet" },
-  { id: "right", src: "/images/varial-discover.png", alt: "Varial discover" },
-];
-
-function PhoneMockups({ delay }: { delay: number }) {
-  const [hovered, setHovered] = useState<PhoneId | null>(null);
-  const [entered, setEntered] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setEntered(true), 1200 + delay * 1000);
-    return () => clearTimeout(t);
-  }, [delay]);
-
-  const yFor = (id: PhoneId) => (hovered === id ? -18 : 0);
-
-  return (
-    <div className="absolute left-1/2 top-[320px] sm:top-[410px] lg:top-[490px] z-10 flex -translate-x-1/2 items-start justify-center gap-4 sm:gap-6 lg:gap-8 pointer-events-none">
-      {PHONES.map((phone, i) => (
-        <motion.div
-          key={phone.id}
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: yFor(phone.id) }}
-          transition={
-            entered
-              ? springTransition
-              : { delay: delay + 0.7 + i * 0.1, duration: 0.5, ease: EASE_OUT }
-          }
-          onMouseEnter={() => setHovered(phone.id)}
-          onMouseLeave={() => setHovered(null)}
-          onContextMenu={(event) => event.preventDefault()}
-          className="pointer-events-auto w-[220px] lg:w-[300px] xl:w-[330px] aspect-[330/717] select-none rounded-[16px] bg-white shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] overflow-hidden cursor-default shrink-0"
-        >
-          <Image
-            src={phone.src}
-            alt={phone.alt}
-            width={330}
-            height={717}
-            priority
-            draggable={false}
-            sizes="(max-width: 1024px) 220px, (max-width: 1280px) 300px, 330px"
-            className="w-full h-full select-none object-cover pointer-events-none"
-          />
-        </motion.div>
-      ))}
-    </div>
   );
 }
 
@@ -160,96 +124,485 @@ function HeroNav({ delay }: { delay: number }) {
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay, ease: EASE_OUT }}
-      className="absolute left-1/2 top-5 z-30 flex w-[min(calc(100%-48px),1024px)] -translate-x-1/2 items-center justify-between"
+      className="relative z-30 w-full"
       aria-label="Primary navigation"
     >
-      <Link href="/" className="relative flex h-8 shrink-0 items-center">
-        <Image
-          src="/images/varial-logo.svg"
-          alt="Varial"
-          width={117}
-          height={32}
-          priority
-          className="h-8 w-auto pointer-events-none"
-        />
-      </Link>
+      <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between">
+        <Link href="/" className="relative flex h-8 shrink-0 items-center">
+          <Image
+            src="/images/varial-logo.svg"
+            alt="Varial"
+            width={117}
+            height={32}
+            priority
+            className="h-8 w-auto pointer-events-none"
+          />
+        </Link>
 
-      <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full bg-white p-1 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_0_0_1px_#F3F3F3] sm:flex">
-        {HERO_NAV_LINKS.map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            target={item.external ? "_blank" : undefined}
-            rel={item.external ? "noopener noreferrer" : undefined}
-            className="rounded-full px-4 py-2 text-sm font-medium leading-5 text-text-primary transition-colors duration-200 hover:bg-[#F3F3F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent/70"
-          >
-            {item.label}
-          </Link>
-        ))}
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full bg-white p-1 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_0_0_1px_#F3F3F3] sm:flex">
+          {HERO_NAV_LINKS.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
+              className="rounded-full px-4 py-2 text-sm font-medium leading-5 text-text-primary transition-colors duration-200 hover:bg-[#F3F3F3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent/70"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+
+        <a
+          href="#download"
+          className="fixed right-[max(1.5rem,calc((100vw-1280px)/2))] top-5 z-50 inline-flex min-h-11 items-center justify-center rounded-full bg-[#171717] px-5 py-2 text-base font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+        >
+          Download
+        </a>
       </div>
-
-      <a
-        href="#download"
-        className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#171717] px-5 py-2 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
-      >
-        Download
-      </a>
     </motion.nav>
+  );
+}
+
+type Screen = { src: string; alt: string };
+type SideMode = "fan" | "slide" | "single";
+type Stage = {
+  id: string;
+  /** Small uppercase label above the title (decorative) */
+  eyebrow?: string;
+  title?: string;
+  sub?: string;
+  /** fan: side screens swing out with a tilt. slide: they slide straight out. single: centre phone only. */
+  mode: SideMode;
+  /** Centre phone slowly cycles through all three screens while the stage is open. */
+  rotate?: boolean;
+  /** Centre phone plays a scripted walkthrough instead of a screenshot. */
+  demo?: "swap" | "discover";
+  /** [centre, left, right] */
+  screens: [Screen, Screen, Screen];
+};
+
+const STAGES: Stage[] = [
+  {
+    id: "wallet",
+    sub: "Send, swap, and discover apps on Stellar — from one wallet.",
+    mode: "fan",
+    screens: [
+      { src: "/images/varial-wallet.png", alt: "Varial wallet home" },
+      { src: "/images/varial-add-funds.png", alt: "Varial add funds" },
+      { src: "/images/varial-token-xlm.png", alt: "Varial token detail" },
+    ],
+  },
+  {
+    id: "swap",
+    eyebrow: "Swap",
+    title: "Swap at the best rate",
+    sub: "Trade XLM, USDC, and any Stellar asset in a couple of taps.",
+    mode: "single",
+    demo: "swap",
+    screens: [
+      { src: "/images/varial-swap-screen.png", alt: "Varial swap" },
+      { src: "/images/varial-swap-route.png", alt: "Varial swap route" },
+      { src: "/images/varial-swap-review.png", alt: "Varial review swap" },
+    ],
+  },
+  {
+    id: "discover",
+    eyebrow: "Discover",
+    title: "Discover what's built on Stellar",
+    sub: "Browse DeFi, stablecoins, and apps — without leaving your wallet.",
+    mode: "single",
+    demo: "discover",
+    screens: [
+      { src: "/images/varial-discover.png", alt: "Varial discover" },
+      { src: "/images/varial-add-funds.png", alt: "Varial add funds" },
+      { src: "/images/varial-token-xlm.png", alt: "Varial token detail" },
+    ],
+  },
+];
+
+const ROTATE_EVERY_MS = 3600;
+/**
+ * Screen image inside a phone. Shows this phone's screen for the active stage;
+ * on a rotating stage the centre phone cycles through all of them, slowly.
+ */
+function PhoneScreen({
+  phone,
+  active,
+  step,
+}: {
+  phone: 0 | 1 | 2;
+  active: number;
+  step: number;
+}) {
+  return (
+    <div className="relative h-full w-full">
+      {STAGES.map((stage, si) =>
+        stage.demo && phone === 0 ? (
+          <div
+            key={stage.id}
+            className="absolute inset-0 transition-opacity duration-500 ease-out"
+            style={{ opacity: active === si ? 1 : 0 }}
+          >
+            <FlowDemo
+              playing={active === si}
+              config={stage.demo === "swap" ? SWAP_DEMO : DISCOVER_DEMO}
+            />
+          </div>
+        ) : (
+          stage.screens.map((screen, idx) => {
+            const shown = stage.rotate && phone === 0 ? step % 3 : phone;
+            const visible = active === si && idx === shown;
+            return (
+              <Image
+                key={`${stage.id}-${idx}`}
+                src={screen.src}
+                alt={screen.alt}
+                width={804}
+                height={1630}
+                priority={si === 0 && idx === phone}
+                draggable={false}
+                sizes="380px"
+                className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out"
+                style={{ opacity: visible ? 1 : 0 }}
+              />
+            );
+          })
+        ),
+      )}
+    </div>
+  );
+}
+
+/**
+ * One phone. `pos` is its slot (-1 left, 0 centre, 1 right); `openness` and
+ * `mode` decide how far the side slots sit from the centre, whether they tilt,
+ * and whether they show at all.
+ */
+function Phone({
+  phone,
+  active,
+  step,
+  pos,
+  openness,
+  modeMV,
+  delay,
+  className,
+}: {
+  phone: 0 | 1 | 2;
+  active: number;
+  step: number;
+  pos: number;
+  openness: MotionValue<number>;
+  modeMV: MotionValue<number>; // 0 single, 1 slide, 2 fan
+  delay: number;
+  className: string;
+}) {
+  const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+  const x = useTransform([openness, modeMV], ([o, m]) => {
+    const spread =
+      (m as number) === 2
+        ? mix(4, 56, o as number)
+        : (m as number) === 1
+          ? mix(4, 58, o as number)
+          : 0;
+    return `${pos * spread}%`;
+  });
+  const rotate = useTransform([openness, modeMV], ([o, m]) =>
+    (m as number) === 2 ? pos * mix(0, 6, o as number) : 0,
+  );
+  const scale = useTransform([openness, modeMV], ([o, m]) => {
+    const side =
+      (m as number) === 2
+        ? mix(0.88, 0.9, o as number)
+        : mix(0.88, 0.92, o as number);
+    return pos === 0 ? 1 : side;
+  });
+  const y = useTransform([openness, modeMV], ([o, m]) => {
+    if (pos === 0) return "0%";
+    const side =
+      (m as number) === 2 ? mix(0, 4, o as number) : mix(0, 3, o as number);
+    // Tuck fully behind the centre while fading out on a single-phone stage.
+    return `${side * Math.min(1, m as number)}%`;
+  });
+  // Side phones fade away entirely on a "single" stage.
+  const opacity = useTransform([openness, modeMV], ([o, m]) =>
+    pos === 0 ? 1 : Math.min(1, m as number) * (0.6 + 0.4 * (o as number)),
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: delay + (pos === 0 ? 0.45 : 0.5), duration: 0.5 }}
+      onContextMenu={(e) => e.preventDefault()}
+      className={`absolute ${pos === 0 ? "z-10" : "z-[5]"}`}
+      style={{ transformOrigin: "50% 100%" }}
+    >
+      <motion.div
+        style={{ x, y, rotate, scale, opacity, transformOrigin: "50% 100%" }}
+        className={`${pos === 0 ? "shadow-[0px_24px_48px_rgba(0,0,0,0.22)]" : "shadow-[0px_16px_40px_rgba(0,0,0,0.14)]"} ${className}`}
+      >
+        <PhoneScreen phone={phone} active={active} step={step} />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/**
+ * Three phones that stay put while the copy scrolls. Each shows the active
+ * stage's screen for its index; side phones fan or slide out from behind the
+ * centre (`openness`) or hide on single-phone stages, where the centre phone
+ * slowly cycles through the stage's screens.
+ */
+function StickyPhone({
+  active,
+  delay,
+  openness,
+}: {
+  active: number;
+  delay: number;
+  openness: MotionValue<number>;
+}) {
+  const stage = STAGES[active] ?? STAGES[0];
+  const modeValue = stage.mode === "fan" ? 2 : stage.mode === "slide" ? 1 : 0;
+  const modeMV = useMotionValue(2);
+  useEffect(() => {
+    const controls = animate(modeMV, modeValue, {
+      duration: 0.5,
+      ease: EASE_OUT,
+    });
+    return () => controls.stop();
+  }, [modeValue, modeMV]);
+
+  // Rotation step, keyed by stage so entering a stage starts from its first screen.
+  const [rotation, setRotation] = useState({ stageId: stage.id, step: 0 });
+  const step = rotation.stageId === stage.id ? rotation.step : 0;
+  useEffect(() => {
+    if (!stage.rotate) return;
+    const id = setInterval(
+      () =>
+        setRotation((r) => ({
+          stageId: stage.id,
+          step: r.stageId === stage.id ? r.step + 1 : 1,
+        })),
+      ROTATE_EVERY_MS,
+    );
+    return () => clearInterval(id);
+  }, [stage]);
+
+  const phoneClass =
+    "aspect-[804/1630] w-[240px] overflow-hidden rounded-[24px] bg-white select-none sm:w-[300px] lg:h-[min(92vh,880px)] lg:w-auto";
+
+  return (
+    // Past the first stage the whole group shrinks a little so the phone is
+    // fully visible instead of cropped by the bottom of the viewport.
+    <motion.div
+      animate={{ scale: active === 0 ? 1 : 0.82 }}
+      transition={{ duration: 0.6, ease: EASE_OUT }}
+      style={{ transformOrigin: "50% 0%" }}
+      className="relative flex items-start justify-center"
+    >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: delay + 0.3, duration: 0.9, ease: EASE_OUT }}
+        className="pointer-events-none absolute left-1/2 top-[45%] z-0 h-[120%] w-[220%] max-w-[1400px] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,#0050FF_0%,rgba(0,80,255,0.45)_38%,rgba(0,80,255,0)_70%)] blur-2xl"
+      />
+      {/* Invisible sizer so the absolute phones have a box to centre in */}
+      <div className={`invisible ${phoneClass}`} aria-hidden />
+      <Phone
+        phone={1}
+        active={active}
+        step={step}
+        pos={-1}
+        openness={openness}
+        modeMV={modeMV}
+        delay={delay}
+        className={phoneClass}
+      />
+      <Phone
+        phone={2}
+        active={active}
+        step={step}
+        pos={1}
+        openness={openness}
+        modeMV={modeMV}
+        delay={delay}
+        className={phoneClass}
+      />
+      <Phone
+        phone={0}
+        active={active}
+        step={step}
+        pos={0}
+        openness={openness}
+        modeMV={modeMV}
+        delay={delay}
+        className={phoneClass}
+      />
+    </motion.div>
   );
 }
 
 export function HeroSection() {
   const delay = 0;
+  const [active, setActive] = useState(0);
+  const stageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // 1 while a stage sits in the middle of the viewport, 0 while scrolling between stages.
+  const scrollOpenness = useMotionValue(1);
+  // Entrance: the fan unfolds from behind the centre phone once on load.
+  const introOpenness = useMotionValue(0);
+  const openness = useTransform([scrollOpenness, introOpenness], ([a, b]) =>
+    Math.min(a as number, b as number),
+  );
+
+  useEffect(() => {
+    const controls = animate(introOpenness, 1, {
+      delay: delay + 1.0,
+      duration: 0.9,
+      ease: [0.22, 1, 0.36, 1],
+    });
+    return () => controls.stop();
+  }, [introOpenness, delay]);
+
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const vh = window.innerHeight;
+      let best = 0;
+      let nearest = 0;
+      let nearestD = Infinity;
+      stageRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.top + r.height / 2 - vh / 2) / vh;
+        best = Math.max(best, Math.min(1, Math.max(0, 1 - (d - 0.08) / 0.3)));
+        if (d < nearestD) {
+          nearestD = d;
+          nearest = i;
+        }
+      });
+      scrollOpenness.set(best);
+      // The stage nearest the viewport centre is active; at the very top it is always the first.
+      setActive(window.scrollY < 40 ? 0 : nearest);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [scrollOpenness]);
+
+  const setStageRef = useCallback(
+    (i: number) => (el: HTMLDivElement | null) => {
+      stageRefs.current[i] = el;
+    },
+    [],
+  );
 
   return (
-    <section className="px-6 py-6">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.01 }}
-        className="relative mx-auto h-[100vh] min-h-[600px] max-h-[700px] w-full overflow-hidden rounded-[24px] sm:min-h-[680px] sm:max-h-[760px] lg:min-h-[960px] lg:max-h-[1000px]"
-      >
-        {/* Blue glow the phones rise out of */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: delay + 0.5, duration: 0.9, ease: EASE_OUT }}
-          className="pointer-events-none absolute left-1/2 top-[330px] sm:top-[420px] lg:top-[500px] z-[1] h-[520px] w-[140%] max-w-[1400px] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,#0050FF_0%,rgba(0,80,255,0.55)_38%,rgba(0,80,255,0)_72%)] blur-2xl"
-        />
+    <section className="px-6 pt-5">
+      <HeroNav delay={delay + 0.1} />
 
-        <HeroNav delay={delay + 0.1} />
-
-        <div className="relative z-20 flex flex-col items-center gap-7 px-6 pt-[112px] sm:pt-[160px] lg:pt-[176px]">
-          <RotatingHeadline delay={delay} />
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE_OUT, delay: delay + 0.45 }}
-            className="flex flex-row items-center gap-3"
-          >
-            <a
-              href={LINKS.iosApp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#171717] px-6 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+      <div className="relative mx-auto mt-12 w-full max-w-[1280px] lg:mt-0 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:gap-8">
+        {/* Copy — three stages, each roughly a screen tall on desktop; only the first shows below lg */}
+        <div className="flex min-w-0 flex-col">
+          {STAGES.map((stage, i) => (
+            <div
+              key={stage.id}
+              ref={setStageRef(i)}
+              data-stage={i}
+              className={`${i === 0 ? "flex" : "hidden lg:flex"} flex-col items-center gap-6 text-center lg:min-h-[85vh] lg:items-start lg:justify-center lg:text-left ${i === 0 ? "" : "lg:pb-[8vh]"}`}
             >
-              <AppleLogoFill size={18} className="shrink-0" />
-              Get iOS
-            </a>
-            <a
-              href={LINKS.androidApp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-transparent px-6 py-3 text-base font-semibold text-[#171717] shadow-[inset_0_0_0_1px_#DBDBDB] transition-colors duration-200 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
-            >
-              <AndroidLogoFill size={18} className="shrink-0" />
-              Get Android
-            </a>
-          </motion.div>
+              {stage.eyebrow && (
+                <motion.span
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-20% 0px" }}
+                  transition={{ duration: 0.5, ease: EASE_OUT }}
+                  className="-mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#0050FF]"
+                  aria-hidden
+                >
+                  {stage.eyebrow}
+                </motion.span>
+              )}
+              {i === 0 ? (
+                <RotatingHeadline delay={delay} />
+              ) : (
+                <motion.h2
+                  initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
+                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  viewport={{ once: true, margin: "-20% 0px" }}
+                  transition={{ duration: 0.6, ease: EASE_OUT }}
+                  className="max-w-[460px] text-4xl font-medium leading-[1.1] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:text-[52px]"
+                >
+                  {stage.title}
+                </motion.h2>
+              )}
+              {stage.sub && (
+                <motion.p
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-20% 0px" }}
+                  transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.1 }}
+                  className="max-w-[420px] text-lg leading-7 text-[#6F6F6F] sm:text-xl sm:leading-8"
+                >
+                  {stage.sub}
+                </motion.p>
+              )}
+              {i === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.6,
+                    ease: EASE_OUT,
+                    delay: delay + 0.5,
+                  }}
+                  className="flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+                >
+                  <a
+                    href="#download"
+                    className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-[#171717] px-7 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <AndroidLogoFill size={18} />
+                      <AppleLogoFill size={18} />
+                    </span>
+                    Download
+                  </a>
+                  <a
+                    href={LINKS.chromeExtension}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-base font-semibold text-[#171717] shadow-[inset_0_0_0_1px_#DBDBDB] transition-colors duration-200 hover:bg-[#EDEDED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+                  >
+                    Get extension
+                  </a>
+                </motion.div>
+              )}
+            </div>
+          ))}
         </div>
 
-        <PhoneMockups delay={delay} />
-      </motion.div>
+        {/* Phone fan — sticks while the copy scrolls past (desktop); stacked under the copy below lg */}
+        <div className="mt-12 h-[460px] w-full [clip-path:inset(-60%_-20%_0_-20%)] sm:h-[520px] lg:hidden">
+          <StickyPhone active={active} delay={delay} openness={openness} />
+        </div>
+        <div className="hidden lg:block">
+          <div className="sticky top-[84px] flex h-[calc(100vh-84px)] items-start justify-center pt-6 [clip-path:inset(-50%_-80%_0_-80%)]">
+            <StickyPhone active={active} delay={delay} openness={openness} />
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

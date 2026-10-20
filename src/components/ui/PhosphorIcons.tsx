@@ -32,6 +32,7 @@ import {
   Plus,
   AppleLogo,
   AndroidLogo,
+  GooglePlayLogo,
   TrendUp,
   Bridge,
   GameController,
@@ -127,6 +128,7 @@ export const ImageFill = fill(PhosphorImage);
 export const ImagesFill = fill(Images);
 export const AppleLogoFill = fill(AppleLogo);
 export const AndroidLogoFill = fill(AndroidLogo);
+export const GooglePlayLogoFill = fill(GooglePlayLogo);
 export const GameControllerFill = fill(GameController);
 export const UsersThreeFill = fill(UsersThree);
 export const CheckFill = fill(Check);

@@ -1608,3 +1608,16 @@ body {
   --tw-prose-bullets: #8F8F8F;   /* Gray 9 */
   --tw-prose-hr: #EDEDED;        /* Gray 4 */
 }
+
+/* CTA edge "rain": a vertical line of copy scrolling seamlessly (content is doubled) */
+@keyframes cta-rain {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.cta-rain {
+  animation: cta-rain 40s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-rain { animation: none; }
+}

@@ -73,7 +73,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 export function FAQSection() {
   return (
     <section>
-      <div className="max-w-[1024px] mx-auto px-6">
+      <div className="max-w-[1280px] mx-auto px-6">
         <motion.div
           variants={fadeSlideUp}
           initial="hidden"
