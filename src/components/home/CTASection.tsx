@@ -152,15 +152,18 @@ export function CTASection() {
                     Get Android
                   </a>
                 )}
-                <a
-                  href={extensionHref(browser)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
-                >
-                  <BrowserBadge browser={browser} />
-                  Get extension
-                </a>
+                {/* No extension on phones */}
+                {!phone && (
+                  <a
+                    href={extensionHref(browser)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
+                  >
+                    <BrowserBadge browser={browser} />
+                    Get extension
+                  </a>
+                )}
               </motion.div>
             </div>
           </div>

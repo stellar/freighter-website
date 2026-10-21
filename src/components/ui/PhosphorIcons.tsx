@@ -48,6 +48,7 @@ import {
   Check,
   QrCode,
   Plant,
+  AppWindow,
   type IconProps,
 } from "@phosphor-icons/react";
 
@@ -111,6 +112,7 @@ export const LinkSimpleBold = bold(LinkSimple);
 export const CheckBold = bold(Check);
 export const QrCodeBold = bold(QrCode);
 export const PlantFill = fill(Plant);
+export const AppWindowBold = bold(AppWindow);
 
 // Filled variants used by the FeatureCarousel labels
 export const PaperPlaneTiltFill = fill(PaperPlaneTilt);
