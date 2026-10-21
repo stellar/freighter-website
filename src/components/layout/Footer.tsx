@@ -13,6 +13,7 @@ const footerLinksBefore: {
   external?: boolean;
   hideOnLg?: boolean;
 }[] = [
+  { label: "Docs", href: LINKS.docs, external: true, hideOnLg: true },
   { label: "Changelog", href: "/changelog" },
   { label: "GitHub", href: SITE.github, external: true },
   // Mirrors the Navbar Support link so mobile/tablet users still have

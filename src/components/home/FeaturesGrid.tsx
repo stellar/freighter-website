@@ -6,6 +6,7 @@ import { staggerContainer, fadeSlideUp } from "@/lib/animations";
 import {
   CurrencyDollarBold,
   ArrowDownBold,
+  ArrowRightBold,
   ShieldCheckBold,
 } from "@/components/ui/PhosphorIcons";
 
@@ -14,7 +15,13 @@ import {
  * and the foundation behind it. Each card leads with one big visual.
  */
 
-const CHAINS = ["Ethereum", "Polygon", "Base"];
+/** Networks you can deposit from, with their official marks */
+const CHAINS: { name: string; logo: string; size?: string }[] = [
+  { name: "Ethereum", logo: "/images/chains/ethereum.svg" },
+  { name: "Polygon", logo: "/images/chains/polygon.svg" },
+  // The Base square reads heavier than the other marks, so it sits a bit smaller
+  { name: "Base", logo: "/images/chains/base.svg", size: "size-6" },
+];
 
 const CARD =
   "relative flex min-h-[380px] flex-col overflow-hidden rounded-[32px] bg-white p-8 md:p-10";
@@ -61,23 +68,55 @@ export function FeaturesGrid() {
             <div className={ICON}>
               <ArrowDownBold size={18} />
             </div>
-            <div className="my-auto flex flex-wrap gap-2 py-8">
-              {CHAINS.map((chain) => (
-                <span
-                  key={chain}
-                  className="rounded-full bg-[#F3F3F3] px-4 py-2 text-sm font-medium text-[#171717]"
-                >
-                  {chain}
-                </span>
-              ))}
+            {/* Three network marks flowing into Stellar */}
+            <div className="my-auto flex items-center gap-3 py-8">
+              <div className="flex items-center">
+                {CHAINS.map((chain, i) => (
+                  <span
+                    key={chain.name}
+                    title={chain.name}
+                    className={`flex size-14 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_6px_20px_rgba(0,0,0,0.08)] ring-1 ring-[#EDEDED] ${i > 0 ? "-ml-3" : ""}`}
+                    style={{ zIndex: CHAINS.length - i }}
+                  >
+                    <Image
+                      src={chain.logo}
+                      alt={chain.name}
+                      width={28}
+                      height={28}
+                      className={`${chain.size ?? "size-7"} object-contain`}
+                    />
+                  </span>
+                ))}
+              </div>
+              <span
+                className="flex items-center gap-1 text-[#B4B4B4]"
+                aria-hidden
+              >
+                <span className="size-1 rounded-full bg-current" />
+                <span className="size-1 rounded-full bg-current" />
+                <span className="size-1 rounded-full bg-current" />
+                <ArrowRightBold size={14} />
+              </span>
+              <span
+                title="Stellar"
+                className="flex size-14 items-center justify-center rounded-full bg-[#171717] shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
+              >
+                <Image
+                  src="/images/stellar-xlm-logo.png"
+                  alt="Stellar"
+                  width={28}
+                  height={28}
+                  className="size-7 object-contain invert"
+                />
+              </span>
             </div>
             <div>
               <h3 className="text-xl font-medium tracking-[-0.02em] text-[#171717]">
                 From other chains to Stellar
               </h3>
               <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
-                Deposit supported assets from other networks into your
-                Stellar wallet.
+                Deposit supported assets from other networks into your Stellar
+                wallet.
               </p>
             </div>
           </motion.div>
