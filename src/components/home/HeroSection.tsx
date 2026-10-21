@@ -200,8 +200,8 @@ const STAGES: Stage[] = [
   {
     id: "discover",
     eyebrow: "Discover",
-    title: "Explore Stellar apps",
-    sub: "Browse Stellar apps and connect with Varial.",
+    title: "Explore beyond your wallet.",
+    sub: "Connect to Stellar apps and discover what's possible.",
     mode: "single",
     demo: "discover",
     screens: [
