@@ -47,7 +47,7 @@ export function DownloadCards() {
               <h3 className="text-2xl font-medium tracking-[-0.04em] text-[#171717] sm:text-[28px]">
                 Take Varial with you
               </h3>
-              <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
+              <p className="mt-2 min-h-12 text-base leading-6 text-[#6F6F6F]">
                 Available on iOS and Android.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
@@ -95,7 +95,7 @@ export function DownloadCards() {
               <h3 className="text-2xl font-medium tracking-[-0.04em] text-[#171717] sm:text-[28px]">
                 Varial in your browser
               </h3>
-              <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
+              <p className="mt-2 min-h-12 text-base leading-6 text-[#6F6F6F]">
                 Connect to Stellar apps with the browser extension.
               </p>
               <div className="mt-5 hidden md:block">
