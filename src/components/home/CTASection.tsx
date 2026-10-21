@@ -122,7 +122,11 @@ export function CTASection() {
                   transition={{ delay: 0.15, duration: 0.5, ease: EASE_OUT }}
                   className="text-base sm:text-lg text-[#6F6F6F] text-center text-pretty max-w-[40ch]"
                 >
-                  On your phone or in your browser.
+                  {phone === "ios"
+                    ? "Available on the App Store."
+                    : phone === "android"
+                      ? "Available on Google Play."
+                      : "On your phone or in your browser."}
                 </motion.p>
               </div>
 

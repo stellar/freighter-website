@@ -48,7 +48,11 @@ export function DownloadCards() {
                 Take Varial with you
               </h3>
               <p className="mt-2 min-h-12 text-base leading-6 text-[#6F6F6F]">
-                Available on iOS and Android.
+                {phone === "ios"
+                  ? "Available for iPhone."
+                  : phone === "android"
+                    ? "Available for Android."
+                    : "Available on iOS and Android."}
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {phone !== "android" && (
