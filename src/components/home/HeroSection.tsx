@@ -14,7 +14,7 @@ import {
 import { EASE_OUT } from "@/lib/animations";
 import { FlowDemo, SWAP_DEMO, DISCOVER_DEMO } from "@/components/home/FlowDemo";
 import { LINKS } from "@/lib/constants";
-import { DownloadPill } from "@/components/ui/DownloadPill";
+import { DownloadPill, openDownloadCard } from "@/components/ui/DownloadPill";
 import {
   AppleLogoFill,
   AndroidLogoFill,
@@ -634,16 +634,18 @@ export function HeroSection() {
                     // On phones the floating pill is the single download CTA
                     className="hidden flex-wrap items-center justify-center gap-3 md:flex lg:justify-start"
                   >
-                    <a
-                      href="#download"
-                      className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-[#171717] px-7 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+                    {/* Opens the QR card in the corner, same as the Download pill */}
+                    <button
+                      type="button"
+                      onClick={openDownloadCard}
+                      className="inline-flex min-h-12 cursor-pointer items-center justify-center gap-2.5 rounded-full bg-[#171717] px-7 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
                     >
                       <span className="flex items-center gap-1.5">
                         <AndroidLogoFill size={18} />
                         <AppleLogoFill size={18} />
                       </span>
                       Download
-                    </a>
+                    </button>
                     <a
                       href={LINKS.chromeExtension}
                       target="_blank"

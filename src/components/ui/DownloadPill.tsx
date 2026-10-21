@@ -12,6 +12,13 @@ import {
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+/** Fired by other buttons on the page to unfold the QR card */
+export const OPEN_DOWNLOAD_EVENT = "varial:open-download";
+
+export function openDownloadCard() {
+  window.dispatchEvent(new Event(OPEN_DOWNLOAD_EVENT));
+}
+
 /**
  * The floating Download button. On desktop a click unfolds the pill into a
  * card with a QR code (which opens /get — phones are routed to their store);
@@ -32,6 +39,13 @@ export function DownloadPill() {
       else if (/Android/.test(ua)) setPhoneStore(LINKS.androidApp);
     }, 0);
     return () => clearTimeout(t);
+  }, []);
+
+  // Other buttons (e.g. the hero's Download) open the card too
+  useEffect(() => {
+    const onOpen = () => setOpen(true);
+    window.addEventListener(OPEN_DOWNLOAD_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_DOWNLOAD_EVENT, onOpen);
   }, []);
 
   // Close on outside click / Escape
