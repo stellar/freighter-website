@@ -81,7 +81,7 @@ export function DownloadCards() {
           </div>
 
           {/* For browser */}
-          <div className="group relative flex h-[420px] flex-col overflow-hidden rounded-[32px] bg-white p-8 md:h-[500px] md:p-10">
+          <div className="group relative flex h-[340px] flex-col overflow-hidden rounded-[32px] bg-white p-8 md:h-[500px] md:p-10">
             <Glow />
 
             <div className="relative z-10 max-w-[320px]">
@@ -105,7 +105,7 @@ export function DownloadCards() {
             </div>
 
             {/* Browser window: toolbar, and the extension popup hanging under its icon */}
-            <div className="absolute right-8 top-[50%] z-[1] w-[300px] overflow-hidden rounded-[16px] bg-[#F3F3F3] shadow-[0px_24px_48px_rgba(0,0,0,0.2)] ring-1 ring-[#EDEDED] transition-transform duration-500 ease-out group-hover:-translate-y-3 md:right-10 md:top-[48%] md:w-[340px]">
+            <div className="absolute right-8 top-[46%] z-[1] w-[300px] overflow-hidden rounded-[16px] bg-[#F3F3F3] shadow-[0px_24px_48px_rgba(0,0,0,0.2)] ring-1 ring-[#EDEDED] transition-transform duration-500 ease-out group-hover:-translate-y-3 md:right-10 md:top-[48%] md:w-[340px]">
               {/* Toolbar */}
               <div
                 className="flex items-center gap-3 bg-[#F8F8F8] px-3 py-2.5"
