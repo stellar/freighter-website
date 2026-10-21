@@ -18,7 +18,7 @@ import { DownloadPill } from "@/components/ui/DownloadPill";
 import {
   AppleLogoFill,
   AndroidLogoFill,
-  AppWindowBold,
+  MonitorBold,
 } from "@/components/ui/PhosphorIcons";
 
 const HERO_NAV_LINKS = [
@@ -650,7 +650,7 @@ export function HeroSection() {
                       rel="noopener noreferrer"
                       className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-[#171717] shadow-[inset_0_0_0_1px_#DBDBDB] transition-colors duration-200 hover:bg-[#EDEDED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
                     >
-                      <AppWindowBold size={18} className="shrink-0" />
+                      <MonitorBold size={18} className="shrink-0" />
                       Get extension
                     </a>
                   </motion.div>
