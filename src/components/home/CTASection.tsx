@@ -10,6 +10,7 @@ import {
   extensionHref,
 } from "@/components/ui/BrowserBadge";
 import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
+import { usePhone } from "@/lib/use-phone";
 
 const EDGE_WORDS = [
   "Your everyday Stellar wallet",
@@ -67,6 +68,8 @@ function EdgeRain({ side }: { side: "left" | "right" }) {
 
 export function CTASection() {
   const browser = useBrowser();
+  // On a phone, only that phone's store button
+  const phone = usePhone();
   return (
     <section>
       <div className="max-w-[1280px] mx-auto px-6">
@@ -131,20 +134,24 @@ export function CTASection() {
                 transition={{ delay: 0.2, duration: 0.5, ease: EASE_OUT }}
                 className="flex flex-wrap items-center justify-center gap-3"
               >
-                <a
-                  href={LINKS.iosApp}
-                  className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
-                >
-                  <AppleLogoFill size={16} className="shrink-0" />
-                  Get iOS
-                </a>
-                <a
-                  href={LINKS.androidApp}
-                  className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
-                >
-                  <AndroidLogoFill size={16} className="shrink-0" />
-                  Get Android
-                </a>
+                {phone !== "android" && (
+                  <a
+                    href={LINKS.iosApp}
+                    className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
+                  >
+                    <AppleLogoFill size={16} className="shrink-0" />
+                    Get iOS
+                  </a>
+                )}
+                {phone !== "ios" && (
+                  <a
+                    href={LINKS.androidApp}
+                    className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
+                  >
+                    <AndroidLogoFill size={16} className="shrink-0" />
+                    Get Android
+                  </a>
+                )}
                 <a
                   href={extensionHref(browser)}
                   target="_blank"

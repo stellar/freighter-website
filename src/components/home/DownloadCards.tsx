@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/BrowserBadge";
 import Image from "next/image";
 import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
+import { usePhone } from "@/lib/use-phone";
 
 const PRIMARY_BTN =
   "inline-flex min-h-11 items-center gap-2 rounded-full bg-[#171717] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]";
@@ -26,6 +27,8 @@ function Glow() {
 
 export function DownloadCards() {
   const browser = useBrowser();
+  // On a phone, only that phone's store button
+  const phone = usePhone();
   return (
     <section id="download" className="scroll-mt-[72px]">
       <div className="mx-auto max-w-[1280px] px-6">
@@ -48,14 +51,18 @@ export function DownloadCards() {
                 Available on iOS and Android.
               </p>
               <div className="mt-5 flex flex-wrap gap-2">
-                <a href={LINKS.iosApp} className={PRIMARY_BTN}>
-                  <AppleLogoFill size={16} />
-                  Get iOS
-                </a>
-                <a href={LINKS.androidApp} className={PRIMARY_BTN}>
-                  <AndroidLogoFill size={16} />
-                  Get Android
-                </a>
+                {phone !== "android" && (
+                  <a href={LINKS.iosApp} className={PRIMARY_BTN}>
+                    <AppleLogoFill size={16} />
+                    Get iOS
+                  </a>
+                )}
+                {phone !== "ios" && (
+                  <a href={LINKS.androidApp} className={PRIMARY_BTN}>
+                    <AndroidLogoFill size={16} />
+                    Get Android
+                  </a>
+                )}
               </div>
             </div>
 
