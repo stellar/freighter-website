@@ -4,7 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { LINKS } from "@/lib/constants";
-import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
+import {
+  AppleLogoFill,
+  AndroidLogoFill,
+  QrCodeBold,
+} from "@/components/ui/PhosphorIcons";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -78,8 +82,9 @@ export function DownloadPill() {
                 opacity: { duration: 0.15 },
               }}
               style={{ borderRadius: 999 }}
-              className="inline-flex min-h-11 cursor-pointer items-center justify-center bg-[#171717] px-5 py-2 text-base font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+              className="inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 bg-[#171717] pl-4 pr-5 py-2 text-base font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
             >
+              <QrCodeBold size={18} className="shrink-0" />
               Download
             </motion.button>
           ) : (

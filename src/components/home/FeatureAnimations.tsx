@@ -887,6 +887,82 @@ function EarnStage() {
 }
 
 /* ════════════════════════════════════════
+   9. EARN — token details, after the Figma screen:
+       USDC mark, a balance that ticks up, the gain in
+       green, and a rising area chart that draws itself.
+   ════════════════════════════════════════ */
+
+const YIELD_BASE = 500.0;
+const YIELD_TICKS = 12; // cents added over one cycle
+const YIELD_GAIN_BASE = 31.63;
+const YIELD_GAIN_PCT = "2.54%";
+// Jagged climb across a 200×90 box (x, y), last point is the live dot
+const YIELD_POINTS: [number, number][] = [
+  [0, 78], [10, 70], [18, 74], [26, 64], [34, 58], [44, 60], [52, 50],
+  [60, 44], [68, 46], [78, 40], [86, 44], [94, 36], [104, 26], [112, 20],
+  [120, 24], [128, 18], [138, 22], [146, 30], [154, 26], [162, 20],
+  [172, 12], [180, 16], [190, 10], [200, 8],
+];
+
+function YieldStage() {
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Cents trickle in while the chart draws; both restart together.
+    const id = window.setInterval(() => {
+      setTick((t) => (reduceMotion ? YIELD_TICKS : t >= YIELD_TICKS ? 0 : t + 1));
+    }, 420);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const money = (n: number) =>
+    n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const balance = money(YIELD_BASE + tick / 100);
+  const gain = money(YIELD_GAIN_BASE + tick / 100);
+  const line = YIELD_POINTS.map((p) => p.join(",")).join(" ");
+  const [endX, endY] = YIELD_POINTS[YIELD_POINTS.length - 1];
+
+  return (
+    <div className="fc-yield" aria-label="Earn">
+      <div className="fc-yield-card" aria-hidden="true">
+        <TokenTile variant="usdc" />
+        <div className="fc-yield-balance">
+          <span className="fc-yield-balance-symbol">$</span>
+          <span className="fc-yield-balance-num">{balance}</span>
+        </div>
+        <div className="fc-yield-gain">
+          +${gain} ({YIELD_GAIN_PCT})
+        </div>
+        <svg className="fc-yield-chart" viewBox="0 0 200 90" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="fc-yield-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#3CB179" stopOpacity="0.28" />
+              <stop offset="100%" stopColor="#3CB179" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <polygon points={`0,90 ${line} 200,90`} fill="url(#fc-yield-fill)" />
+          <polyline
+            points={line}
+            fill="none"
+            stroke="#3CB179"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+          <circle className="fc-yield-dot" cx={endX} cy={endY} r="3" fill="#3CB179" />
+        </svg>
+        <div className="fc-yield-tabs">
+          <span className="fc-yield-tab fc-yield-tab--on">Your position</span>
+          <span className="fc-yield-tab">Overview</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
    Wrappers — wrap each stage in the card frame
    ════════════════════════════════════════ */
 
@@ -900,6 +976,7 @@ export function CollectiblesAnimation() { return <FeatureCard><CollectiblesStage
 export function ReceiveAnimation()      { return <FeatureCard><ReceiveStage /></FeatureCard>; }
 export function WalletsAnimation()      { return <FeatureCard><WalletsStage /></FeatureCard>; }
 export function EarnAnimation()         { return <FeatureCard className="fc-card--raised"><EarnStage /></FeatureCard>; }
+export function YieldAnimation()        { return <FeatureCard><YieldStage /></FeatureCard>; }
 
 export const FEATURE_ANIMATIONS: Record<string, ComponentType<FeatureAnimationProps>> = {
   Send: SendAnimation,
@@ -910,4 +987,5 @@ export const FEATURE_ANIMATIONS: Record<string, ComponentType<FeatureAnimationPr
   Receive: ReceiveAnimation,
   Wallets: WalletsAnimation,
   Deposit: EarnAnimation,
+  Earn: YieldAnimation,
 };

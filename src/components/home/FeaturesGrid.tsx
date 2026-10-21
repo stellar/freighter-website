@@ -14,14 +14,7 @@ import {
  * and the foundation behind it. Each card leads with one big visual.
  */
 
-const CHAINS = [
-  "Ethereum",
-  "Solana",
-  "Base",
-  "Polygon",
-  "Arbitrum",
-  "BNB Chain",
-];
+const CHAINS = ["Ethereum", "Polygon", "Base"];
 
 const CARD =
   "relative flex min-h-[380px] flex-col overflow-hidden rounded-[32px] bg-white p-8 md:p-10";
@@ -77,9 +70,6 @@ export function FeaturesGrid() {
                   {chain}
                 </span>
               ))}
-              <span className="rounded-full bg-[#F3F3F3] px-4 py-2 text-sm font-medium text-[#171717]">
-                + more
-              </span>
             </div>
             <div>
               <h3 className="text-xl font-medium tracking-[-0.02em] text-[#171717]">

@@ -12,6 +12,7 @@ import {
   ImagesBold,
   WalletBold,
   ArrowDownBold,
+  TrendUpBold,
   PlayFill,
   PauseFill,
 } from "@/components/ui/PhosphorIcons";
@@ -21,6 +22,7 @@ const ITEMS = [
   { label: "Send", icon: PaperPlaneTiltBold },
   { label: "Swap", icon: ArrowsLeftRightBold },
   { label: "Deposit", icon: ArrowDownBold },
+  { label: "Earn", icon: TrendUpBold },
   { label: "Discover", icon: CompassBold },
   { label: "History", icon: ClockCounterClockwiseBold },
   { label: "Collectibles", icon: ImagesBold },

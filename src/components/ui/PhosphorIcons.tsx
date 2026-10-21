@@ -46,6 +46,7 @@ import {
   Coin,
   LinkSimple,
   Check,
+  QrCode,
   type IconProps,
 } from "@phosphor-icons/react";
 
@@ -107,6 +108,7 @@ export const HandCoinsBold = bold(HandCoins);
 export const CoinBold = bold(Coin);
 export const LinkSimpleBold = bold(LinkSimple);
 export const CheckBold = bold(Check);
+export const QrCodeBold = bold(QrCode);
 
 // Filled variants used by the FeatureCarousel labels
 export const PaperPlaneTiltFill = fill(PaperPlaneTilt);

@@ -184,15 +184,15 @@ const STAGES: Stage[] = [
     mode: "fan",
     screens: [
       { src: "/images/varial-wallet.png", alt: "Varial wallet home" },
-      { src: "/images/varial-add-funds.png", alt: "Varial add funds" },
+      { src: "/images/varial-collectible.png", alt: "Varial collectible" },
       { src: "/images/varial-token-xlm.png", alt: "Varial token detail" },
     ],
   },
   {
     id: "swap",
     eyebrow: "Swap",
-    title: "See your swap route",
-    sub: "See the route and rate before you confirm your swap.",
+    title: "Smarter swaps. Better rates.",
+    sub: "Compare available routes and see exactly how your swap works before you confirm.",
     mode: "single",
     demo: "swap",
     screens: [
@@ -217,6 +217,11 @@ const STAGES: Stage[] = [
 ];
 
 const ROTATE_EVERY_MS = 3600;
+/** Sticky phone column: top offset and inner padding (px), see the lg layout */
+const STICKY_TOP = 84;
+const STICKY_PAD = 24;
+/** Scale of the phone past the first stage */
+const SMALL_SCALE = 0.82;
 /**
  * Screen image inside a phone. Shows this phone's screen for the active stage;
  * on a rotating stage the centre phone cycles through all of them, slowly.
@@ -389,11 +394,31 @@ function StickyPhone({
   const phoneClass =
     "aspect-[804/1630] w-[240px] overflow-hidden rounded-[24px] bg-white select-none sm:w-[300px] lg:h-[min(92vh,880px)] lg:w-auto";
 
+  // Past the first stage the phone shrinks and is nudged so its centre sits
+  // on the viewport centre, level with the stage copy. The sticky column
+  // starts at STICKY_TOP + STICKY_PAD and the phone is min(92vh, 880px) tall.
+  const [centerOffset, setCenterOffset] = useState(0);
+  useEffect(() => {
+    const update = () => {
+      const vh = window.innerHeight;
+      if (window.innerWidth < 1024) {
+        setCenterOffset(0);
+        return;
+      }
+      const phoneH = Math.min(vh * 0.92, 880) * SMALL_SCALE;
+      setCenterOffset(Math.round(vh / 2 - (STICKY_TOP + STICKY_PAD + phoneH / 2)));
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   return (
-    // Past the first stage the whole group shrinks a little so the phone is
-    // fully visible instead of cropped by the bottom of the viewport.
     <motion.div
-      animate={{ scale: active === 0 ? 1 : 0.82 }}
+      animate={{
+        scale: active === 0 ? 1 : SMALL_SCALE,
+        y: active === 0 ? 0 : centerOffset,
+      }}
       transition={{ duration: 0.6, ease: EASE_OUT }}
       style={{ transformOrigin: "50% 0%" }}
       className="relative flex items-start justify-center"
@@ -515,7 +540,10 @@ export function HeroSection() {
               key={stage.id}
               ref={setStageRef(i)}
               data-stage={i}
-              className={`${i === 0 ? "flex" : "hidden lg:flex"} flex-col items-center gap-6 text-center lg:min-h-[85vh] lg:items-start lg:justify-center lg:text-left ${i === 0 ? "" : "lg:pb-[8vh]"}`}
+              // Later stages are a full viewport tall so their copy centres on
+              // the viewport (where the sticky phone is centred too) and the
+              // sticky column is never pushed up by a short last stage
+              className={`${i === 0 ? "flex" : "hidden lg:flex"} flex-col items-center gap-6 text-center lg:items-start lg:justify-center lg:text-left ${i === 0 ? "lg:min-h-[85vh]" : "lg:min-h-screen"}`}
             >
               {stage.eyebrow && (
                 <motion.span
