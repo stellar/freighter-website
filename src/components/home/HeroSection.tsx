@@ -583,7 +583,7 @@ export function HeroSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-20% 0px" }}
                     transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.1 }}
-                    className="max-w-[420px] text-lg leading-7 text-[#6F6F6F] sm:text-xl sm:leading-8"
+                    className="max-w-[420px] text-pretty text-lg leading-7 text-[#6F6F6F] sm:text-xl sm:leading-8"
                   >
                     {stage.sub}
                   </motion.p>
