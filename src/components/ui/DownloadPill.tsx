@@ -52,13 +52,16 @@ export function DownloadPill() {
     };
   }, [open]);
 
-  // On a phone the pill is just a link to the store.
+  // On a phone the pill is just a link to that phone's store, with its logo.
   if (phoneStore) {
+    const StoreLogo =
+      phoneStore === LINKS.iosApp ? AppleLogoFill : AndroidLogoFill;
     return (
       <a
         href={phoneStore}
-        className="fixed right-[max(1.5rem,calc((100vw-1280px)/2))] top-5 z-50 inline-flex min-h-11 items-center justify-center rounded-full bg-[#171717] px-5 py-2 text-base font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:bg-[#2a2a2a]"
+        className="fixed right-[max(1.5rem,calc((100vw-1280px)/2))] top-5 z-50 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#171717] pl-4 pr-5 py-2 text-base font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:bg-[#2a2a2a]"
       >
+        <StoreLogo size={18} className="shrink-0" />
         Download
       </a>
     );
