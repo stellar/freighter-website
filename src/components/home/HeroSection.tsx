@@ -570,7 +570,9 @@ export function HeroSection() {
                     whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     viewport={{ once: true, margin: "-20% 0px" }}
                     transition={{ duration: 0.6, ease: EASE_OUT }}
-                    className="max-w-[460px] text-4xl font-medium leading-[1.1] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:text-[52px]"
+                    // -2px: optical alignment — the big glyphs' side bearing otherwise
+                    // leaves the title a hair right of the eyebrow and paragraph
+                    className="max-w-[460px] text-4xl font-medium leading-[1.1] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:-ml-[2px] lg:text-[52px]"
                   >
                     {stage.title}
                   </motion.h2>
