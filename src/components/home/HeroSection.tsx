@@ -180,8 +180,8 @@ const STAGES: Stage[] = [
     mode: "fan",
     screens: [
       { src: "/images/varial-wallet.png", alt: "Varial wallet home" },
-      { src: "/images/varial-collectible.png", alt: "Varial collectible" },
       { src: "/images/varial-token-xlm.png", alt: "Varial token detail" },
+      { src: "/images/varial-collectible.png", alt: "Varial collectible" },
     ],
   },
   {
