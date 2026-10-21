@@ -39,6 +39,15 @@ export const metadata: Metadata = {
     "Stellar network",
   ],
   authors: [{ name: "Stellar Development Foundation" }],
+  // Mark only, no tile — blue on light tabs, a lighter blue on dark tabs
+  icons: {
+    icon: [
+      { url: "/favicon-light.svg", type: "image/svg+xml", media: "(prefers-color-scheme: light)" },
+      { url: "/favicon-dark.svg", type: "image/svg+xml", media: "(prefers-color-scheme: dark)" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/images/apple-touch-icon.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
