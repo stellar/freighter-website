@@ -1476,7 +1476,7 @@ body {
   line-height: 1;
 }
 .fc-earn-pos-label + .fc-earn-pos-box {
-  margin-bottom: clamp(6px, 2cqw, 10px);
+  margin-bottom: clamp(10px, 3cqw, 14px);
 }
 .fc-earn-pos-box {
   background: #FFFFFF;
@@ -1488,7 +1488,7 @@ body {
   display: flex;
   align-items: center;
   gap: clamp(10px, 3cqw, 12px);
-  padding: clamp(12px, 3.6cqw, 16px) 0;
+  padding: clamp(14px, 4cqw, 18px) 0;
 }
 .fc-earn-tile {
   position: relative;
@@ -1514,7 +1514,7 @@ body {
   flex-direction: column;
   flex: 1;
   min-width: 0;
-  gap: 2px;
+  gap: 4px;
   font-size: clamp(14px, 4.4cqw, 18px);
   font-weight: 600;
   letter-spacing: -0.025em;
@@ -1529,7 +1529,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 2px;
+  gap: 4px;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.025em;
   line-height: 1.1;
@@ -1550,7 +1550,7 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  padding: clamp(10px, 3cqw, 12px) 0;
+  padding: clamp(14px, 4cqw, 18px) 0;
   border-top: 1px solid var(--fc-line);
   font-size: 14px;
   font-weight: 500;
