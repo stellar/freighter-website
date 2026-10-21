@@ -29,11 +29,7 @@ const HERO_NAV_LINKS = [
 ] as const;
 
 const HEADLINE_LEAD = "Your everyday wallet for";
-const HEADLINE_TAILS = [
-  "Stellar apps",
-  "stablecoins",
-  "swapping",
-] as const;
+const HEADLINE_TAILS = ["Stellar apps", "stablecoins", "swapping"] as const;
 const HEADLINE_INTERVAL_MS = 3400;
 /** Per-character stagger of the wipe, like Zoah's hero. */
 const WIPE_STEP_MS = 18;
@@ -406,7 +402,9 @@ function StickyPhone({
         return;
       }
       const phoneH = Math.min(vh * 0.92, 880) * SMALL_SCALE;
-      setCenterOffset(Math.round(vh / 2 - (STICKY_TOP + STICKY_PAD + phoneH / 2)));
+      setCenterOffset(
+        Math.round(vh / 2 - (STICKY_TOP + STICKY_PAD + phoneH / 2)),
+      );
     };
     update();
     window.addEventListener("resize", update);
@@ -540,78 +538,87 @@ export function HeroSection() {
               key={stage.id}
               ref={setStageRef(i)}
               data-stage={i}
-              // Later stages are a full viewport tall so their copy centres on
-              // the viewport (where the sticky phone is centred too) and the
-              // sticky column is never pushed up by a short last stage
-              className={`${i === 0 ? "flex" : "hidden lg:flex"} flex-col items-center gap-6 text-center lg:items-start lg:justify-center lg:text-left ${i === 0 ? "lg:min-h-[85vh]" : "lg:min-h-screen"}`}
+              // Later stages are taller than the viewport and their copy sticks
+              // to the viewport centre while the stage scrolls past, so it is
+              // always level with the sticky phone (also centred on the viewport)
+              className={`${i === 0 ? "flex" : "hidden lg:flex"} flex-col items-center text-center lg:items-start lg:text-left ${i === 0 ? "gap-6 lg:min-h-[85vh] lg:justify-center" : "lg:min-h-[150vh]"}`}
             >
-              {stage.eyebrow && (
-                <motion.span
-                  initial={{ opacity: 0, y: 8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-20% 0px" }}
-                  transition={{ duration: 0.5, ease: EASE_OUT }}
-                  className="-mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#0050FF]"
-                  aria-hidden
-                >
-                  {stage.eyebrow}
-                </motion.span>
-              )}
-              {i === 0 ? (
-                <RotatingHeadline delay={delay} />
-              ) : (
-                <motion.h2
-                  initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
-                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  viewport={{ once: true, margin: "-20% 0px" }}
-                  transition={{ duration: 0.6, ease: EASE_OUT }}
-                  className="max-w-[460px] text-4xl font-medium leading-[1.1] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:text-[52px]"
-                >
-                  {stage.title}
-                </motion.h2>
-              )}
-              {stage.sub && (
-                <motion.p
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-20% 0px" }}
-                  transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.1 }}
-                  className="max-w-[420px] text-lg leading-7 text-[#6F6F6F] sm:text-xl sm:leading-8"
-                >
-                  {stage.sub}
-                </motion.p>
-              )}
-              {i === 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.6,
-                    ease: EASE_OUT,
-                    delay: delay + 0.5,
-                  }}
-                  className="flex flex-wrap items-center justify-center gap-3 lg:justify-start"
-                >
-                  <a
-                    href="#download"
-                    className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-[#171717] px-7 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+              <div
+                className={
+                  i === 0
+                    ? "contents"
+                    : "flex flex-col items-center gap-6 lg:sticky lg:top-0 lg:h-screen lg:items-start lg:justify-center"
+                }
+              >
+                {stage.eyebrow && (
+                  <motion.span
+                    initial={{ opacity: 0, y: 8 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20% 0px" }}
+                    transition={{ duration: 0.5, ease: EASE_OUT }}
+                    className="-mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#0050FF]"
+                    aria-hidden
                   >
-                    <span className="flex items-center gap-1.5">
-                      <AndroidLogoFill size={18} />
-                      <AppleLogoFill size={18} />
-                    </span>
-                    Download
-                  </a>
-                  <a
-                    href={LINKS.chromeExtension}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-base font-semibold text-[#171717] shadow-[inset_0_0_0_1px_#DBDBDB] transition-colors duration-200 hover:bg-[#EDEDED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+                    {stage.eyebrow}
+                  </motion.span>
+                )}
+                {i === 0 ? (
+                  <RotatingHeadline delay={delay} />
+                ) : (
+                  <motion.h2
+                    initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
+                    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    viewport={{ once: true, margin: "-20% 0px" }}
+                    transition={{ duration: 0.6, ease: EASE_OUT }}
+                    className="max-w-[460px] text-4xl font-medium leading-[1.1] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:text-[52px]"
                   >
-                    Get extension
-                  </a>
-                </motion.div>
-              )}
+                    {stage.title}
+                  </motion.h2>
+                )}
+                {stage.sub && (
+                  <motion.p
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20% 0px" }}
+                    transition={{ duration: 0.6, ease: EASE_OUT, delay: 0.1 }}
+                    className="max-w-[420px] text-lg leading-7 text-[#6F6F6F] sm:text-xl sm:leading-8"
+                  >
+                    {stage.sub}
+                  </motion.p>
+                )}
+                {i === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.6,
+                      ease: EASE_OUT,
+                      delay: delay + 0.5,
+                    }}
+                    // On phones the floating pill is the single download CTA
+                    className="hidden flex-wrap items-center justify-center gap-3 md:flex lg:justify-start"
+                  >
+                    <a
+                      href="#download"
+                      className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-[#171717] px-7 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <AndroidLogoFill size={18} />
+                        <AppleLogoFill size={18} />
+                      </span>
+                      Download
+                    </a>
+                    <a
+                      href={LINKS.chromeExtension}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-base font-semibold text-[#171717] shadow-[inset_0_0_0_1px_#DBDBDB] transition-colors duration-200 hover:bg-[#EDEDED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"
+                    >
+                      Get extension
+                    </a>
+                  </motion.div>
+                )}
+              </div>
             </div>
           ))}
         </div>

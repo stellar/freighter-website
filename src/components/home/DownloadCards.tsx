@@ -47,7 +47,7 @@ export function DownloadCards() {
               <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
                 Available on iOS and Android.
               </p>
-              <div className="mt-5 flex flex-wrap gap-2">
+              <div className="mt-5 hidden flex-wrap gap-2 md:flex">
                 <a href={LINKS.iosApp} className={PRIMARY_BTN}>
                   <AppleLogoFill size={16} />
                   Get iOS
@@ -91,7 +91,7 @@ export function DownloadCards() {
               <p className="mt-2 text-base leading-6 text-[#6F6F6F]">
                 Connect to Stellar apps with the browser extension.
               </p>
-              <div className="mt-5">
+              <div className="mt-5 hidden md:block">
                 <a
                   href={extensionHref(browser)}
                   target="_blank"
