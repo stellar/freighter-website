@@ -23,6 +23,34 @@ const CHAINS: { name: string; logo: string; size?: string }[] = [
   { name: "Base", logo: "/images/chains/base.svg", size: "size-6" },
 ];
 
+/** A network mark in a round tile with its name underneath */
+function ChainTile({
+  name,
+  dark,
+  children,
+}: {
+  name: string;
+  dark?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <span className="flex flex-col items-center gap-2">
+      <span
+        className={`flex size-12 items-center justify-center rounded-full sm:size-14 ${
+          dark
+            ? "bg-[#171717] shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
+            : "bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_6px_20px_rgba(0,0,0,0.08)] ring-1 ring-[#EDEDED]"
+        }`}
+      >
+        {children}
+      </span>
+      <span className="text-[10px] font-medium uppercase tracking-[0.08em] text-[#6F6F6F]">
+        {name}
+      </span>
+    </span>
+  );
+}
+
 const CARD =
   "relative flex min-h-[380px] flex-col overflow-hidden rounded-[32px] bg-white p-8 md:p-10";
 const ICON =
@@ -68,39 +96,28 @@ export function FeaturesGrid() {
             <div className={ICON}>
               <ArrowDownBold size={18} />
             </div>
-            {/* Three network marks flowing into Stellar */}
-            <div className="my-auto flex items-center gap-3 py-8">
-              <div className="flex items-center">
-                {CHAINS.map((chain, i) => (
-                  <span
-                    key={chain.name}
-                    title={chain.name}
-                    className={`flex size-14 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_6px_20px_rgba(0,0,0,0.08)] ring-1 ring-[#EDEDED] ${i > 0 ? "-ml-3" : ""}`}
-                    style={{ zIndex: CHAINS.length - i }}
-                  >
-                    <Image
-                      src={chain.logo}
-                      alt={chain.name}
-                      width={28}
-                      height={28}
-                      className={`${chain.size ?? "size-7"} object-contain`}
-                    />
-                  </span>
-                ))}
-              </div>
+            {/* Three network marks, each named, flowing into Stellar */}
+            <div className="my-auto flex items-end gap-1.5 py-8 sm:gap-2">
+              {CHAINS.map((chain) => (
+                <ChainTile key={chain.name} name={chain.name}>
+                  <Image
+                    src={chain.logo}
+                    alt={chain.name}
+                    width={28}
+                    height={28}
+                    className={`${chain.size ?? "size-7"} object-contain`}
+                  />
+                </ChainTile>
+              ))}
               <span
-                className="flex items-center gap-1 text-[#B4B4B4]"
+                className="mb-6 flex items-center gap-1 px-0.5 text-[#B4B4B4]"
                 aria-hidden
               >
                 <span className="size-1 rounded-full bg-current" />
                 <span className="size-1 rounded-full bg-current" />
-                <span className="size-1 rounded-full bg-current" />
                 <ArrowRightBold size={14} />
               </span>
-              <span
-                title="Stellar"
-                className="flex size-14 items-center justify-center rounded-full bg-[#171717] shadow-[0_6px_20px_rgba(0,0,0,0.12)]"
-              >
+              <ChainTile name="Stellar" dark>
                 <Image
                   src="/images/stellar-xlm-logo.png"
                   alt="Stellar"
@@ -108,7 +125,7 @@ export function FeaturesGrid() {
                   height={28}
                   className="size-7 object-contain invert"
                 />
-              </span>
+              </ChainTile>
             </div>
             <div>
               <h3 className="text-xl font-medium tracking-[-0.02em] text-[#171717]">

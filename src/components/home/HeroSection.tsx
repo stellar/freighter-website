@@ -467,6 +467,35 @@ function StickyPhone({
   );
 }
 
+/** Below lg: one phone per later stage, playing that stage's walkthrough. */
+function MobileDemoPhone({ stage }: { stage: Stage }) {
+  return (
+    <div className="relative mt-10 flex w-full justify-center lg:hidden">
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[110%] w-[160%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,#0050FF_0%,rgba(0,80,255,0.45)_38%,rgba(0,80,255,0)_70%)] blur-2xl"
+        aria-hidden
+      />
+      <div className="relative z-10 aspect-[804/1630] w-[240px] overflow-hidden rounded-[24px] bg-white shadow-[0px_24px_48px_rgba(0,0,0,0.22)] sm:w-[300px]">
+        {stage.demo ? (
+          <FlowDemo
+            playing={true}
+            config={stage.demo === "swap" ? SWAP_DEMO : DISCOVER_DEMO}
+          />
+        ) : (
+          <Image
+            src={stage.screens[0].src}
+            alt={stage.screens[0].alt}
+            width={804}
+            height={1630}
+            sizes="300px"
+            className="h-full w-full object-cover"
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function HeroSection() {
   const delay = 0;
   const [active, setActive] = useState(0);
@@ -497,7 +526,8 @@ export function HeroSection() {
       let nearest = 0;
       let nearestD = Infinity;
       stageRefs.current.forEach((el, i) => {
-        if (!el) return;
+        // Skip stages hidden at this breakpoint (display: none)
+        if (!el || !el.offsetParent) return;
         const r = el.getBoundingClientRect();
         const d = Math.abs(r.top + r.height / 2 - vh / 2) / vh;
         best = Math.max(best, Math.min(1, Math.max(0, 1 - (d - 0.08) / 0.3)));
@@ -535,7 +565,7 @@ export function HeroSection() {
       <HeroNav delay={delay + 0.1} />
 
       <div className="relative mx-auto mt-12 w-full max-w-[1280px] lg:mt-0 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:gap-8">
-        {/* Copy — three stages, each roughly a screen tall on desktop; only the first shows below lg */}
+        {/* Copy — three stages; each a screen tall on desktop, stacked with its own phone below lg */}
         <div className="flex min-w-0 flex-col">
           {STAGES.map((stage, i) => (
             <div
@@ -545,7 +575,7 @@ export function HeroSection() {
               // Later stages are taller than the viewport and their copy sticks
               // to the viewport centre while the stage scrolls past, so it is
               // always level with the sticky phone (also centred on the viewport)
-              className={`${i === 0 ? "flex" : "hidden lg:flex"} flex-col items-center text-center lg:items-start lg:text-left ${i === 0 ? "gap-6 lg:min-h-[85vh] lg:justify-center" : "lg:min-h-[150vh]"}`}
+              className={`flex flex-col items-center text-center lg:items-start lg:text-left ${i === 0 ? "gap-6 lg:min-h-[85vh] lg:justify-center" : "mt-20 lg:mt-0 lg:min-h-[150vh]"}`}
             >
               <div
                 className={
@@ -626,14 +656,21 @@ export function HeroSection() {
                   </motion.div>
                 )}
               </div>
+
+              {/* Below lg each stage carries its own phone: the fan under the
+                  first stage, a single demo phone under the later ones */}
+              {i === 0 ? (
+                <div className="mt-12 h-[460px] w-full [clip-path:inset(-60%_-20%_0_-20%)] sm:h-[520px] lg:hidden">
+                  <StickyPhone active={0} delay={delay} openness={openness} />
+                </div>
+              ) : (
+                <MobileDemoPhone stage={stage} />
+              )}
             </div>
           ))}
         </div>
 
-        {/* Phone fan — sticks while the copy scrolls past (desktop); stacked under the copy below lg */}
-        <div className="mt-12 h-[460px] w-full [clip-path:inset(-60%_-20%_0_-20%)] sm:h-[520px] lg:hidden">
-          <StickyPhone active={active} delay={delay} openness={openness} />
-        </div>
+        {/* Phone fan — sticks while the copy scrolls past (desktop) */}
         <div className="hidden lg:block">
           <div className="sticky top-[84px] flex h-[calc(100vh-84px)] items-start justify-center pt-6 [clip-path:inset(-50%_-80%_0_-80%)]">
             <StickyPhone active={active} delay={delay} openness={openness} />
