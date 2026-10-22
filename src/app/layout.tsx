@@ -39,12 +39,13 @@ export const metadata: Metadata = {
     "Stellar network",
   ],
   authors: [{ name: "Stellar Development Foundation" }],
-  // Mark only, no tile — blue on light tabs, a lighter blue on dark tabs
+  // Mark only, no tile. One SVG switches blue for light / dark tabs itself
+  // (prefers-color-scheme inside the file); the .ico is the 32px fallback.
+  // No sizes="any" on the .ico — Chrome would pick it over the SVG.
   icons: {
     icon: [
-      { url: "/favicon-light.svg", type: "image/svg+xml", media: "(prefers-color-scheme: light)" },
-      { url: "/favicon-dark.svg", type: "image/svg+xml", media: "(prefers-color-scheme: dark)" },
-      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32" },
     ],
     apple: "/images/apple-touch-icon.png",
   },
