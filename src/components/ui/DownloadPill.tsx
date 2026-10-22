@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { LINKS } from "@/lib/constants";
@@ -24,7 +25,33 @@ export function openDownloadCard() {
  * card with a QR code (which opens /get — phones are routed to their store);
  * on a phone the button simply opens the right store.
  */
+/**
+ * Rendered into <body> through a portal: the navs animate in with a
+ * transform, and a transformed ancestor becomes the containing block for
+ * `position: fixed` — the pill would sit against the nav and jump when the
+ * entrance ends. It fades in on its own instead.
+ */
 export function DownloadPill() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    // Deferred so the client-only flag is not set synchronously in the effect
+    const t = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(t);
+  }, []);
+  if (!mounted) return null;
+  return createPortal(
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.45, delay: 0.1, ease: EASE }}
+    >
+      <FloatingDownload />
+    </motion.div>,
+    document.body,
+  );
+}
+
+function FloatingDownload() {
   const [open, setOpen] = useState(false);
   const [qrValue, setQrValue] = useState("https://varial.app/get"); // TODO(varial): domain
   const [phoneStore, setPhoneStore] = useState<string | null>(null);
@@ -89,6 +116,8 @@ export function DownloadPill() {
             <motion.button
               key="pill"
               layoutId="download-pill"
+              // Only morph when the card opens / closes, not on other re-renders
+              layoutDependency={open}
               type="button"
               onClick={() => setOpen(true)}
               initial={{ opacity: 0 }}
@@ -109,6 +138,8 @@ export function DownloadPill() {
               key="card"
               ref={cardRef}
               layoutId="download-pill"
+              // Only morph when the card opens / closes, not on other re-renders
+              layoutDependency={open}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
