@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import { Agentation } from "agentation";
-import { MeasurerProvider } from "@/components/providers/MeasurerProvider";
 import { MotionProvider } from "@/components/providers/MotionProvider";
 import "./globals.css";
 
@@ -87,8 +85,6 @@ export default function RootLayout({
           }}
         />
         <MotionProvider>{children}</MotionProvider>
-        {process.env.NODE_ENV === "development" && <Agentation />}
-        {process.env.NODE_ENV === "development" && <MeasurerProvider />}
       </body>
     </html>
   );

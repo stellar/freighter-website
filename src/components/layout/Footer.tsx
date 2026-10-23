@@ -16,6 +16,7 @@ const footerLinksBefore: {
   { label: "Docs", href: LINKS.docs, external: true, hideOnLg: true },
   { label: "Changelog", href: "/changelog" },
   { label: "GitHub", href: SITE.github, external: true },
+  { label: "Brand", href: "/brand" },
   // Mirrors the Navbar Support link so mobile/tablet users still have
   // a path to help when the top nav is collapsed. Hidden at lg+ where
   // the Navbar's Support link is always visible.
