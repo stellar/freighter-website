@@ -145,7 +145,7 @@ export function BrandContent() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {[
             { name: "Varial Blue", hex: "#0050FF" },
-            { name: "Black", hex: "#171717" },
+            { name: "Black", hex: "#000000" },
             { name: "White", hex: "#FFFFFF", border: true },
           ].map((c) => (
             <div key={c.hex}>
