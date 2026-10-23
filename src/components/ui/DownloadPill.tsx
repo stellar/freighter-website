@@ -100,7 +100,7 @@ function FloatingDownload() {
     return (
       <a
         href={phoneStore}
-        className="fixed right-[max(1.5rem,calc((100vw-1280px)/2))] top-[14px] z-50 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#171717] pl-4 pr-5 py-2 text-base font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:bg-[#2a2a2a]"
+        className="fixed right-[max(1.5rem,calc((100vw-1280px)/2))] top-5 z-50 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#171717] pl-4 pr-5 py-2 text-base font-semibold text-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] transition-colors duration-200 hover:bg-[#2a2a2a]"
       >
         <StoreLogo size={18} className="shrink-0" />
         Download
@@ -109,7 +109,7 @@ function FloatingDownload() {
   }
 
   return (
-    <div className="fixed right-[max(1.5rem,calc((100vw-1280px)/2))] top-[14px] z-50">
+    <div className="fixed right-[max(1.5rem,calc((100vw-1280px)/2))] top-5 z-50">
       <LayoutGroup>
         <AnimatePresence mode="popLayout" initial={false}>
           {!open ? (
