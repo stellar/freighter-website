@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://www.freighter.app/sitemap.xml",
+    sitemap: "https://varialwallet.com/sitemap.xml",
   };
 }

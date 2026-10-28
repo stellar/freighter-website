@@ -4,6 +4,7 @@
 import {
   PaperPlaneTilt,
   Swap,
+  ArrowsLeftRight,
   Compass,
   ClockCounterClockwise,
   Diamond,
@@ -11,6 +12,8 @@ import {
   Wallet,
   CaretLeft,
   CaretRight,
+  Play,
+  Pause,
   CaretDown,
   ArrowsDownUp,
   ArrowsClockwise,
@@ -31,6 +34,7 @@ import {
   Plus,
   AppleLogo,
   AndroidLogo,
+  GooglePlayLogo,
   TrendUp,
   Bridge,
   GameController,
@@ -42,6 +46,10 @@ import {
   Coin,
   LinkSimple,
   Check,
+  QrCode,
+  Plant,
+  AppWindow,
+  Monitor,
   type IconProps,
 } from "@phosphor-icons/react";
 
@@ -65,6 +73,7 @@ function fill(Icon: React.ComponentType<IconProps>) {
 
 export const PaperPlaneTiltBold = bold(PaperPlaneTilt);
 export const SwapBold = bold(Swap);
+export const ArrowsLeftRightBold = bold(ArrowsLeftRight);
 export const CompassBold = bold(Compass);
 export const ClockCounterClockwiseBold = bold(ClockCounterClockwise);
 export const DiamondBold = bold(Diamond);
@@ -102,6 +111,10 @@ export const HandCoinsBold = bold(HandCoins);
 export const CoinBold = bold(Coin);
 export const LinkSimpleBold = bold(LinkSimple);
 export const CheckBold = bold(Check);
+export const QrCodeBold = bold(QrCode);
+export const PlantFill = fill(Plant);
+export const AppWindowBold = bold(AppWindow);
+export const MonitorBold = bold(Monitor);
 
 // Filled variants used by the FeatureCarousel labels
 export const PaperPlaneTiltFill = fill(PaperPlaneTilt);
@@ -125,6 +138,9 @@ export const ImageFill = fill(PhosphorImage);
 export const ImagesFill = fill(Images);
 export const AppleLogoFill = fill(AppleLogo);
 export const AndroidLogoFill = fill(AndroidLogo);
+export const GooglePlayLogoFill = fill(GooglePlayLogo);
+export const PlayFill = fill(Play);
+export const PauseFill = fill(Pause);
 export const GameControllerFill = fill(GameController);
 export const UsersThreeFill = fill(UsersThree);
 export const CheckFill = fill(Check);

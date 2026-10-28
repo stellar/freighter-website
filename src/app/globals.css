@@ -4,24 +4,25 @@
 @theme inline {
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
-  /* Stellar design system — Gray + Lilac (design-system.stellar.org) */
-  --color-bg-primary: #161616;   /* Gray 1 */
-  --color-bg-elevated: #1C1C1C;  /* Gray 2 */
-  --color-bg-hover: #282828;     /* Gray 4 */
-  --color-bg-tertiary: #161616;  /* Gray 1 */
-  --color-bg-page: #101010;      /* one step below Gray 1 */
+  /* Stellar design system Gray (light) + Varial Blue (light palette,
+     Figma: Varial › Blue). Varial is a light-theme brand. */
+  --color-bg-primary: #FCFCFC;   /* Gray 1 */
+  --color-bg-elevated: #F8F8F8;  /* Gray 2 */
+  --color-bg-hover: #EDEDED;     /* Gray 4 */
+  --color-bg-tertiary: #FCFCFC;  /* Gray 1 */
+  --color-bg-page: #F6F6F5;      /* warm off-white page */
 
-  --color-border: #232323;       /* Gray 3 */
-  --color-border-hover: #3E3E3E; /* Gray 7 */
+  --color-border: #F3F3F3;       /* Gray 3 */
+  --color-border-hover: #DBDBDB; /* Gray 7 */
 
-  --color-text-primary: #EDEDED;   /* Gray 12 */
-  --color-text-secondary: #A0A0A0; /* Gray 11 */
-  --color-text-tertiary: #707070;  /* Gray 9 */
+  --color-text-primary: #171717;   /* Gray 12 */
+  --color-text-secondary: #6F6F6F; /* Gray 11 */
+  --color-text-tertiary: #8F8F8F;  /* Gray 9 */
 
-  --color-accent: #7B68FF;           /* Brand primary — solid */
-  --color-accent-secondary: #8A78FF; /* Brand primary — hover */
-  --color-accent-light: #7B68FF;     /* Brand primary — icons and accent text */
-  --color-accent-link: #7B68FF;      /* Brand primary — text links */
+  --color-accent: #0050FF;           /* Blue 09 — solid */
+  --color-accent-secondary: #0246DF; /* Blue 10 — hover */
+  --color-accent-light: #0F53EC;     /* Blue 11 — icons and accent text */
+  --color-accent-link: #0F53EC;      /* Blue 11 — text links */
 
   /* Easing — single source of truth. Mirror the JS constants in
      `lib/animations.ts` so paired CSS + Framer Motion animations
@@ -50,7 +51,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
   scroll-behavior: smooth;
 }
 
@@ -65,21 +66,22 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #7B68FF, #8A78FF);
+  background: linear-gradient(135deg, #0050FF, #73A5FF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 /* Hero text shimmer sweep */
+/* Lives on the blue hero, so it stays white regardless of the page theme */
 .shimmer-text {
   background: linear-gradient(
     110deg,
-    var(--color-text-primary) 0%,
-    var(--color-text-primary) 40%,
-    var(--color-accent-light) 50%,
-    var(--color-text-primary) 60%,
-    var(--color-text-primary) 100%
+    #FFFFFF 0%,
+    #FFFFFF 40%,
+    #C8E0FF 50%,  /* Blue 05 */
+    #FFFFFF 60%,
+    #FFFFFF 100%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
@@ -103,7 +105,7 @@ body {
               transform 0.3s var(--ease-out);
 }
 .logo-glow:hover {
-  box-shadow: 0 0 16px 2px rgba(123, 104, 255, 0.4); /* Lilac 9 */
+  box-shadow: 0 0 16px 2px rgba(0, 80, 255, 0.35); /* Blue 9 */
   transform: scale(1.05);
 }
 
@@ -114,7 +116,7 @@ body {
 }
 .mockup-hover:hover {
   transform: translateY(-6px);
-  box-shadow: 0px 32px 40px 8px rgba(0, 0, 0, 0.35);
+  box-shadow: 0px 32px 40px 8px rgba(0, 0, 0, 0.12);
 }
 
 .glow-border {
@@ -129,8 +131,8 @@ body {
   padding: 1px;
   background: linear-gradient(
     135deg,
-    rgba(123, 104, 255, 0.3),  /* Brand primary */
-    rgba(138, 120, 255, 0.1)   /* Brand primary — hover */
+    rgba(0, 80, 255, 0.3),     /* Brand primary */
+    rgba(115, 165, 255, 0.1)   /* Brand primary — light */
   );
   -webkit-mask: linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
@@ -178,7 +180,7 @@ body {
 }
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.14);
 }
 
 /* QR code glow pulse */
@@ -186,8 +188,8 @@ body {
   animation: qr-pulse 3s ease-in-out infinite;
 }
 @keyframes qr-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-  50% { box-shadow: 0 0 20px 4px rgba(255, 255, 255, 0.1); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 80, 255, 0); }
+  50% { box-shadow: 0 0 20px 4px rgba(0, 80, 255, 0.12); }
 }
 
 /* Nav link underline animation */
@@ -268,28 +270,28 @@ body {
 }
 
 .feature-cards {
-  /* Chrome aligned to Stellar design system (Gray + Lilac).
+  /* Chrome aligned to Stellar design system (Gray + Varial Blue).
      Multi-hue accents (blu/grn/gold/pink/orange) are decorative
      illustration colors, not part of the token system. */
-  --fc-bg: #161616;            /* Gray 1 */
-  --fc-surface: var(--color-bg-hover); /* Gray 4 — matches carousel buttons */
-  --fc-surface-2: #232323;     /* Gray 3 */
-  --fc-line: #282828;          /* Gray 4 */
-  --fc-line-2: #3E3E3E;        /* Gray 7 */
-  --fc-ink: #EDEDED;           /* Gray 12 */
-  --fc-ink-2: #A0A0A0;         /* Gray 11 */
-  --fc-ink-3: #7E7E7E;         /* Gray 10 */
-  --fc-ink-4: #505050;         /* Gray 8 */
-  --fc-pur-1: #7B68FF;         /* Brand primary */
-  --fc-pur-2: #8A78FF;         /* Brand primary — hover */
+  --fc-bg: #FCFCFC;            /* Gray 1 */
+  --fc-surface: #FFFFFF;        /* card screens — same as the card */
+  --fc-surface-2: #F3F3F3;     /* Gray 3 */
+  --fc-line: #E2E2E2;          /* Gray 6 */
+  --fc-line-2: #DBDBDB;        /* Gray 7 */
+  --fc-ink: #171717;           /* Gray 12 */
+  --fc-ink-2: #6F6F6F;         /* Gray 11 */
+  --fc-ink-3: #8F8F8F;         /* Gray 9 */
+  --fc-ink-4: #B4B4B4;         /* Gray 8 */
+  --fc-pur-1: #0050FF;         /* Brand primary (Blue 9) */
+  --fc-pur-2: #0F53EC;         /* Brand primary — text (Blue 11) */
   --fc-blu-1: #2dd4ff;
   --fc-blu-2: #4f8cff;
   --fc-grn: #3CB179;
   --fc-gold: #ffd24f;
   --fc-pink: #ff4f8c;
   --fc-orange: #ff6b35;
-  --fc-grad: linear-gradient(135deg, #7B68FF 0%, #4f8cff 60%, #2dd4ff 100%);
-  --fc-grad-pbb: linear-gradient(135deg, #8A78FF 0%, #4f8cff 50%, #2dd4ff 100%);
+  --fc-grad: linear-gradient(135deg, #0050FF 0%, #4f8cff 60%, #2dd4ff 100%);
+  --fc-grad-pbb: linear-gradient(135deg, #0246DF 0%, #4f8cff 50%, #2dd4ff 100%);
   --fc-grad-cool: linear-gradient(135deg, #2dd4ff 0%, #5fffaf 100%);
   --fc-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -298,8 +300,8 @@ body {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  background: var(--color-bg-hover);
-  border: 1px solid var(--fc-line);
+  background: #FFFFFF; /* white card on the off-white page */
+  border: none;
   border-radius: 28px;
   overflow: hidden;
   isolation: isolate;
@@ -312,12 +314,12 @@ body {
    chevron buttons (which use `bg-bg-hover` = Gray 4) so the card reads
    as a peer of the controls rather than a deeper surface. */
 .fc-card.fc-card--raised {
-  background: var(--color-bg-hover);
+  background: #FFFFFF;
   border: none;
 }
 .fc-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 18px 50px -20px rgba(0, 0, 0, 0.18);
 }
 /* `will-change` is applied on the SECTION's hover so the browser
    promotes every card to its own layer just before any one of them
@@ -336,7 +338,7 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1.5px;
-  background: linear-gradient(135deg, #7B68FF 0%, #4f8cff 50%, #2dd4ff 100%);
+  background: linear-gradient(135deg, #0050FF 0%, #4f8cff 50%, #2dd4ff 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
@@ -347,13 +349,13 @@ body {
 .feature-cards--glow .fc-card:hover::after { opacity: 1; }
 .feature-cards--glow .fc-card:hover {
   border-color: transparent;
-  box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.65);
+  box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.2);
 }
 
 /* ── Glass variant — translucent surface with backdrop blur, soft top edge */
 .feature-cards--glass .fc-card {
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.025);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 32px;
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
@@ -363,13 +365,13 @@ body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 30%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0) 30%);
   pointer-events: none;
 }
 .feature-cards--glass .fc-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 24px 60px -22px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 24px 60px -22px rgba(0, 0, 0, 0.16);
 }
 
 /* ── Editorial variant — borderless, deeper drop shadow, smaller radius */
@@ -377,14 +379,14 @@ body {
   border: none;
   border-radius: 20px;
   box-shadow:
-    0 22px 50px -22px rgba(0, 0, 0, 0.7),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 22px 50px -22px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .feature-cards--editorial .fc-card:hover {
   border-color: transparent;
   box-shadow:
-    0 30px 70px -22px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 30px 70px -22px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
 .fc-stage {
@@ -436,7 +438,7 @@ body {
 
 /* ───── Send card ─────
    Dark "well" containing a recessed amount panel and a separate Send
-   button. The cycling amount carries a Lilac highlight + blinking
+   button. The cycling amount carries a Blue highlight + blinking
    caret so the input feel reads even at a glance. */
 .fc-send-screen {
   container-type: inline-size;
@@ -444,7 +446,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--color-bg-hover); /* Gray 4 — brighter outer */
+  background: var(--fc-surface); /* Gray 4 — brighter outer */
   display: flex;
   flex-direction: column;
   /* Tighter top/bottom so the inner panel matches the visible height of
@@ -458,7 +460,8 @@ body {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background: #333333; /* lighter than the Gray-4 outer */
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.06); /* lifts the white tile off the white card */
   border: none;
   border-radius: clamp(20px, 7cqw, 32px);
   padding: 16px;
@@ -610,7 +613,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.24);
+  background: rgba(0, 0, 0, 0.08);
   transform: scaleX(0);
   transform-origin: left center;
   opacity: 0;
@@ -655,7 +658,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--color-bg-hover); /* Gray 4 — matches Send card outer */
+  background: var(--fc-surface); /* Gray 4 — matches Send card outer */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -666,7 +669,8 @@ body {
 }
 .fc-swap-panel {
   flex: 1;
-  background: #333333; /* lighter than the Gray-4 outer, matches Send panel */
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.06); /* lifts the white tile off the white card */
   border: none;
   border-radius: clamp(14px, 4.4cqw, 20px);
   padding: 16px;
@@ -751,12 +755,13 @@ body {
   width: clamp(34px, 11cqw, 50px);
   height: clamp(34px, 11cqw, 50px);
   border-radius: 999px;
-  background: var(--color-bg-hover);
-  border: none;
+  background: #ffffff;
+  border: 3px solid #ffffff; /* white ring separates the disc from the panels */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 6px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
+  color: #171717;
 }
 .fc-swap-divider-icon {
   width: 55%;
@@ -776,7 +781,7 @@ body {
   flex-direction: column;
   gap: clamp(14px, 4.4cqw, 20px);
   padding: 40px 0;
-  background: var(--color-bg-hover);
+  background: var(--fc-surface);
   overflow: hidden;
 }
 .fc-discover-pills {
@@ -830,9 +835,9 @@ body {
     color 0.6s var(--ease-out);
 }
 .fc-discover-pill[data-active] {
-  background: #4F4F4F; /* Gray 8 — brighter than Gray-7 inactive border */
-  border-color: #4F4F4F;
-  color: var(--color-text-primary);
+  background: #171717; /* Gray 12 — matches the other "selected" pills */
+  border-color: #171717;
+  color: #ffffff;
 }
 /* During the silent loop-back, disable pill color transitions too so the
    destination active pill snaps into place instead of fading in over
@@ -859,7 +864,8 @@ body {
   width: 100%;
   height: 72px;
   border-radius: clamp(14px, 4cqw, 20px);
-  background: #333333; /* lighter than the Gray-4 outer, matches Send panel */
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.06); /* lifts the white tile off the white card */
   opacity: 0;
   transform-origin: 50% 0%;
   /* Ease-out-back (spring overshoot) — mirrors the History feed row's
@@ -927,7 +933,8 @@ body {
 .fc-feed-amount {
   display: inline-flex;
   align-items: center;
-  background: #333333; /* one step above the Gray-4 card surface */
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.06); /* lifts the white tile off the white card */
   border-radius: 999px;
   padding: 9px clamp(10px, 3cqw, 14px);
   font-size: 14px;
@@ -946,8 +953,8 @@ body {
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    var(--color-bg-hover) 78%,
-    var(--color-bg-hover) 100%
+    var(--fc-surface) 78%,
+    var(--fc-surface) 100%
   );
 }
 .fc-feed-heading {
@@ -1077,7 +1084,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg-hover); /* Gray 4 — matches other cards */
+  background: var(--fc-surface); /* Gray 4 — matches other cards */
   overflow: hidden;
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -1121,7 +1128,7 @@ body {
 }
 .fc-earn-ring rect {
   fill: none;
-  stroke: var(--color-bg-hover); /* matches card bg → invisible */
+  stroke: var(--fc-surface); /* matches card bg → invisible */
   stroke-width: 1;
   /* 1px dash + 2px gap → reads as dotted rather than dashed. */
   stroke-dasharray: 1 2;
@@ -1129,7 +1136,7 @@ body {
   transition: stroke 0.3s var(--ease-out) var(--ring-state-delay, 0ms);
 }
 .fc-earn-rings--done .fc-earn-ring rect {
-  stroke: #ffffff;
+  stroke: #0050FF; /* Varial Blue 09 — the ripple on the light card */
 }
 .fc-earn-pill {
   position: relative;
@@ -1140,7 +1147,8 @@ body {
   padding: clamp(10px, 3.4cqw, 14px) clamp(20px, 6.4cqw, 28px) clamp(10px, 3.4cqw, 14px) clamp(10px, 3.4cqw, 14px);
   border-radius: 999px;
   border: 2.5px solid transparent;
-  background: #333333; /* matches row bg used across other cards */
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.06); /* lifts the white tile off the white card */
   color: var(--color-text-primary);
   font-size: clamp(16px, 5.2cqw, 22px);
   font-weight: 600;
@@ -1196,9 +1204,9 @@ body {
   100% { opacity: 1; filter: blur(0); }
 }
 .fc-earn-pill--done {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #161616;
+  background: #171717;
+  border-color: #171717;
+  color: #ffffff;
 }
 
 /* ───── Collectibles card ───── */
@@ -1211,7 +1219,7 @@ body {
   justify-content: center;
   padding: 40px;
   overflow: hidden;
-  background: var(--color-bg-hover);
+  background: var(--fc-surface);
 }
 .fc-collectibles-grid {
   --fc-collectible-gap: 14px;
@@ -1219,7 +1227,8 @@ body {
   position: relative;
   width: min(100%, 246px);
   aspect-ratio: 1 / 1;
-  overflow: hidden;
+  /* no overflow clip — the focused tile fits the grid exactly, and the
+     tile shadows need room to spill past the edges */
 }
 .fc-collectible-tile {
   position: absolute;
@@ -1248,7 +1257,8 @@ body {
    or fill-mode hasn't applied the 0% keyframe yet. The `animation-fill-mode:
    both` ensures the 0% keyframes also reapply once the animation begins. */
 .fc-collectible-tile {
-  background: #333333; /* Gray, one step above the card surface */
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.06); /* lifts the white tile off the white card */
   --fc-collectible-icon-color: #5c5c5c;
 }
 .fc-collectible-tile--sky {
@@ -1315,7 +1325,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--color-bg-hover);
+  background: var(--fc-surface);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1331,7 +1341,8 @@ body {
   display: flex;
   align-items: center;
   gap: clamp(10px, 3.4cqw, 14px);
-  background: #333333; /* matches Collectibles tile — one step above Gray-4 card */
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.06); /* lifts the white tile off the white card */
   border: 1px solid var(--color-border);
   border-radius: clamp(12px, 4cqw, 18px);
   padding: clamp(10px, 3.4cqw, 14px) clamp(12px, 4cqw, 16px);
@@ -1354,9 +1365,13 @@ body {
   border-radius: 999px;
   display: block;
 }
-.fc-wallet-row-avatar > svg {
+.fc-wallet-row-avatar-img {
+  display: block;
+  width: 100%;
+  height: 100%;
   border-radius: 999px;
-  overflow: hidden;
+  object-fit: cover;
+  user-select: none;
 }
 .fc-wallet-row-badge {
   position: absolute;
@@ -1370,7 +1385,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid #333333; /* matches row bg */
+  border: 2px solid #FFFFFF; /* matches row bg */
   /* Default (unselected) — pre-scaled-in state. Reset instantly so the
      deselected row doesn't visibly fade out. */
   opacity: 0;
@@ -1431,6 +1446,122 @@ body {
    when the carousel section is paused (off-screen) or animations have
    not started. The animation periodically re-slides the card down to
    convey a payment landing. */
+/* ───── Earn card ─────
+   "Your deposits / Your earnings" from the position screen, laid out
+   like the Swap card: full-bleed stage, white panels lifted off the
+   card with a soft shadow. The earnings amounts count up on loop. */
+.fc-earn-pos {
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+.fc-earn-pos-card {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2.4cqw, 10px);
+  width: 100%;
+  color: var(--color-text-primary);
+}
+.fc-earn-pos-label {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--color-text-tertiary);
+  line-height: 1;
+}
+.fc-earn-pos-label + .fc-earn-pos-box {
+  margin-bottom: clamp(10px, 3cqw, 14px);
+}
+.fc-earn-pos-box {
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 20px rgba(0, 0, 0, 0.06);
+  border-radius: clamp(14px, 4.4cqw, 20px);
+  padding: 0 16px;
+}
+.fc-earn-pos-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 3cqw, 12px);
+  padding: clamp(14px, 4cqw, 18px) 0;
+}
+.fc-earn-tile {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.fc-earn-sprout {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--fc-grn);
+  box-shadow: 0 0 0 2px #ffffff, 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.fc-earn-pos-name {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 4px;
+  font-size: clamp(14px, 4.4cqw, 18px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+.fc-earn-pos-apy {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--fc-grn);
+}
+.fc-earn-pos-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+.fc-earn-pos-amount-usd {
+  font-size: clamp(14px, 4.4cqw, 18px);
+  font-weight: 600;
+}
+.fc-earn-pos-amount-usd--green {
+  color: var(--fc-grn);
+}
+.fc-earn-pos-amount-sub {
+  font-size: 14px;
+  color: var(--color-text-tertiary);
+}
+.fc-earn-pos-est {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: clamp(14px, 4cqw, 18px) 0;
+  border-top: 1px solid var(--fc-line);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.fc-earn-pos-est > span:first-child {
+  color: var(--color-text-tertiary);
+}
+
 .fc-receive-incoming {
   position: relative;
   width: 100%;
@@ -1469,8 +1600,8 @@ body {
   color: #0a0b14;
   transform-origin: 50% 90%;
   box-shadow:
-    0 22px 44px -22px rgba(0, 0, 0, 0.55),
-    0 2px 6px -2px rgba(0, 0, 0, 0.25);
+    0 22px 44px -22px rgba(0, 0, 0, 0.2),
+    0 2px 6px -2px rgba(0, 0, 0, 0.1);
   will-change: transform, opacity;
 }
 .fc-receive-incoming-card--front {
@@ -1585,11 +1716,24 @@ body {
 
 /* Prose overrides for legal pages */
 .prose-invert {
-  --tw-prose-body: #A0A0A0;      /* Gray 11 */
-  --tw-prose-headings: #EDEDED;  /* Gray 12 */
+  --tw-prose-body: #6F6F6F;      /* Gray 11 */
+  --tw-prose-headings: #171717;  /* Gray 12 */
   --tw-prose-links: var(--color-accent-link);
-  --tw-prose-bold: #EDEDED;      /* Gray 12 */
-  --tw-prose-counters: #707070;  /* Gray 9 */
-  --tw-prose-bullets: #707070;   /* Gray 9 */
-  --tw-prose-hr: #282828;        /* Gray 4 */
+  --tw-prose-bold: #171717;      /* Gray 12 */
+  --tw-prose-counters: #8F8F8F;  /* Gray 9 */
+  --tw-prose-bullets: #8F8F8F;   /* Gray 9 */
+  --tw-prose-hr: #EDEDED;        /* Gray 4 */
+}
+
+/* CTA edge "rain": a vertical line of copy scrolling seamlessly (content is doubled) */
+@keyframes cta-rain {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.cta-rain {
+  animation: cta-rain 40s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-rain { animation: none; }
 }

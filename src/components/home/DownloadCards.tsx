@@ -2,80 +2,157 @@
 
 import { motion } from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
-import { RoundedQR } from "@/components/ui/RoundedQR";
 import { LINKS } from "@/lib/constants";
+import {
+  BrowserBadge,
+  useBrowser,
+  extensionHref,
+} from "@/components/ui/BrowserBadge";
 import Image from "next/image";
 import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
-import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
+import { usePhone } from "@/lib/use-phone";
+
+const PRIMARY_BTN =
+  "inline-flex min-h-11 items-center gap-2 rounded-full bg-[#171717] px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]";
+
+/** Blue glow tucked behind the screenshot, bottom-right of the card. */
+function Glow() {
+  return (
+    <div
+      className="pointer-events-none absolute -bottom-[45%] -right-[28%] z-0 h-[130%] w-[100%] rounded-[50%] bg-[radial-gradient(ellipse_at_center,#73A5FF_0%,#C8E0FF_40%,rgba(238,244,255,0)_72%)] blur-3xl"
+      aria-hidden
+    />
+  );
+}
 
 export function DownloadCards() {
+  const browser = useBrowser();
+  // On a phone, only that phone's store button
+  const phone = usePhone();
   return (
     <section id="download" className="scroll-mt-[72px]">
-      <div className="max-w-[1024px] mx-auto px-6">
+      <div className="mx-auto max-w-[1280px] px-6">
         <motion.div
           variants={fadeSlideUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start"
+          className="grid grid-cols-1 items-start gap-8 md:grid-cols-2"
         >
           {/* For mobile */}
-          <div className="group relative h-[400px] md:h-[480px] rounded-[32px] bg-bg-elevated overflow-hidden p-8 flex flex-col">
-            <IridescenceBackground amplitude={0.06} patternClassName="scale-150 -translate-x-20 translate-y-8" />
+          <div className="group relative flex h-[420px] flex-col overflow-hidden rounded-[32px] bg-white p-8 md:h-[500px] md:p-10">
+            <Glow />
 
-            <h3 className="text-xl sm:text-2xl font-medium text-white tracking-[-0.96px] relative z-10">
-              For mobile
-            </h3>
-            <div className="flex gap-2 mt-auto self-end relative z-10">
-              <a
-                href={LINKS.iosApp}
-                className="inline-flex items-center gap-1 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition duration-300 ease-out"
-              >
-                <AppleLogoFill size={14} className="opacity-70" />
-                Get iOS
-              </a>
-              <a
-                href={LINKS.androidApp}
-                className="inline-flex items-center gap-1 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition duration-300 ease-out"
-              >
-                <AndroidLogoFill size={14} className="opacity-70" />
-                Get Android
-              </a>
+            <div className="relative z-10 max-w-[320px]">
+              <h3 className="text-2xl font-medium tracking-[-0.04em] text-[#171717] sm:text-[28px]">
+                Take Varial with you
+              </h3>
+              <p className="mt-2 min-h-12 text-base leading-6 text-[#6F6F6F]">
+                {phone === "ios"
+                  ? "Available for iPhone."
+                  : phone === "android"
+                    ? "Available for Android."
+                    : "Available on iOS and Android."}
+              </p>
+              <div className="mt-5 flex flex-wrap gap-2">
+                {phone !== "android" && (
+                  <a href={LINKS.iosApp} className={PRIMARY_BTN}>
+                    <AppleLogoFill size={16} />
+                    Get iOS
+                  </a>
+                )}
+                {phone !== "ios" && (
+                  <a href={LINKS.androidApp} className={PRIMARY_BTN}>
+                    <AndroidLogoFill size={16} />
+                    Get Android
+                  </a>
+                )}
+              </div>
             </div>
 
-            {/* Phone screenshot */}
-            <div className="absolute bottom-[120px] right-0 h-[360px] w-[166px] sm:-right-4 sm:h-[420px] sm:w-[194px] md:-right-8 md:h-[500px] md:w-[231px] rounded-[24px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] overflow-hidden transition-transform duration-300 ease-out group-hover:-translate-x-3 group-hover:translate-y-3">
-              <Image src="/images/for-mobile.png" alt="Freighter mobile app" fill className="object-cover object-top" />
-            </div>
-            <div className="qr-glow absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-10 size-[96px] rounded-[8px] bg-white p-2 shadow-lg">
-              <RoundedQR value={LINKS.iosApp} size={80} />
+            {/* Phone — monotone device frame, bleeds off the bottom-right */}
+            <div className="absolute right-8 top-[50%] z-[1] w-[236px] rounded-[36px] bg-[#171717] p-[10px] shadow-[0px_24px_48px_rgba(0,0,0,0.2)] transition-transform duration-500 ease-out group-hover:-translate-y-3 md:right-10 md:top-[49%] md:w-[270px]">
+              <div className="relative overflow-hidden rounded-[28px] bg-white pt-7">
+                {/* Dynamic island */}
+                <span
+                  className="absolute left-1/2 top-2 z-10 h-[18px] w-[64px] -translate-x-1/2 rounded-full bg-[#171717]"
+                  aria-hidden
+                />
+                <div className="aspect-[804/1630] w-full">
+                  <Image
+                    src="/images/varial-wallet.png"
+                    alt="Varial mobile app"
+                    width={804}
+                    height={1630}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* For extension */}
-          <div className="group relative h-[400px] md:h-[480px] rounded-[32px] bg-bg-elevated overflow-hidden p-8 flex flex-col">
-            <IridescenceBackground amplitude={0.06} patternClassName="scale-125 -translate-x-10 -translate-y-10 rotate-180" />
+          {/* For browser */}
+          <div className="group relative flex h-[340px] flex-col overflow-hidden rounded-[32px] bg-white p-8 md:h-[500px] md:p-10">
+            <Glow />
 
-            <h3 className="text-xl sm:text-2xl font-medium text-white tracking-[-0.96px] relative z-10">
-              For browser
-            </h3>
-            <a
-              href={LINKS.chromeExtension}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-6 py-3 text-sm font-medium text-white bg-white/10 backdrop-blur-md rounded-full hover:bg-white/20 transition duration-300 ease-out mt-auto self-start relative z-10"
-            >
-              <span className="flex items-center -space-x-0.5">
-                <Image src="/images/browser-chrome.png" alt="Chrome" width={18} height={18} className="size-[18px] rounded-full ring-1 ring-white/50" />
-                <Image src="/images/browser-firefox.png" alt="Firefox" width={18} height={18} className="size-[18px] rounded-full ring-1 ring-white/50" />
-                <Image src="/images/browser-brave.png" alt="Brave" width={18} height={18} className="size-[18px] rounded-full ring-1 ring-white/50" />
-              </span>
-              Get extension
-            </a>
+            <div className="relative z-10 max-w-[320px]">
+              <h3 className="text-2xl font-medium tracking-[-0.04em] text-[#171717] sm:text-[28px]">
+                Varial in your browser
+              </h3>
+              <p className="mt-2 min-h-12 text-base leading-6 text-[#6F6F6F]">
+                Connect to Stellar apps with the browser extension.
+              </p>
+              <div className="mt-5 hidden md:block">
+                <a
+                  href={extensionHref(browser)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={PRIMARY_BTN}
+                >
+                  <BrowserBadge browser={browser} />
+                  Get extension
+                </a>
+              </div>
+            </div>
 
-            {/* Browser extension screenshot — 360×600 aspect ratio */}
-            <div className="absolute bottom-[120px] -right-16 aspect-[360/600] h-[420px] overflow-hidden rounded-[24px] shadow-[0px_24px_24px_4px_rgba(0,0,0,0.25)] z-[1] sm:-right-20 sm:h-[500px] md:-right-24 md:h-[580px] transition-transform duration-300 ease-out group-hover:-translate-x-3 group-hover:translate-y-3">
-              <Image src="/images/for-extension.png" alt="Freighter browser extension" fill className="object-cover object-top" />
+            {/* Browser window: toolbar, and the extension popup hanging under its icon */}
+            <div className="absolute right-8 top-[46%] z-[1] w-[300px] overflow-hidden rounded-[16px] bg-[#F3F3F3] shadow-[0px_24px_48px_rgba(0,0,0,0.2)] ring-1 ring-[#EDEDED] transition-transform duration-500 ease-out group-hover:-translate-y-3 md:right-10 md:top-[48%] md:w-[340px]">
+              {/* Toolbar */}
+              <div
+                className="flex items-center gap-3 bg-[#F8F8F8] px-3 py-2.5"
+                aria-hidden
+              >
+                <span className="flex gap-1.5">
+                  <span className="size-2.5 rounded-full bg-[#DBDBDB]" />
+                  <span className="size-2.5 rounded-full bg-[#DBDBDB]" />
+                  <span className="size-2.5 rounded-full bg-[#DBDBDB]" />
+                </span>
+                <span className="h-6 flex-1 rounded-full bg-white shadow-[inset_0_0_0_1px_#EDEDED]" />
+                {/* Extension icon, pressed */}
+                <span className="flex size-7 items-center justify-center rounded-[8px] bg-[#EDEDED]">
+                  <Image
+                    src="/images/varial-icon.svg"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="size-4 rounded-[4px]"
+                  />
+                </span>
+              </div>
+              {/* Page + popup */}
+              <div className="relative h-[520px]">
+                <div className="absolute right-2 top-0 w-[76%] overflow-hidden rounded-b-[14px] bg-white shadow-[0px_16px_40px_rgba(0,0,0,0.18)] ring-1 ring-[#EDEDED]">
+                  <div className="aspect-[720/1200] w-full">
+                    <Image
+                      src="/images/varial-for-extension.png"
+                      alt="Varial browser extension"
+                      width={720}
+                      height={1200}
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

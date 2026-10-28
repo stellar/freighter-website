@@ -1,10 +1,13 @@
+// TODO(varial): store listings and GitHub org still point at Freighter
+// until the Varial ones exist. Swap the values here — the rest of the site
+// reads from this file.
 export const SITE = {
-  name: "Freighter",
+  name: "Varial",
   tagline: "Your Everyday Stellar Wallet",
   description:
-    "Browse, connect, and use Stellar apps — all in one place",
-  url: "https://www.freighter.app",
-  supportEmail: "help@freighter.app",
+    "Send, swap, and connect to apps on Stellar.",
+  url: "https://varialwallet.com",
+  supportEmail: "help@varialwallet.com",
   github: "https://github.com/stellar/freighter",
   discord: "#",
 };
@@ -12,14 +15,15 @@ export const SITE = {
 export const LINKS = {
   chromeExtension:
     "https://chromewebstore.google.com/detail/freighter/bcacfldlkkdogcmkkibnjlakofdplcbk",
-  firefoxExtension: "#",
+  // Numeric add-on ID: AMO resolves it regardless of the listing slug, so it
+  // survives the Freighter→Varial rename.
+  firefoxExtension: "https://addons.mozilla.org/firefox/addon/2676833/",
   iosApp: "https://apps.apple.com/us/app/freighter/id6743947720",
   androidApp: "https://play.google.com/store/apps/details?id=org.stellar.freighterwallet",
   stellarExpert: "https://stellar.expert",
   feedback: "https://docs.google.com/forms/d/e/1FAIpQLSesb7QzQElout02Q4AG8334vCe1m5QlC4jIhZMzWTYVHrCyHw/viewform",
-  docs: "https://docs.freighter.app",
-  help: "https://docs.freighter.app/support",
-  support: "https://help.freighter.app",
+  docs: "https://docs.varialwallet.com",
+  support: "https://help.varialwallet.com",
 };
 
 export const NAV_LINKS: readonly {

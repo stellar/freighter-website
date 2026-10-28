@@ -8,24 +8,24 @@ import { PlusBold, ArrowRightBold } from "@/components/ui/PhosphorIcons";
 
 const FAQ_ITEMS = [
   {
-    question: "Is Freighter safe to use?",
+    question: "Is Varial safe to use?",
     answer:
-      "Freighter is non-custodial, which means your keys are encrypted and stored only on your device — never on a server. It's fully open source and auditable on GitHub, and includes advanced transaction protection powered by Blockaid to help block scams and malicious sites.",
+      "Varial is non-custodial: your keys are encrypted and stored only on your device, never on a server. The code is open source on GitHub. Transaction protection powered by Blockaid helps flag scams and malicious sites.",
   },
   {
-    question: "Does Freighter charge fees?",
+    question: "Does Varial charge fees?",
     answer:
-      "No. Freighter doesn't add any wallet fees on top of transactions. You only pay Stellar's network fees, which typically cost a fraction of a cent.",
+      "No. Varial doesn't charge wallet fees. You pay Stellar's network fees, which are typically a fraction of a cent.",
   },
   {
     question: "What happens if I lose my device?",
     answer:
-      "Your account can always be restored on a new device using your recovery phrase — a unique set of words generated when you first set up Freighter. Freighter never stores your phrase, so keep it somewhere safe; it's the only way to recover your account.",
+      "You can restore your account on a new device with your recovery phrase, the set of words generated when you set up Varial. Varial never stores your phrase, so keep it somewhere safe. It's the only way to recover your account.",
   },
   {
-    question: "What can I do with Freighter?",
+    question: "What can I do with Varial?",
     answer:
-      "Hold XLM and other Stellar assets, swap tokens directly in the wallet, manage multiple accounts, and connect to any Stellar or Soroban app that supports WalletConnect or the Stellar Wallets Kit.",
+      "Hold XLM and other Stellar assets, swap tokens in the wallet, manage multiple accounts, and connect to Stellar and Soroban apps that support WalletConnect or the Stellar Wallets Kit.",
   },
 ];
 
@@ -35,19 +35,19 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   return (
     <button
       onClick={() => setOpen(!open)}
-      className="flex gap-4 items-start text-left w-full cursor-pointer"
+      className="flex w-full cursor-pointer items-start gap-4 rounded-[24px] bg-white p-6 text-left transition-colors duration-200 hover:bg-[#FCFCFC]"
     >
       {/* Plus/minus icon — spring rotation */}
       <motion.div
         animate={{ rotate: open ? 45 : 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
-        className="shrink-0 mt-1 text-accent-light"
+        className="mt-1 shrink-0 text-[#171717]"
       >
         <PlusBold size={18} />
       </motion.div>
       {/* Question + Answer */}
       <div className="flex-1 min-w-0">
-        <h3 className="text-xl font-normal text-text-primary leading-7">
+        <h3 className="text-lg font-medium leading-7 text-text-primary">
           {question}
         </h3>
         <AnimatePresence>
@@ -73,7 +73,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 export function FAQSection() {
   return (
     <section>
-      <div className="max-w-[1024px] mx-auto px-6">
+      <div className="max-w-[1280px] mx-auto px-6">
         <motion.div
           variants={fadeSlideUp}
           initial="hidden"
@@ -81,34 +81,30 @@ export function FAQSection() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16"
         >
-          {/* Left column — heading */}
-          <div>
-            <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-white tracking-[-1.6px] leading-[1.2]">
-              Frequently asked<br className="hidden md:inline" /> questions
+          {/* Left column — heading + link */}
+          <div className="flex flex-col items-start gap-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-[40px] font-medium text-text-primary tracking-[-1.6px] leading-[1.2]">
+              Frequently asked
+              <br className="hidden md:inline" /> questions
             </h2>
-          </div>
-
-          {/* Right column — FAQ items */}
-          <div className="flex flex-col gap-8">
-            {FAQ_ITEMS.map((item, i) => (
-              <div key={item.question}>
-                <FAQItem question={item.question} answer={item.answer} />
-                {i < FAQ_ITEMS.length - 1 && (
-                  <div className="h-px bg-border mt-8" />
-                )}
-              </div>
-            ))}
-
-            <div className="h-px bg-border" />
-
-            {/* See more FAQs */}
             <Link
               href="/faq"
-              className="inline-flex items-center gap-1 self-start px-6 py-3 text-sm font-medium text-text-primary bg-bg-hover rounded-full hover:bg-zinc-700 transition-colors"
+              className="inline-flex items-center gap-1 rounded-full bg-[#171717] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#2a2a2a]"
             >
-              See more FAQs
+              More FAQs
               <ArrowRightBold size={16} />
             </Link>
+          </div>
+
+          {/* Right column — FAQ cards */}
+          <div className="flex flex-col gap-3">
+            {FAQ_ITEMS.map((item) => (
+              <FAQItem
+                key={item.question}
+                question={item.question}
+                answer={item.answer}
+              />
+            ))}
           </div>
         </motion.div>
       </div>

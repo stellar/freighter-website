@@ -4,13 +4,75 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeSlideUp, EASE_OUT } from "@/lib/animations";
 import { LINKS } from "@/lib/constants";
-import { DownloadBold } from "@/components/ui/PhosphorIcons";
-import { IridescenceBackground } from "@/components/ui/IridescenceBackground";
+import {
+  BrowserBadge,
+  useBrowser,
+  extensionHref,
+} from "@/components/ui/BrowserBadge";
+import { AppleLogoFill, AndroidLogoFill } from "@/components/ui/PhosphorIcons";
+import { usePhone } from "@/lib/use-phone";
+
+const EDGE_WORDS = [
+  "Your everyday Stellar wallet",
+  "Send",
+  "Swap",
+  "Discover",
+  "No wallet fees",
+  "Non-custodial",
+  "Open source",
+  "Stablecoins",
+];
+/** Columns per side: [x offset px, duration s, direction, opacity] */
+const RAIN_COLUMNS: [number, number, 1 | -1, number][] = [
+  [16, 150, 1, 0.14],
+  [48, 210, -1, 0.09],
+  [80, 120, 1, 0.12],
+  [112, 240, -1, 0.07],
+  [144, 180, 1, 0.1],
+  [176, 135, -1, 0.13],
+];
+
+/** Matrix-style columns of small uppercase copy drifting along both edges of the card. */
+function EdgeRain({ side }: { side: "left" | "right" }) {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-y-0 z-[2] hidden w-[220px] overflow-hidden sm:block"
+      style={side === "left" ? { left: 0 } : { right: 0 }}
+    >
+      {RAIN_COLUMNS.map(([x, dur, dir, op], i) => {
+        // Each column starts on a different word so they don't read in lockstep
+        const words = [...EDGE_WORDS.slice(i), ...EDGE_WORDS.slice(0, i)];
+        const line = words.join("  ·  ") + "  ·  ";
+        return (
+          <div
+            key={i}
+            className="absolute inset-y-0 [mask-image:linear-gradient(to_bottom,transparent,black_18%,black_82%,transparent)]"
+            style={side === "left" ? { left: x } : { right: x }}
+          >
+            <motion.span
+              className="block whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.3em] text-[#171717]"
+              style={{ writingMode: "vertical-rl", opacity: op }}
+              animate={{ y: dir === 1 ? ["0%", "-50%"] : ["-50%", "0%"] }}
+              transition={{ duration: dur, ease: "linear", repeat: Infinity }}
+            >
+              {line.repeat(6)}
+              {line.repeat(6)}
+            </motion.span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export function CTASection() {
+  const browser = useBrowser();
+  // On a phone, only that phone's store button
+  const phone = usePhone();
   return (
     <section>
-      <div className="max-w-[1024px] mx-auto px-6">
+      <div className="max-w-[1280px] mx-auto px-6">
         <motion.div
           variants={fadeSlideUp}
           initial="hidden"
@@ -19,9 +81,10 @@ export function CTASection() {
           className="flex flex-col gap-8"
         >
           {/* CTA card */}
-          <div className="relative rounded-[16px] overflow-hidden">
-            <IridescenceBackground amplitude={0.07} patternClassName="scale-[2.2] rotate-90" />
-            <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(circle_at_50%_18%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(180deg,rgba(9,9,11,0.04),rgba(9,9,11,0.24))]" />
+          <div className="relative overflow-hidden rounded-[32px] bg-white">
+            {/* Subtle vertical type running down both edges */}
+            <EdgeRain side="left" />
+            <EdgeRain side="right" />
 
             <div className="relative z-10 flex flex-col items-center justify-center p-8 gap-8 h-[360px] sm:h-[420px] lg:h-[480px]">
               {/* Logo */}
@@ -32,11 +95,11 @@ export function CTASection() {
                 transition={{ duration: 0.5, ease: EASE_OUT }}
               >
                 <Image
-                  src="/images/logo.svg"
-                  alt="Freighter"
+                  src="/images/varial-icon.svg"
+                  alt="Varial"
                   width={64}
                   height={64}
-                  className="size-16"
+                  className="size-16 rounded-[14px]"
                 />
               </motion.div>
 
@@ -47,9 +110,9 @@ export function CTASection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1, duration: 0.5, ease: EASE_OUT }}
-                  className="text-3xl sm:text-4xl lg:text-[48px] font-medium text-white tracking-[-1.92px] text-center leading-[1.17]"
+                  className="text-3xl sm:text-4xl lg:text-[48px] font-medium text-[#171717] tracking-[-1.92px] text-center leading-[1.17]"
                 >
-                  Try Freighter today
+                  Get Varial
                 </motion.h2>
 
                 <motion.p
@@ -57,9 +120,13 @@ export function CTASection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.15, duration: 0.5, ease: EASE_OUT }}
-                  className="text-base sm:text-lg text-white/60 text-center text-pretty max-w-[40ch]"
+                  className="text-base sm:text-lg text-[#6F6F6F] text-center text-pretty max-w-[40ch]"
                 >
-                  Open source and free to use
+                  {phone === "ios"
+                    ? "Available on the App Store."
+                    : phone === "android"
+                      ? "Available on Google Play."
+                      : "On your phone or in your browser."}
                 </motion.p>
               </div>
 
@@ -69,33 +136,38 @@ export function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2, duration: 0.5, ease: EASE_OUT }}
-                className="flex w-full max-w-xs flex-col items-stretch gap-3"
+                className="flex flex-wrap items-center justify-center gap-3"
               >
-                <div className="flex gap-3">
+                {phone !== "android" && (
                   <a
                     href={LINKS.iosApp}
-                    className="inline-flex min-w-0 flex-1 basis-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
+                    className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
                   >
-                    <DownloadBold size={16} className="shrink-0 opacity-50" />
-                    iOS
+                    <AppleLogoFill size={16} className="shrink-0" />
+                    Get iOS
                   </a>
+                )}
+                {phone !== "ios" && (
                   <a
                     href={LINKS.androidApp}
-                    className="inline-flex min-w-0 flex-1 basis-0 items-center justify-center gap-1 whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
+                    className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
                   >
-                    <DownloadBold size={16} className="shrink-0 opacity-50" />
-                    Android
+                    <AndroidLogoFill size={16} className="shrink-0" />
+                    Get Android
                   </a>
-                </div>
-                <a
-                  href={LINKS.chromeExtension}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-[calc((100%-0.75rem)/2)] items-center justify-center gap-1 self-center whitespace-nowrap rounded-full bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md transition duration-300 ease-out hover:bg-white/20"
-                >
-                  <DownloadBold size={16} className="shrink-0 opacity-50" />
-                  Browser
-                </a>
+                )}
+                {/* No extension on phones */}
+                {!phone && (
+                  <a
+                    href={extensionHref(browser)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full bg-[#171717] px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#2a2a2a]"
+                  >
+                    <BrowserBadge browser={browser} />
+                    Get extension
+                  </a>
+                )}
               </motion.div>
             </div>
           </div>
