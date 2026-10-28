@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div
       className="overflow-x-clip flex flex-col"
-      style={{ background: "linear-gradient(198deg, #1C1C1C 0%, #161616 100%)" }}
+      style={{ background: "#F6F6F5" }}
     >
       <div className="flex flex-col gap-16 sm:gap-[120px]">
         <main className="flex flex-col gap-16 sm:gap-[120px]">

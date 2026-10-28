@@ -22,6 +22,7 @@ import {
   HandCoinsFill,
   ImageFill,
   ImagesFill,
+  PlantFill,
   UsersThreeFill,
 } from "@/components/ui/PhosphorIcons";
 
@@ -633,26 +634,11 @@ function ReceiveStage() {
        the card reads as a real wallet switcher.
    ════════════════════════════════════════ */
 
-type IdenticonCells = ReadonlyArray<ReadonlyArray<0 | 1>>;
-
-function WalletIdenticon({
-  cells,
-  on,
-  off,
-}: {
-  cells: IdenticonCells;
-  on: string;
-  off: string;
-}) {
+/** Varial gradient avatar (Figma: Varial › Account) */
+function WalletAvatar({ src }: { src: string }) {
   return (
-    <svg viewBox="0 0 5 5" shapeRendering="crispEdges" aria-hidden="true">
-      <rect width="5" height="5" fill={off} />
-      {cells.flatMap((row, y) =>
-        row.map((cell, x) =>
-          cell ? <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill={on} /> : null,
-        ),
-      )}
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt="" className="fc-wallet-row-avatar-img" draggable={false} />
   );
 }
 
@@ -661,43 +647,19 @@ const WALLETS = [
     name: "Personal",
     address: "GC6N...K4P9",
     balance: "$1,420.18",
-    cells: [
-      [1, 0, 1, 0, 1],
-      [0, 1, 1, 1, 0],
-      [1, 1, 0, 1, 1],
-      [0, 1, 0, 1, 0],
-      [1, 0, 1, 0, 1],
-    ] as IdenticonCells,
-    on: "#9E8CFC",
-    off: "#3A2F6E",
+    avatar: "/images/varial-avatar-1.png",
   },
   {
     name: "Trading",
     address: "GBQH...28HF",
     balance: "$483.62",
-    cells: [
-      [0, 1, 1, 1, 0],
-      [1, 1, 0, 1, 1],
-      [0, 1, 1, 1, 0],
-      [1, 0, 1, 0, 1],
-      [0, 1, 1, 1, 0],
-    ] as IdenticonCells,
-    on: "#5fffaf",
-    off: "#163b2c",
+    avatar: "/images/varial-avatar-2.png",
   },
   {
     name: "Savings",
     address: "GAZX...8L2J",
     balance: "$94.10",
-    cells: [
-      [1, 1, 0, 1, 1],
-      [1, 0, 1, 0, 1],
-      [0, 1, 1, 1, 0],
-      [1, 0, 1, 0, 1],
-      [1, 1, 0, 1, 1],
-    ] as IdenticonCells,
-    on: "#f4b860",
-    off: "#3a2a14",
+    avatar: "/images/varial-avatar-3.png",
   },
 ] as const;
 
@@ -726,7 +688,7 @@ function WalletsStage() {
               className={`fc-wallet-row${isSelected ? " fc-wallet-row--selected" : ""}`}
             >
               <span className="fc-wallet-row-avatar">
-                <WalletIdenticon cells={w.cells} on={w.on} off={w.off} />
+                <WalletAvatar src={w.avatar} />
                 <span
                   className={`fc-wallet-row-badge${isSelected ? " is-visible" : ""}`}
                 >
@@ -926,6 +888,86 @@ function EarnStage() {
 }
 
 /* ════════════════════════════════════════
+   9. EARN — the "Your deposits / Your earnings"
+       section of the position screen (Figma
+       3916-96636). Earnings count up on loop.
+   ════════════════════════════════════════ */
+
+const EARN_TICKS = 12; // cents of earnings that arrive over one cycle
+const EARN_USDC_PER_TICK = 0.1234 / EARN_TICKS;
+
+function EarnSproutTile() {
+  return (
+    <span className="fc-earn-tile">
+      <TokenTile variant="usdc" />
+      <span className="fc-earn-sprout">
+        <PlantFill size={10} />
+      </span>
+    </span>
+  );
+}
+
+function YieldStage() {
+  const [tick, setTick] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Earnings trickle in a cent at a time, hold, then start over.
+    const id = window.setInterval(() => {
+      setTick((t) => (reduceMotion ? EARN_TICKS : t >= EARN_TICKS + 4 ? 0 : t + 1));
+    }, 420);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const cents = Math.min(tick, EARN_TICKS);
+  const usd = (cents / 100).toFixed(2);
+  const usdc = (cents * EARN_USDC_PER_TICK).toFixed(4);
+
+  return (
+    <div className="fc-earn-pos" aria-label="Earn">
+      <div className="fc-earn-pos-card" aria-hidden="true">
+        <span className="fc-earn-pos-label">Your deposits</span>
+        <div className="fc-earn-pos-box">
+          <div className="fc-earn-pos-row">
+            <TokenTile variant="usdc" />
+            <span className="fc-earn-pos-name">USDC</span>
+            <span className="fc-earn-pos-amount">
+              <span className="fc-earn-pos-amount-usd">$500.00</span>
+              <span className="fc-earn-pos-amount-sub">500.1223 USDC</span>
+            </span>
+          </div>
+        </div>
+
+        <span className="fc-earn-pos-label">Your earnings</span>
+        <div className="fc-earn-pos-box">
+          <div className="fc-earn-pos-row">
+            <EarnSproutTile />
+            <span className="fc-earn-pos-name">
+              USDC
+              <span className="fc-earn-pos-apy">16.94% APY</span>
+            </span>
+            <span className="fc-earn-pos-amount">
+              <span className="fc-earn-pos-amount-usd fc-earn-pos-amount-usd--green">
+                +${usd}
+              </span>
+              <span className="fc-earn-pos-amount-sub">{usdc} USDC</span>
+            </span>
+          </div>
+          <div className="fc-earn-pos-est">
+            <span>Est. monthly earnings</span>
+            <span>$7.06</span>
+          </div>
+          <div className="fc-earn-pos-est">
+            <span>Est. yearly earnings</span>
+            <span>$84.70</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════
    Wrappers — wrap each stage in the card frame
    ════════════════════════════════════════ */
 
@@ -939,6 +981,7 @@ export function CollectiblesAnimation() { return <FeatureCard><CollectiblesStage
 export function ReceiveAnimation()      { return <FeatureCard><ReceiveStage /></FeatureCard>; }
 export function WalletsAnimation()      { return <FeatureCard><WalletsStage /></FeatureCard>; }
 export function EarnAnimation()         { return <FeatureCard className="fc-card--raised"><EarnStage /></FeatureCard>; }
+export function YieldAnimation()        { return <FeatureCard><YieldStage /></FeatureCard>; }
 
 export const FEATURE_ANIMATIONS: Record<string, ComponentType<FeatureAnimationProps>> = {
   Send: SendAnimation,
@@ -949,4 +992,5 @@ export const FEATURE_ANIMATIONS: Record<string, ComponentType<FeatureAnimationPr
   Receive: ReceiveAnimation,
   Wallets: WalletsAnimation,
   Deposit: EarnAnimation,
+  Earn: YieldAnimation,
 };

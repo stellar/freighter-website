@@ -6,7 +6,7 @@ import { BackToTopButton } from "@/components/ui/BackToTopButton";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Freighter Terms of Service.",
+  description: "Varial Terms of Service.",
 };
 
 export default function TermsPage() {
@@ -14,23 +14,23 @@ export default function TermsPage() {
     <>
       <Navbar />
       <main className="pt-32 pb-24">
-        <div className="max-w-[1024px] mx-auto px-6">
+        <div className="max-w-[1280px] mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-semibold text-text-primary tracking-tight">
-            Freighter Terms of Service
+            Varial Terms of Service
           </h1>
           <p className="text-sm text-text-tertiary mt-2">
-            Last Updated: August 15, 2025 &middot; Version 1.0
+            Last Updated: October 28, 2026 &middot; Version 1.0
           </p>
 
           <article className="prose prose-invert prose-lg mt-12 max-w-none">
             <p>
               This User Agreement (&quot;Agreement&quot;) is between you and the Stellar
               Development Foundation (&quot;SDF,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). It governs
-              your use of the Freighter Services, which include the Freighter
+              your use of the Varial Services, which include the Varial
               browser extension, mobile application, website, and related user
-              interfaces that enable you to create and manage a Freighter Wallet.
-              Your Freighter Wallet is an access-controlled instance of the
-              Freighter Services that allows you to generate and control
+              interfaces that enable you to create and manage a Varial Wallet.
+              Your Varial Wallet is an access-controlled instance of the
+              Varial Services that allows you to generate and control
               cryptographic keys for an underlying Stellar Account (e.g., a G or
               C address) on the Stellar Network. This Agreement also applies to
               any related current or future services, including customer support
@@ -43,8 +43,8 @@ export default function TermsPage() {
             <p>
               By clicking &quot;I Agree&quot; or using the Services in any form, you accept
               all terms in this Agreement. This includes accessing the Services
-              through freighter.app,{" "}
-              <a href="https://www.freighter.app">www.freighter.app</a>, any
+              through{" "}
+              <a href="https://varialwallet.com">varialwallet.com</a>, any
               related websites, APIs, applications, or browser extensions,
               regardless of how you access them or which device you use.
             </p>
@@ -146,9 +146,9 @@ export default function TermsPage() {
               </li>
             </ul>
 
-            <h3>1.3 Setting Up Your Freighter Wallet: What You Need to Know.</h3>
+            <h3>1.3 Setting Up Your Varial Wallet: What You Need to Know.</h3>
             <p>
-              To use the Services, you&apos;ll need to set up a Freighter Wallet.
+              To use the Services, you&apos;ll need to set up a Varial Wallet.
               Here&apos;s what this means:
             </p>
             <ul>
@@ -156,7 +156,7 @@ export default function TermsPage() {
                 <strong>
                   You&apos;re using this for yourself or an authorized entity
                 </strong>
-                . By setting up your Freighter Wallet, you confirm you&apos;re either
+                . By setting up your Varial Wallet, you confirm you&apos;re either
                 using it for yourself or you have permission to act on behalf of
                 the entity you represent.
               </li>
@@ -165,7 +165,7 @@ export default function TermsPage() {
                   We do not require your name, email, or other directly
                   identifying information to use the Services
                 </strong>
-                . However, when you use the Freighter App, certain technical
+                . However, when you use the Varial App, certain technical
                 information—such as your Stellar Account, device information, and
                 blockchain transaction data—may be collected. While we do not
                 link this information to your real-world identity, your Stellar
@@ -187,25 +187,25 @@ export default function TermsPage() {
               </li>
               <li>
                 <strong>
-                  You&apos;re responsible for all Freighter Wallet activity
+                  You&apos;re responsible for all Varial Wallet activity
                 </strong>
-                . Any actions taken through your Freighter Wallet are your
+                . Any actions taken through your Varial Wallet are your
                 responsibility, whether you knew about them or not.
               </li>
               <li>
                 <strong>We have some discretion about your access</strong>. We
-                can refuse to provide Services, limit how many Freighter Wallets
+                can refuse to provide Services, limit how many Varial Wallets
                 you can create, or restrict your access to certain features.
               </li>
               <li>
                 <strong>
-                  We may suspend or limit access to your Freighter Wallet if
+                  We may suspend or limit access to your Varial Wallet if
                 </strong>
                 :
                 <ul>
                   <li>You provide false or incomplete information</li>
                   <li>
-                    We suspect your Freighter App or Freighter Wallet is being
+                    We suspect your Varial App or Varial Wallet is being
                     used to violate this Agreement
                   </li>
                   <li>You don&apos;t meet our requirements</li>
@@ -244,11 +244,11 @@ export default function TermsPage() {
               </li>
             </ul>
 
-            <h2>2. FREIGHTER SERVICES</h2>
+            <h2>2. VARIAL SERVICES</h2>
 
             <h3>2.1 Digital Interface.</h3>
             <p>
-              The Services allow you to create a Freighter Wallet, which
+              The Services allow you to create a Varial Wallet, which
               generates and manages cryptographic keys for your Stellar Account
               on the Stellar Network. The Services provide a graphical user
               interface to view your information and create transactions on the
@@ -334,7 +334,7 @@ export default function TermsPage() {
 
             <h3>2.4 Your Key, Your Responsibility.</h3>
             <p>
-              When setting up your Freighter Wallet, the Services generate
+              When setting up your Varial Wallet, the Services generate
               cryptographic private and public key pairs for your Stellar
               Account on the Stellar Network.
             </p>
@@ -349,7 +349,7 @@ export default function TermsPage() {
                 digital asset balance in your account
               </strong>{" "}
               on the Stellar Network that are accessed through the Services in
-              the event that the Services or the Freighter Wallet are disrupted
+              the event that the Services or the Varial Wallet are disrupted
               or we discontinue or no longer offer some or all of the Services.{" "}
               <strong>
                 We will not maintain nor are we responsible for maintaining any
@@ -359,7 +359,7 @@ export default function TermsPage() {
             <p>
               You agree and acknowledge that you are solely responsible for the
               secure storage of any digital assets accessed through your
-              Freighter App, your user key, and any other related private keys
+              Varial App, your user key, and any other related private keys
               in your possession.{" "}
               <strong>
                 You agree that in no event will SDF be liable for the security
@@ -374,7 +374,7 @@ export default function TermsPage() {
 
             <h3>2.5 How Your Transactions Work.</h3>
             <p>
-              Your Freighter Wallet, via the Services, allows you to create,
+              Your Varial Wallet, via the Services, allows you to create,
               sign, and submit transactions from your Stellar Account to the
               Stellar Network. Here&apos;s how it works:
             </p>
@@ -420,7 +420,7 @@ export default function TermsPage() {
               charged by the Stellar Network.
             </p>
             <p>
-              <strong>Freighter Fees</strong>
+              <strong>Varial Fees</strong>
             </p>
             <p>Currently, SDF does not charge fees for use of the Services. However:</p>
             <ul>
@@ -470,7 +470,7 @@ export default function TermsPage() {
               <li>
                 <strong>Separate terms apply</strong>. Your use of Third-Party
                 Services is governed by separate terms and conditions between you
-                and the third-party provider identified in the Freighter App.
+                and the third-party provider identified in the Varial App.
               </li>
               <li>
                 <strong>Duty to review terms</strong>. You are responsible for
@@ -679,7 +679,7 @@ export default function TermsPage() {
               disclaims any and all liability arising from your use of
               Third-Party Services, your interaction with third parties, or any
               transactions you may conduct with third parties, whether via the
-              Freighter App, the Services, or otherwise.
+              Varial App, the Services, or otherwise.
             </p>
 
             <h3>4.6 Application Security.</h3>
@@ -769,7 +769,7 @@ export default function TermsPage() {
             <ul>
               <li>
                 <strong>What we own</strong>: Our specific implementation of the
-                Freighter App, including how we&apos;ve configured it, how we host
+                Varial App, including how we&apos;ve configured it, how we host
                 it, and any unique elements we&apos;ve added.
               </li>
               <li>
@@ -803,7 +803,7 @@ export default function TermsPage() {
 
             <h3>7.2 Trademarks.</h3>
             <p>
-              The Freighter name and design are trademarks or service marks of
+              The Varial name and design are trademarks or service marks of
               SDF and may not be copied, imitated, or used, in whole or in part,
               except as expressly permitted in this Agreement or with the prior
               written permission of SDF. All other trademarks, names, or logos
@@ -935,7 +935,7 @@ export default function TermsPage() {
             <p>
               The Services are subject to U.S. export control and economic
               sanctions laws. You may not use, export, re-export, transfer, or
-              otherwise make available the Freighter App or Services:
+              otherwise make available the Varial App or Services:
             </p>
             <p>
               (a) to any person or entity on the U.S. Treasury Department&apos;s List
@@ -1224,7 +1224,7 @@ export default function TermsPage() {
             <p>
               <strong>Questions about electronic communications?</strong> Contact
               our support team at{" "}
-              <a href="mailto:help@freighter.app">help@freighter.app</a>.
+              <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>.
             </p>
 
             <h3>10.12 How to Contact Us.</h3>
@@ -1237,12 +1237,12 @@ export default function TermsPage() {
               </li>
               <li>
                 <strong>For technical support</strong>: Email us at{" "}
-                <a href="mailto:help@freighter.app">help@freighter.app</a>.
+                <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>.
               </li>
               <li>
                 <strong>For feedback</strong>: We appreciate your suggestions for
                 improving our Services. By sending feedback to{" "}
-                <a href="mailto:help@freighter.app">help@freighter.app</a>, you
+                <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>, you
                 give us complete permission to use your ideas however we need to.
                 This means we can use, modify, build upon, and share your
                 feedback without restrictions or payment. This permission applies

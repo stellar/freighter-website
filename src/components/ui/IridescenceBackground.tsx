@@ -14,11 +14,8 @@ type IridescenceBackgroundProps = {
   mouseReact?: boolean;
 };
 
-const FREIGHTER_PURPLE: [number, number, number] = [
-  0.4627450980392157,
-  0.3137254901960784,
-  1,
-];
+// Varial Blue 09 (#0050FF) as 0–1 RGB
+const VARIAL_BLUE: [number, number, number] = [0, 0.3137254901960784, 1];
 
 export function IridescenceBackground({
   className = "",
@@ -28,10 +25,10 @@ export function IridescenceBackground({
   mouseReact = false,
 }: IridescenceBackgroundProps) {
   return (
-    <div className={`absolute inset-0 z-0 bg-[#7650ff] ${className}`} aria-hidden="true">
+    <div className={`absolute inset-0 z-0 bg-[#0050FF] ${className}`} aria-hidden="true">
       <div className={`absolute inset-0 ${patternClassName}`}>
         <Iridescence
-          color={FREIGHTER_PURPLE}
+          color={VARIAL_BLUE}
           speed={speed}
           amplitude={amplitude}
           mouseReact={mouseReact}
