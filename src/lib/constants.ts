@@ -7,7 +7,7 @@ export const SITE = {
   description:
     "Send, swap, and connect to apps on Stellar.",
   url: "https://varialwallet.com",
-  supportEmail: "help@varialwallet.com",
+  supportEmail: "help@freighter.app",
   github: "https://github.com/stellar/freighter",
   discord: "#",
 };
