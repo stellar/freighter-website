@@ -70,10 +70,14 @@ function FloatingDownload() {
 
   // Other buttons (e.g. the hero's Download) open the card too
   useEffect(() => {
-    const onOpen = () => setOpen(true);
+    // On a phone/tablet there is no card, so go straight to the store
+    const onOpen = () => {
+      if (phoneStore) window.location.href = phoneStore;
+      else setOpen(true);
+    };
     window.addEventListener(OPEN_DOWNLOAD_EVENT, onOpen);
     return () => window.removeEventListener(OPEN_DOWNLOAD_EVENT, onOpen);
-  }, []);
+  }, [phoneStore]);
 
   // Close on outside click / Escape
   useEffect(() => {

@@ -85,12 +85,16 @@ function RotatingHeadline({ delay }: { delay: number }) {
       className="flex max-w-[560px] flex-col items-center text-center text-4xl font-medium leading-[1.08] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:items-start lg:text-left lg:text-[60px]"
     >
       <span className="block">{HEADLINE_LEAD}</span>
-      <span className="flex min-h-[1.1em] flex-wrap justify-center gap-x-[0.26em] lg:justify-start">
+      {/* Screen readers get the phrase as plain text; the animated chars are hidden */}
+      <span className="sr-only">{tail}</span>
+      <span
+        aria-hidden
+        className="flex min-h-[1.1em] flex-wrap justify-center gap-x-[0.26em] lg:justify-start"
+      >
         {/* Words wrap normally; characters inside a word never break apart */}
         {tail.split(" ").map((word, wi) => (
           <span
             key={`${index}-${wi}`}
-            aria-label={wi === 0 ? tail : undefined}
             className="inline-block whitespace-nowrap"
           >
             {Array.from(word).map((ch, ci) => {
@@ -98,7 +102,6 @@ function RotatingHeadline({ delay }: { delay: number }) {
               return (
                 <span
                   key={ci}
-                  aria-hidden
                   className="inline-block"
                   style={{
                     opacity: wiping ? 0 : 1,
