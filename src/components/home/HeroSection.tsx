@@ -15,6 +15,7 @@ import { EASE_OUT } from "@/lib/animations";
 import { FlowDemo, SWAP_DEMO, DISCOVER_DEMO } from "@/components/home/FlowDemo";
 import { LINKS } from "@/lib/constants";
 import { DownloadPill, openDownloadCard } from "@/components/ui/DownloadPill";
+import { useBrowser, extensionHref } from "@/components/ui/BrowserBadge";
 import {
   AppleLogoFill,
   AndroidLogoFill,
@@ -83,20 +84,21 @@ function RotatingHeadline({ delay }: { delay: number }) {
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 0.7, ease: EASE_OUT, delay: delay + 0.1 }}
       className="flex max-w-[560px] flex-col items-center text-center text-4xl font-medium leading-[1.08] tracking-[-0.04em] text-[#171717] sm:text-5xl lg:items-start lg:text-left lg:text-[60px]"
+      // Assistive tech reads one stable sentence; the animated copy is decorative
+      aria-label={`${HEADLINE_LEAD} ${HEADLINE_TAILS[0]}`}
     >
-      <span className="block">{HEADLINE_LEAD}</span>
-      {/* Screen readers get the phrase as plain text; the animated chars are hidden */}
-      <span className="sr-only">{tail}</span>
+      <span className="block" aria-hidden>
+        {HEADLINE_LEAD}
+      </span>
       <span
         aria-hidden
         className="flex min-h-[1.1em] flex-wrap justify-center gap-x-[0.26em] lg:justify-start"
       >
         {/* Words wrap normally; characters inside a word never break apart */}
         {tail.split(" ").map((word, wi) => (
-          <span
-            key={`${index}-${wi}`}
-            className="inline-block whitespace-nowrap"
-          >
+          // The flex gap draws the space; the text node keeps copied text spaced
+          <span key={`${index}-${wi}`} className="inline-block whitespace-nowrap">
+            {wi > 0 && " "}
             {Array.from(word).map((ch, ci) => {
               const d = charIndex++ * WIPE_STEP_MS;
               return (
@@ -501,6 +503,7 @@ function MobileDemoPhone({ stage }: { stage: Stage }) {
 
 export function HeroSection() {
   const delay = 0;
+  const browser = useBrowser();
   const [active, setActive] = useState(0);
   const stageRefs = useRef<(HTMLDivElement | null)[]>([]);
   // 1 while a stage sits in the middle of the viewport, 0 while scrolling between stages.
@@ -634,7 +637,7 @@ export function HeroSection() {
                       ease: EASE_OUT,
                       delay: delay + 0.5,
                     }}
-                    // On phones the floating pill is the single download CTA
+                    // Below md the floating pill is the single download CTA
                     className="hidden flex-wrap items-center justify-center gap-3 md:flex lg:justify-start"
                   >
                     {/* Opens the QR card in the corner, same as the Download pill */}
@@ -650,7 +653,7 @@ export function HeroSection() {
                       Download
                     </button>
                     <a
-                      href={LINKS.chromeExtension}
+                      href={extensionHref(browser)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-semibold text-[#171717] shadow-[inset_0_0_0_1px_#DBDBDB] transition-colors duration-200 hover:bg-[#EDEDED] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent/70"

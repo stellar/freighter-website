@@ -17,8 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  // TODO(varial): domain — set NEXT_PUBLIC_SITE_URL (or replace the fallback) once the Varial domain is live
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://freighter-website.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://varialwallet.com"),
   title: {
     default: "Varial | Your Everyday Stellar Wallet",
     template: "%s | Varial",

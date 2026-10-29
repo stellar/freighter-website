@@ -5,7 +5,7 @@ import { BackToTopButton } from "@/components/ui/BackToTopButton";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Freighter Privacy Policy.",
+  description: "Varial Privacy Policy.",
 };
 
 export default function PrivacyPage() {
@@ -15,21 +15,21 @@ export default function PrivacyPage() {
       <main className="pt-32 pb-24">
         <div className="max-w-[1280px] mx-auto px-6">
           <h1 className="text-4xl md:text-5xl font-semibold text-text-primary tracking-tight">
-            Freighter Privacy Policy
+            Varial Privacy Policy
           </h1>
           <p className="text-sm text-text-tertiary mt-2">
-            Last Updated: August 19, 2025 &middot; Version 1.0
+            Last Updated: October 28, 2026 &middot; Version 1.0
           </p>
 
           <article className="prose prose-invert prose-lg mt-12 max-w-none">
             <p>
-              <strong>Welcome to the Freighter</strong>
+              <strong>Welcome to Varial</strong>
             </p>
             <p>
-              The Freighter Services, or Services, include the Freighter browser
+              The Varial Services, or Services, include the Varial browser
               extension, mobile application, website, and related user interfaces
-              that enable you to create and manage a Freighter Wallet. Your
-              Freighter Wallet is an access-controlled instance of the Services
+              that enable you to create and manage a Varial Wallet. Your
+              Varial Wallet is an access-controlled instance of the Services
               that allows you to generate and control cryptographic keys for an
               underlying Stellar Account. You control your crypto—we don&apos;t hold
               your keys. Your privacy comes first.
@@ -42,11 +42,11 @@ export default function PrivacyPage() {
             <h2>Scope of This Policy</h2>
             <p>This Privacy Policy applies when you:</p>
             <ul>
-              <li>Use the Freighter Services — a user interface</li>
+              <li>Use the Varial Services — a user interface</li>
               <li>
                 Visit our website at{" "}
-                <a href="https://www.freighter.app">
-                  https://www.freighter.app/
+                <a href="https://varialwallet.com">
+                  https://varialwallet.com/
                 </a>
               </li>
               <li>Use any services that link to this Privacy Policy</li>
@@ -226,7 +226,7 @@ export default function PrivacyPage() {
               </li>
               <li>
                 <strong>Public Key / Addresses:</strong> We may collect the
-                public key that is generated when you create your Freighter
+                public key that is generated when you create your Varial
                 account. We may also collect other public blockchain addresses
                 associated with your public key. We do not use these keys or
                 addresses for tracking purposes.
@@ -538,7 +538,7 @@ export default function PrivacyPage() {
               </li>
               <li>
                 Website:{" "}
-                <a href="https://www.freighter.app">www.freighter.app</a>
+                <a href="https://varialwallet.com">varialwallet.com</a>
               </li>
             </ul>
           </article>

@@ -150,6 +150,9 @@ export function FeatureCarousel({
             drag="x"
             dragMomentum={false}
             onDragStart={() => (dragging.current = true)}
+            // Wrap during the gesture too, or dragging against the flow
+            // reveals the empty space beyond the two copies until release
+            onDrag={() => x.set(wrap(x.get()))}
             onDragEnd={() => {
               dragging.current = false;
               x.set(wrap(x.get()));

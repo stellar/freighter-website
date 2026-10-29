@@ -42,7 +42,7 @@ const ICONS: Record<
 
 /** The store link for the visitor's browser; Chrome Web Store otherwise. */
 export function extensionHref(browser: Browser) {
-  return browser === "firefox" && LINKS.firefoxExtension !== "#"
+  return browser === "firefox"
     ? LINKS.firefoxExtension
     : LINKS.chromeExtension;
 }

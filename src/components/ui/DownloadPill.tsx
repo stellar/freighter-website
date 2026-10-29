@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { QRCodeSVG } from "qrcode.react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { LINKS } from "@/lib/constants";
+import { useBrowser, extensionHref } from "@/components/ui/BrowserBadge";
 import {
   AppleLogoFill,
   AndroidLogoFill,
@@ -52,8 +53,9 @@ export function DownloadPill() {
 }
 
 function FloatingDownload() {
+  const browser = useBrowser();
   const [open, setOpen] = useState(false);
-  const [qrValue, setQrValue] = useState("https://varial.app/get"); // TODO(varial): domain
+  const [qrValue, setQrValue] = useState("https://varialwallet.com/get");
   const [phoneStore, setPhoneStore] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -68,11 +70,13 @@ function FloatingDownload() {
     return () => clearTimeout(t);
   }, []);
 
-  // Other buttons (e.g. the hero's Download) open the card too
+  // Other buttons (e.g. the hero's Download) open the card too. On a phone
+  // there is no card, so they go to the store like the pill itself does —
+  // the hero button is shown by viewport width, which can be ≥ md on a
+  // phone in landscape or an Android tablet.
   useEffect(() => {
-    // On a phone/tablet there is no card, so go straight to the store
     const onOpen = () => {
-      if (phoneStore) window.location.href = phoneStore;
+      if (phoneStore) window.location.assign(phoneStore);
       else setOpen(true);
     };
     window.addEventListener(OPEN_DOWNLOAD_EVENT, onOpen);
@@ -217,7 +221,7 @@ function FloatingDownload() {
                 </div>
 
                 <a
-                  href={LINKS.chromeExtension}
+                  href={extensionHref(browser)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="-mt-1 text-sm font-medium text-[#6F6F6F] transition-colors hover:text-[#171717]"

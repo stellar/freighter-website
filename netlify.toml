@@ -1,3 +1,43 @@
 [build]
   command = "npm run build"
   publish = "out"
+
+# freighter.app is the pre-Varial domain. It stays attached to this site for
+# its certificate; send every path to the same path on varialwallet.com.
+[[redirects]]
+  from = "https://freighter.app/*"
+  to = "https://varialwallet.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.freighter.app/*"
+  to = "https://varialwallet.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://freighter.app/*"
+  to = "https://varialwallet.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.freighter.app/*"
+  to = "https://varialwallet.com/:splat"
+  status = 301
+  force = true
+
+# help.freighter.app points here only to redirect; the helpdesk itself is
+# served by HelpDocs on help.varialwallet.com.
+[[redirects]]
+  from = "https://help.freighter.app/*"
+  to = "https://help.varialwallet.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://help.freighter.app/*"
+  to = "https://help.varialwallet.com/:splat"
+  status = 301
+  force = true

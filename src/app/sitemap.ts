@@ -1,4 +1,3 @@
-// TODO(varial): domain — still freighter.app until the Varial domain is live
 import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
@@ -6,37 +5,37 @@ export const dynamic = "force-static";
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://www.freighter.app",
+      url: "https://varialwallet.com",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: "https://www.freighter.app/faq",
+      url: "https://varialwallet.com/faq",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: "https://www.freighter.app/changelog",
+      url: "https://varialwallet.com/changelog",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.7,
     },
     {
-      url: "https://www.freighter.app/brand",
+      url: "https://varialwallet.com/brand",
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: "https://www.freighter.app/terms",
+      url: "https://varialwallet.com/terms",
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,
     },
     {
-      url: "https://www.freighter.app/privacy",
+      url: "https://varialwallet.com/privacy",
       lastModified: new Date(),
       changeFrequency: "yearly",
       priority: 0.3,
