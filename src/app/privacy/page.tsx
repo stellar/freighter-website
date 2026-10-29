@@ -428,7 +428,7 @@ export default function PrivacyPage() {
               Commission&apos;s adequacy decisions, or executing Standard Contractual
               Clauses. Where relevant, you may request a copy of these Standard
               Contractual Clauses by contacting us at{" "}
-              <a href="mailto:help@freighter.app">help@freighter.app</a>.
+              <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>.
             </p>
 
             <h2>9. Your Privacy Rights</h2>
@@ -482,7 +482,7 @@ export default function PrivacyPage() {
             <p>
               <strong>Want more details?</strong> For specific information about
               our Google Analytics cookies, please contact us at{" "}
-              <a href="mailto:help@freighter.app">help@freighter.app</a>.
+              <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>.
             </p>
 
             <h3>9.2 Mobile Push Notifications</h3>
@@ -534,7 +534,7 @@ export default function PrivacyPage() {
             <ul>
               <li>
                 Email:{" "}
-                <a href="mailto:help@freighter.app">help@freighter.app</a>
+                <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>
               </li>
               <li>
                 Website:{" "}
