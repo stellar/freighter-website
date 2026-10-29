@@ -27,7 +27,7 @@ export function Navbar() {
       className="relative z-30 px-6 pt-5"
       aria-label="Primary navigation"
     >
-      <div className="relative mx-auto flex w-full max-w-[1280px] items-center justify-between">
+      <div className="relative mx-auto flex min-h-11 w-full max-w-[1280px] items-center justify-between">
         <Link href="/" className="relative flex h-8 shrink-0 items-center">
           <Image
             src="/images/varial-logo.svg"

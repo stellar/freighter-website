@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView, useMotionValue } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useMotionValue,
+  useReducedMotion,
+} from "framer-motion";
 import { fadeSlideUp } from "@/lib/animations";
 import { useXlmUsdRate } from "@/lib/xlm-price";
 import {
@@ -71,7 +76,10 @@ export function FeatureCarousel({
     if (n > 0) n -= loopWidth;
     return n;
   };
-  const [playing, setPlaying] = useState(true);
+  const reduceMotion = useReducedMotion();
+  // null = follow the OS reduced-motion setting until the user presses play/pause
+  const [playChoice, setPlayChoice] = useState<boolean | null>(null);
+  const playing = playChoice ?? !reduceMotion;
   const dragging = useRef(false);
 
   useEffect(() => {
@@ -126,7 +134,7 @@ export function FeatureCarousel({
           </h2>
           <button
             type="button"
-            onClick={() => setPlaying((p) => !p)}
+            onClick={() => setPlayChoice(!playing)}
             className="ml-4 flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#171717] text-white transition-colors hover:bg-[#2a2a2a]"
             aria-label={playing ? "Pause" : "Play"}
             aria-pressed={playing}

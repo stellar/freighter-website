@@ -16,6 +16,7 @@ const footerLinksBefore: {
   { label: "Docs", href: LINKS.docs, external: true, hideOnLg: true },
   { label: "Changelog", href: "/changelog" },
   { label: "GitHub", href: SITE.github, external: true },
+  { label: "Brand", href: "/brand" },
   // Mirrors the Navbar Support link so mobile/tablet users still have
   // a path to help when the top nav is collapsed. Hidden at lg+ where
   // the Navbar's Support link is always visible.
@@ -77,7 +78,7 @@ export function Footer() {
     <footer className="mt-8 pb-[72px]">
       <div className="max-w-[1280px] mx-auto px-6 sm:h-8 flex flex-col-reverse sm:flex-row items-start sm:items-center justify-between gap-8 sm:gap-3 text-sm font-normal text-text-secondary">
         <p>&copy; 2026 Stellar Development Foundation</p>
-        <nav className="grid grid-cols-2 grid-rows-4 grid-flow-col gap-x-6 gap-y-3 items-start w-full sm:w-auto sm:flex sm:flex-row sm:items-center sm:gap-3">
+        <nav className="grid grid-cols-2 grid-rows-5 grid-flow-col gap-x-6 gap-y-3 items-start w-full sm:w-auto sm:flex sm:flex-row sm:items-center sm:gap-3">
           {footerLinksBefore.map((link) => {
             const className = `hover:text-text-primary transition-colors${link.hideOnLg ? " lg:hidden" : ""}`;
             return link.external ? (
