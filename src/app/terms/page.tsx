@@ -1224,7 +1224,7 @@ export default function TermsPage() {
             <p>
               <strong>Questions about electronic communications?</strong> Contact
               our support team at{" "}
-              <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>.
+              <a href="mailto:help@freighter.app">help@freighter.app</a>.
             </p>
 
             <h3>10.12 How to Contact Us.</h3>
@@ -1237,12 +1237,12 @@ export default function TermsPage() {
               </li>
               <li>
                 <strong>For technical support</strong>: Email us at{" "}
-                <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>.
+                <a href="mailto:help@freighter.app">help@freighter.app</a>.
               </li>
               <li>
                 <strong>For feedback</strong>: We appreciate your suggestions for
                 improving our Services. By sending feedback to{" "}
-                <a href="mailto:help@varialwallet.com">help@varialwallet.com</a>, you
+                <a href="mailto:help@freighter.app">help@freighter.app</a>, you
                 give us complete permission to use your ideas however we need to.
                 This means we can use, modify, build upon, and share your
                 feedback without restrictions or payment. This permission applies
